@@ -298,8 +298,8 @@ h1 { font-family: var(--site-font-heading); font-size: clamp(29px,3.2vw,43px); l
  const questionBank = [
   {topic:'KOMPOSISI ALJABAR',q:'Diketahui f(x) = 3x − 1 dan g(x) = 2x² − 3. Tentukan (g ∘ f)(x).',options:['9x² − 6x + 3','18x² − 12x − 1','9x² − 6x − 1','18x² − 6x − 1'],answer:1,explanation:'Substitusikan f(x) ke g: 2(3x − 1)² − 3 = 2(9x² − 6x + 1) − 3 = 18x² − 12x − 1.'},
   {topic:'KOMPOSISI ALJABAR',q:'Jika f(x) = 2x + 5 dan g(x) = x², maka (g ∘ f)(x) adalah …',options:['2x² + 5','4x² + 25','4x² + 20x + 25','x² + 4x + 25'],answer:2,explanation:'g(f(x)) = (2x + 5)² = 4x² + 20x + 25.'},
-  {topic:'KOMPOSISI ALJABAR',q:'Diberikan f(x) = x − 4 dan g(x) = 3x + 2. Nilai (f ∘ g)(x) adalah …',options:['3x − 2','3x + 6','3x − 6','x − 2'],answer:2,explanation:'f(g(x)) = (3x + 2) − 4 = 3x − 2. Jadi jawaban yang tepat adalah A.'},
-  {topic:'NILAI FUNGSI',q:'Jika f(x) = x² − 2x dan g(x) = x + 3, berapakah (f ∘ g)(1)?',options:['4','8','10','12'],answer:2,explanation:'g(1) = 4, lalu f(4) = 4² − 2(4) = 8. Jawaban yang tepat adalah B.'},
+  {topic:'KOMPOSISI ALJABAR',q:'Diberikan f(x) = x − 4 dan g(x) = 3x + 2. Nilai (f ∘ g)(x) adalah …',options:['3x − 2','3x + 6','3x − 6','x − 2'],answer:0,explanation:'f(g(x)) = (3x + 2) − 4 = 3x − 2.'},
+  {topic:'NILAI FUNGSI',q:'Jika f(x) = x² − 2x dan g(x) = x + 3, berapakah (f ∘ g)(1)?',options:['4','8','10','12'],answer:1,explanation:'g(1) = 4, lalu f(4) = 4² − 2(4) = 8.'},
   {topic:'FUNGSI INVERS',q:'Jika f(x) = 5x − 10, maka f⁻¹(x) adalah …',options:['5x + 10','(x − 10)/5','(x + 10)/5','x/5 − 10'],answer:2,explanation:'Misalkan y = 5x − 10. Tukar x dan y: x = 5y − 10, sehingga y = (x + 10)/5.'},
   {topic:'FUNGSI INVERS',q:'Fungsi f(x) = 2x + 7 memiliki invers f⁻¹(x) = …',options:['(x + 7)/2','(x − 7)/2','2x − 7','7 − 2x'],answer:1,explanation:'Dari y = 2x + 7, tukar variabel dan selesaikan: x = 2y + 7, sehingga y = (x − 7)/2.'},
   {topic:'DOMAIN DAN RANGE',q:'Domain fungsi f(x) = 1/(x − 4) adalah …',options:['Semua bilangan real','Semua real kecuali x = 4','x lebih besar dari 4','x tidak sama dengan 0'],answer:1,explanation:'Penyebut tidak boleh nol. Karena x − 4 ≠ 0, maka x ≠ 4.'},
