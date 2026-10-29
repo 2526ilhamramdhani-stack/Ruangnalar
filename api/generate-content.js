@@ -91,12 +91,12 @@ module.exports = async function handler(req, res) {
     'Kembalikan JSON valid saja tanpa markdown atau teks di luar JSON.'
   ].join(' ');
 
-  const prompt = \`Buat Handout Pintar lengkap untuk materi SMA. Standar ini WAJIB dipakai setiap kali Admin mengunggah sumber materi.
+  const prompt = `Buat Handout Pintar lengkap untuk materi SMA. Standar ini WAJIB dipakai setiap kali Admin mengunggah sumber materi.
 
 KONTEKS
-Mata pelajaran: \${subject}
-Judul: \${title}
-Topik: \${topic}
+Mata pelajaran: ${subject}
+Judul: ${title}
+Topik: ${topic}
 
 STRUKTUR OUTPUT WAJIB
 draft berisi summary (string), keyPoints (array string), example (string), sections (object), practiceModules (array tepat 2), dan questions (gabungan 20 soal untuk kompatibilitas).
@@ -129,7 +129,7 @@ Setiap soal berupa {question, options, answerIndex, explanation, concept, diffic
 Jangan hilangkan struktur wajib walaupun sumber pendek. Bagian yang tidak dapat disimpulkan harus berisi catatan keterbatasan yang jelas. Keluaran hanya JSON valid.
 
 SUMBER MATERI ADMIN:
-\${sourceText}\`;
+${sourceText}`;
 
   try {
     const upstream = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent', {
