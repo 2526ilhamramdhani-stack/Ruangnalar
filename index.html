@@ -977,7 +977,6 @@ aside {
     notify('Kamu telah keluar dari Admin.');
   });
   refreshAdminSession();
-  loadPublishedContents(selectedSubjectId);
  document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter'){const q=e.target.value.toLowerCase();if(!q.trim())return; if(q.includes('invers')||q.includes('hots')||q.includes('ide')) go('ide'); else if(q.includes('soal')||q.includes('latihan')||q.includes('komposisi')) go('latihan'); else go('materi');notify('Menampilkan bagian yang paling sesuai dengan pencarian.');}});
  document.getElementById('adminPreview').addEventListener('click', async event => {
    const saveButton = event.target.closest('#saveAIDraft');
@@ -1056,6 +1055,8 @@ aside {
  }
  subjectSelect.addEventListener('change', updateTopicOptions);
  updateTopicOptions();
+ // Load published materials only after subjectLabels and selectedSubjectId are initialized.
+ loadPublishedContents(selectedSubjectId);
  document.getElementById('subjectGrid').addEventListener('click', event => {
    const card = event.target.closest('[data-subject]');
    if (!card) return;
