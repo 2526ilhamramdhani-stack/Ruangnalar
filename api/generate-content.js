@@ -49,7 +49,7 @@ function validateHandout(draft) {
   const requiredSections = ['overview','mindmap','real_world','slides','cheatsheet','mnemonic','encouragement','question_types','question_ideas','sources'];
   if (!isObject(draft.sections)) return 'Bagian Handout terstruktur belum tersedia.';
   for (const key of requiredSections) if (!isObject(draft.sections[key])) return 'Bagian Handout wajib belum lengkap: ' + key + '.';
-  if (!Array.isArray(draft.sections.slides.slides) || draft.sections.slides.slides.length < 3) return 'Handout harus memiliki minimal 3 slide materi.';
+  if (!Array.isArray(draft.sections.slides.slides) || draft.sections.slides.slides.length < 5) return 'Handout harus memiliki minimal 3 slide materi.';
   if (!Array.isArray(draft.sections.sources.references)) return 'Daftar sumber harus berupa array.';
   if (!Array.isArray(draft.practiceModules) || draft.practiceModules.length !== 2) return 'AI harus menghasilkan tepat dua modul latihan awal.';
   for (let i = 0; i < draft.practiceModules.length; i++) {
