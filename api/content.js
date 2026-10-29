@@ -81,19 +81,36 @@ function buildSections(draft) {
   return rows;
 }
 async function saveSections(config, contentId, rows) {
-  const deleted = await dbRequest(config, 'handout_sections?content_id=eq.' + encodeURIComponent(contentId), {
-    method: 'DELETE',
-    headers: { Prefer: 'return=minimal' }
-  });
-  if (!deleted.response.ok) return false;
-  if (!rows.length) return true;
-  const payload = rows.map(row => ({ ...row, content_id: contentId }));
-  const inserted = await dbRequest(config, 'handout_sections', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal' },
-    body: JSON.stringify(payload)
-  });
-  return inserted.response.ok;
+  const existingResult = await dbRequest(config, 'handout_sections?select=id,section_type,position&content_id=eq.' + encodeURIComponent(contentId));
+  if (!existingResult.response.ok || !Array.isArray(existingResult.data)) return false;
+  const existing = existingResult.data;
+  const wantedKeys = new Set(rows.map(row => row.section_type + ':' + row.position));
+  // Upsert first; never delete the current handout before its replacement rows are saved.
+  for (const row of rows) {
+    const match = existing.find(item => item.section_type === row.section_type && item.position === row.position);
+    const payload = { title: row.title, body: row.body };
+    const saved = match
+      ? await dbRequest(config, 'handout_sections?id=eq.' + encodeURIComponent(match.id), {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+          body: JSON.stringify(payload)
+        })
+      : await dbRequest(config, 'handout_sections', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+          body: JSON.stringify({ ...row, content_id: contentId })
+        });
+    if (!saved.response.ok) return false;
+  }
+  const staleIds = existing.filter(item => !wantedKeys.has(item.section_type + ':' + item.position)).map(item => item.id);
+  for (const staleId of staleIds) {
+    const removed = await dbRequest(config, 'handout_sections?id=eq.' + encodeURIComponent(staleId), {
+      method: 'DELETE',
+      headers: { Prefer: 'return=minimal' }
+    });
+    if (!removed.response.ok) return false;
+  }
+  return true;
 }
 module.exports = async function handler(req, res) {
   const config = databaseConfig();
@@ -167,7 +184,7 @@ module.exports = async function handler(req, res) {
   const questions = normalizeQuestions(draft);
   const row = {
     title, topic, subject_id: subjectId,
-    status: 'draft', author_name: authorName,
+    author_name: authorName,
     summary: draft.summary.slice(0, 12000),
     key_points: Array.isArray(draft.keyPoints) ? draft.keyPoints.slice(0, 30).map(v => String(v).slice(0, 1000)) : [],
     example: typeof draft.example === 'string' ? draft.example.slice(0, 12000) : '',
@@ -189,7 +206,7 @@ module.exports = async function handler(req, res) {
       saved = await dbRequest(config, 'learning_contents', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Prefer: 'return=representation' },
-        body: JSON.stringify(row)
+        body: JSON.stringify({ ...row, status: 'draft', published: false })
       });
     }
     if (!saved.response.ok) return send(res, 502, { error: 'Gagal menyimpan materi. Pastikan seluruh migration konten, author, dan Handout sudah dijalankan di Supabase.' });
@@ -204,17 +221,18 @@ module.exports = async function handler(req, res) {
         return send(res, 502, { error: 'Materi tersimpan sebagai draf, tetapi bagian Handout gagal disimpan. Materi tidak diterbitkan; periksa migration handout_sections lalu simpan ulang.' });
       }
     }
-    if (requestedStatus === 'published') {
-      const publish = await dbRequest(config, 'learning_contents?id=eq.' + encodeURIComponent(contentId), {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', Prefer: 'return=representation' },
-        body: JSON.stringify({ status: 'published', published: true, reviewed_at: new Date().toISOString() })
-      });
-      if (!publish.response.ok || !Array.isArray(publish.data) || !publish.data.length) {
-        return send(res, 502, { error: 'Handout tersimpan sebagai draf, tetapi publikasi gagal. Tidak ada status sukses yang dilaporkan; coba terbitkan ulang.' });
-      }
-      saved.data = publish.data;
+    const finalStatus = requestedStatus === 'published'
+      ? { status: 'published', published: true, reviewed_at: new Date().toISOString() }
+      : { status: 'draft', published: false };
+    const publish = await dbRequest(config, 'learning_contents?id=eq.' + encodeURIComponent(contentId), {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Prefer: 'return=representation' },
+      body: JSON.stringify(finalStatus)
+    });
+    if (!publish.response.ok || !Array.isArray(publish.data) || !publish.data.length) {
+      return send(res, 502, { error: 'Bagian Handout tersimpan, tetapi status publikasi gagal diperbarui. Periksa status materi di Admin.' });
     }
+    saved.data = publish.data;
     return send(res, req.method === 'PATCH' ? 200 : 201, {
       content: { ...(Array.isArray(saved.data) ? saved.data[0] : null), id: contentId, status: requestedStatus, published: requestedStatus === 'published' }
     });
