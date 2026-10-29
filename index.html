@@ -999,9 +999,10 @@ aside {
          questions:editedQuestions.map(q=>({...q,answerIndex:Number(q.answerIndex)}))
        };
        currentAIDraft.title = document.getElementById('contentTitle').value.trim();
-       currentAIDraft.topic = document.getElementById('contentTopic').value;
-       currentAIDraft.subjectId = document.getElementById('contentSubject').value;
        if (!currentAIDraft.title) throw new Error('Judul materi wajib diisi.');
+       if (currentAIDraft.topic !== document.getElementById('contentTopic').value || currentAIDraft.subjectId !== document.getElementById('contentSubject').value) {
+         throw new Error('Mata pelajaran atau kategori berubah setelah draf dibuat. Buat ulang draf AI agar isi dan pengelompokannya tetap sesuai.');
+       }
      }
    } catch (error) {
      notify(error.message || 'Periksa kembali isi draf sebelum menyimpan.');
