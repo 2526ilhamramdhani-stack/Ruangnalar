@@ -529,6 +529,13 @@ aside {
 .content-status.published { background:#DDF4F0; color:#124846; }
 @media(max-width:680px) { .admin-library-head,.admin-content-row { align-items:stretch; flex-direction:column; } .admin-library-filters { grid-template-columns:1fr; } }
 
+.draft-edit-panel { margin-top:18px; border:1px solid var(--rn-border); border-radius:14px; padding:15px; background:#F8FAFB; }
+.draft-edit-panel summary { cursor:pointer; font-weight:800; color:var(--rn-navy); }
+.draft-edit-panel .field { margin-top:14px; }
+.draft-edit-panel textarea { width:100%; min-height:100px; resize:vertical; }
+.draft-edit-panel #editDraftQuestions { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:12px; line-height:1.55; }
+.draft-edit-panel small { color:var(--rn-muted); display:block; margin-top:5px; }
+
 </style>
 </head>
 <body>
@@ -739,6 +746,7 @@ aside {
        '<h3>Bank soal (' + questions.length + ')</h3>' + questions.map((q,i) => '<div class="exam-item"><b>' + (i+1) + '. ' + escapeHtml(q.question || '') + '</b><ol type="A">' +
        (Array.isArray(q.options) ? q.options : []).map(option => '<li>' + escapeHtml(String(option)) + '</li>').join('') + '</ol><p><b>Jawaban:</b> ' +
        escapeHtml(String((q.options || [])[q.answerIndex] || 'Perlu ditinjau')) + '</p><p class="muted">' + escapeHtml(q.explanation || '') + '</p></div>').join('') +
+       '<details class="draft-edit-panel" open><summary>Edit draf sebelum disimpan</summary><p class="muted">Perubahan di bawah akan digunakan saat menyimpan atau menerbitkan materi.</p><div class="field"><label for="editDraftSummary">Ringkasan</label><textarea id="editDraftSummary" rows="4">'+escapeHtml(draft.summary || '')+'</textarea></div><div class="field"><label for="editDraftKeyPoints">Poin penting (satu poin per baris)</label><textarea id="editDraftKeyPoints" rows="4">'+escapeHtml(points.join('\\n'))+'</textarea></div><div class="field"><label for="editDraftExample">Contoh / penjelasan</label><textarea id="editDraftExample" rows="4">'+escapeHtml(draft.example || '')+'</textarea></div><div class="field"><label for="editDraftQuestions">Bank soal dalam format JSON</label><textarea id="editDraftQuestions" rows="12" spellcheck="false">'+escapeHtml(JSON.stringify(questions,null,2))+'</textarea><small>Setiap soal harus memiliki question, 4 options, answerIndex 0–3, dan explanation.</small></div></details>' +
        '<div class="upload-help"><span aria-hidden="true">ⓘ</span><span>Draf dibuat AI dari teks sumber. Periksa rumus, kunci jawaban, dan pembahasan sebelum digunakan. Draf belum dipublikasikan atau disimpan ke database.</span></div>';
      currentAIDraft = {title, topic, subjectId, draft, status:'draft'};
      document.getElementById('adminPreview').insertAdjacentHTML('beforeend', '<div class="upload-help" style="margin-top:16px"><span>✓</span><span>Draf AI siap ditinjau. Simpan sebagai draf untuk melanjutkan nanti, atau terbitkan setelah konten diperiksa.</span></div><button type="button" class="btn btn-ghost" id="saveAIDraft" style="margin-top:12px;margin-right:8px">Simpan sebagai draf</button><button type="button" class="btn btn-primary" id="publishAIDraft" style="margin-top:12px">Terbitkan materi</button>');
@@ -978,6 +986,27 @@ aside {
    if (!button || !currentAIDraft) return;
    const publish = Boolean(publishButton);
    const previousText = button.textContent;
+   try {
+     const questionEditor = document.getElementById('editDraftQuestions');
+     if (questionEditor) {
+       const editedQuestions = JSON.parse(questionEditor.value);
+       const valid = Array.isArray(editedQuestions) && editedQuestions.length === 5 && editedQuestions.every(q => q && typeof q.question === 'string' && Array.isArray(q.options) && q.options.length === 4 && Number.isInteger(Number(q.answerIndex)) && Number(q.answerIndex) >= 0 && Number(q.answerIndex) <= 3 && typeof q.explanation === 'string');
+       if (!valid) throw new Error('Periksa format bank soal: harus tepat 5 soal, 4 opsi, answerIndex 0–3, dan pembahasan.');
+       currentAIDraft.draft = {
+         summary:document.getElementById('editDraftSummary').value.trim(),
+         keyPoints:document.getElementById('editDraftKeyPoints').value.split('\\n').map(value=>value.trim()).filter(Boolean),
+         example:document.getElementById('editDraftExample').value.trim(),
+         questions:editedQuestions.map(q=>({...q,answerIndex:Number(q.answerIndex)}))
+       };
+       currentAIDraft.title = document.getElementById('contentTitle').value.trim();
+       currentAIDraft.topic = document.getElementById('contentTopic').value;
+       currentAIDraft.subjectId = document.getElementById('contentSubject').value;
+       if (!currentAIDraft.title) throw new Error('Judul materi wajib diisi.');
+     }
+   } catch (error) {
+     notify(error.message || 'Periksa kembali isi draf sebelum menyimpan.');
+     return;
+   }
    button.disabled = true;
    button.textContent = publish ? 'Menerbitkan…' : 'Menyimpan draf…';
    try {
