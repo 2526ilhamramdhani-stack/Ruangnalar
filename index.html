@@ -597,6 +597,59 @@ aside {
 .draft-edit-panel #editDraftQuestions { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:12px; line-height:1.55; }
 .draft-edit-panel small { color:var(--rn-muted); display:block; margin-top:5px; }
 
+
+/* Handout reader: transform generated slide text into a readable lesson deck */
+.handout-sections { display:grid; gap:18px; margin-top:22px; }
+.handout-sections > h3 { margin:0; font-size:22px; letter-spacing:-.5px; color:var(--rn-navy); }
+.handout-sections > .muted { margin:-12px 0 2px; }
+.handout-sections > section { min-width:0; border:1px solid var(--rn-border); background:var(--rn-light); border-radius:18px; padding:clamp(16px,2.5vw,26px); box-shadow:0 8px 24px rgba(23,43,58,.035); }
+.handout-sections section > h4 { font-size:18px; line-height:1.3; margin:0 0 14px; color:var(--rn-navy); letter-spacing:-.3px; }
+.handout-sections section > h5 { font-size:14px; margin:18px 0 8px; color:var(--rn-navy); }
+.handout-sections p,.handout-sections li { font-size:14px; line-height:1.8; overflow-wrap:anywhere; }
+.handout-sections ul,.handout-sections ol { padding-left:23px; }
+.handout-sections li { padding:2px 0; }
+.handout-sections .exam-item { padding:15px; border:1px solid var(--rn-border); border-radius:13px; background:#fff; margin-top:10px; }
+.handout-sections .exam-item p:last-child { margin-bottom:0; }
+.rn-section-intro { margin-bottom:17px; }
+.rn-section-intro h4 { margin:5px 0 7px !important; font-size:23px !important; }
+.rn-section-intro > p { margin:0; color:var(--rn-muted); max-width:650px; }
+.rn-section-eyebrow,.rn-slide-kicker,.rn-mini-label { font-size:10px; line-height:1.4; letter-spacing:1.2px; font-weight:850; color:#187E7C; }
+.rn-slide-deck { border:1px solid #D5E5E5; border-radius:19px; overflow:hidden; background:#F1F8F7; }
+.rn-slide-progress { height:5px; background:#DDEAE8; }
+.rn-slide-progress > span { display:block; height:100%; background:#31AAA9; transition:width .2s ease; }
+.rn-slide-stage { padding:clamp(14px,3vw,28px); }
+.rn-learning-slide { min-height:300px; padding:clamp(18px,3vw,34px); border:1px solid #DDE8E7; border-radius:17px; background:linear-gradient(145deg,#FFFFFF 0%,#F9FCFB 100%); box-shadow:0 12px 30px rgba(23,43,58,.06); }
+.rn-slide-topline { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:22px; }
+.rn-slide-total { font-size:11px; font-weight:800; color:#647B83; background:#EAF3F2; border-radius:99px; padding:6px 10px; }
+.rn-learning-slide h5 { margin:0 0 17px; font-size:clamp(22px,3vw,32px); line-height:1.22; letter-spacing:-.7px; max-width:780px; color:#172B3A; }
+.rn-slide-goal { border-left:3px solid #31AAA9; padding:3px 0 3px 13px; margin:0 0 20px; }
+.rn-slide-goal p { margin:5px 0 0; color:#415965; font-size:13px; }
+.rn-slide-explanation { white-space:pre-line; font-size:clamp(14px,1.4vw,16px); line-height:1.9; color:#2F4651; max-width:850px; }
+.rn-slide-example,.rn-slide-check,.rn-slide-mistake { margin-top:20px; border-radius:13px; padding:15px 17px; }
+.rn-slide-example { background:#EAF6F3; border:1px solid #CBE8E1; }
+.rn-slide-example p,.rn-slide-check p,.rn-slide-mistake p { white-space:pre-line; margin:7px 0 0; font-size:13px; line-height:1.8; }
+.rn-slide-visual { display:flex; align-items:flex-start; gap:12px; margin-top:17px; padding:14px 16px; border:1px dashed #8BBFBA; border-radius:13px; background:#F5FBFA; color:#2F5960; }
+.rn-slide-visual > span { font-size:20px; color:#187E7C; }
+.rn-slide-visual b,.rn-slide-check b,.rn-slide-mistake b { font-size:12px; }
+.rn-slide-visual p { margin:4px 0 0; font-size:13px; line-height:1.7; }
+.rn-slide-mistake { background:#FFF5E7; border:1px solid #F2D7A7; color:#754B18; }
+.rn-slide-check { background:#EEF0FC; border:1px solid #D9DDF8; color:#373D79; }
+.rn-slide-controls { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px clamp(14px,3vw,28px) 19px; }
+.rn-slide-controls .btn { font-size:12px; }
+.rn-slide-counter { font-size:12px; color:#526A73; font-weight:750; text-align:center; }
+.rn-slide-controls button:disabled { opacity:.42; cursor:not-allowed; transform:none; }
+.handout-sections .material-details { border:1px solid var(--rn-border); border-radius:13px; padding:14px; margin-top:10px; background:#fff; }
+.handout-sections .material-details summary { cursor:pointer; font-weight:800; color:var(--rn-navy); }
+@media(max-width:600px) {
+ .handout-sections > section { padding:14px; border-radius:14px; }
+ .rn-learning-slide { min-height:0; padding:18px; }
+ .rn-slide-controls { display:grid; grid-template-columns:1fr 1fr; }
+ .rn-slide-counter { grid-column:1 / -1; grid-row:1; }
+ .rn-slide-controls [data-slide-prev] { grid-column:1; grid-row:2; }
+ .rn-slide-controls [data-slide-next] { grid-column:2; grid-row:2; }
+}
+@media(prefers-reduced-motion:reduce) { .rn-slide-progress > span { transition:none; } }
+
 </style>
 </head>
 <body>
@@ -1271,7 +1324,10 @@ aside {
    const real = byType.real_world || {};
    if (Array.isArray(real.examples) && real.examples.length) blocks.push('<section><h4>Contoh di kehidupan nyata</h4>'+real.examples.map(example=>'<div class="exam-item"><b>'+esc(example.title)+'</b><p>'+esc(example.context)+'</p><p>'+esc(example.explanation)+'</p><p><b>Inti:</b> '+esc(example.takeaway)+'</p></div>').join('')+'</section>');
    const slideData = byType.slides || {};
-   if (Array.isArray(slideData.slides) && slideData.slides.length) blocks.push('<section><h4>Slide materi mendalam</h4>'+slideData.slides.map((slide,index)=>'<article class="exam-item"><div class="type-pill">SLIDE '+(index+1)+'</div><h5>'+esc(slide.title)+'</h5><p><b>Tujuan:</b> '+esc(slide.learningGoal)+'</p><p>'+esc(slide.explanation)+'</p>'+(slide.workedExample?'<p><b>Contoh langkah:</b> '+esc(slide.workedExample)+'</p>':'')+(slide.visualSuggestion?'<p><b>Visual:</b> '+esc(slide.visualSuggestion)+'</p>':'')+(slide.commonMistake?'<p><b>Kesalahan umum:</b> '+esc(slide.commonMistake)+'</p>':'')+(slide.checkForUnderstanding?'<p><b>Cek pemahaman:</b> '+esc(slide.checkForUnderstanding)+'</p>':'')+'</article>').join('')+'</section>');
+   if (Array.isArray(slideData.slides) && slideData.slides.length) {
+     const slideCards = slideData.slides.map((slide,index)=>'<article class="rn-learning-slide" data-slide-index="'+index+'"'+(index===0?'':' hidden')+'><div class="rn-slide-topline"><span class="rn-slide-kicker">PELAJARAN · SLIDE '+String(index+1).padStart(2,'0')+'</span><span class="rn-slide-total">'+(index+1)+' / '+slideData.slides.length+'</span></div><h5>'+esc(slide.title||('Konsep '+(index+1)))+'</h5>'+(slide.learningGoal?'<div class="rn-slide-goal"><span class="rn-mini-label">TUJUAN</span><p>'+esc(slide.learningGoal)+'</p></div>':'')+'<div class="rn-slide-explanation">'+esc(slide.explanation||'')+'</div>'+(slide.workedExample?'<div class="rn-slide-example"><span class="rn-mini-label">CONTOH LANGKAH DEMI LANGKAH</span><p>'+esc(slide.workedExample)+'</p></div>':'')+(slide.visualSuggestion?'<div class="rn-slide-visual"><span aria-hidden="true">✦</span><div><b>Bayangkan secara visual</b><p>'+esc(slide.visualSuggestion)+'</p></div></div>':'')+(slide.commonMistake?'<div class="rn-slide-mistake"><b>Hindari kesalahan ini</b><p>'+esc(slide.commonMistake)+'</p></div>':'')+(slide.checkForUnderstanding?'<div class="rn-slide-check"><b>Cek pemahaman</b><p>'+esc(slide.checkForUnderstanding)+'</p></div>':'')+'</article>').join('');
+     blocks.push('<section class="rn-slide-section"><div class="rn-section-intro"><span class="rn-section-eyebrow">BELAJAR BERTAHAP</span><h4>Slide pembelajaran</h4><p>Fokus pada satu konsep setiap slide. Gunakan navigasi untuk melanjutkan materi.</p></div><div class="rn-slide-deck" data-slide-deck data-current-slide="0"><div class="rn-slide-progress" aria-hidden="true"><span data-slide-progress style="width:'+(100/slideData.slides.length)+'%"></span></div><div class="rn-slide-stage">'+slideCards+'</div><div class="rn-slide-controls"><button type="button" class="btn btn-ghost" data-slide-prev disabled aria-label="Slide sebelumnya">← Sebelumnya</button><span class="rn-slide-counter" aria-live="polite" data-slide-counter>Slide 1 dari '+slideData.slides.length+'</span><button type="button" class="btn btn-primary" data-slide-next'+(slideData.slides.length<2?' disabled':'')+'>Berikutnya →</button></div></div></section>');
+   }
    const cheat = byType.cheatsheet || {};
    if (cheat.keyConcepts || cheat.formulas || cheat.quickReview) blocks.push('<section><h4>Cheatsheet</h4>'+(Array.isArray(cheat.keyConcepts)?cheat.keyConcepts.map(item=>'<div class="exam-item"><b>'+esc(item.concept)+'</b><p>'+esc(item.rule)+'</p><p><b>Kapan dipakai:</b> '+esc(item.whenToUse)+'</p><p class="muted">'+esc(item.caution)+'</p></div>').join(''):'')+(Array.isArray(cheat.formulas)?cheat.formulas.map(item=>'<p><b>'+esc(item.formula)+'</b> — '+esc(item.meaning)+' <span class="muted">'+esc(item.conditions)+'</span></p>').join(''):'')+list(cheat.quickReview)+'</section>');
    const mnemonics = byType.mnemonic || {};
@@ -1309,6 +1365,26 @@ aside {
      if (count) count.textContent = 'Tidak tersedia';
    }
  }
+ document.addEventListener('click', event => {
+   const control = event.target.closest('[data-slide-prev], [data-slide-next]');
+   if (!control) return;
+   const deck = control.closest('[data-slide-deck]');
+   if (!deck) return;
+   const slides = Array.from(deck.querySelectorAll('[data-slide-index]'));
+   if (!slides.length) return;
+   const current = Number(deck.dataset.currentSlide || 0);
+   const next = Math.max(0, Math.min(slides.length - 1, current + (control.hasAttribute('data-slide-next') ? 1 : -1)));
+   deck.dataset.currentSlide = String(next);
+   slides.forEach((slide,index) => { slide.hidden = index !== next; });
+   const prev = deck.querySelector('[data-slide-prev]');
+   const forward = deck.querySelector('[data-slide-next]');
+   if (prev) prev.disabled = next === 0;
+   if (forward) forward.disabled = next === slides.length - 1;
+   const counter = deck.querySelector('[data-slide-counter]');
+   if (counter) counter.textContent = 'Slide ' + (next + 1) + ' dari ' + slides.length;
+   const progress = deck.querySelector('[data-slide-progress]');
+   if (progress) progress.style.width = ((next + 1) / slides.length * 100) + '%';
+ });
  function escapeHtml(str){return str.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 })();
 </script>
