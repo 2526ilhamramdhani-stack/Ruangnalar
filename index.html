@@ -244,7 +244,8 @@ h1 { font-family: var(--site-font-heading); font-size: clamp(29px,3.2vw,43px); l
  const navItems = [...document.querySelectorAll('.nav-item[data-tab]')];
  let answered = false, selected = null, answeredCount = 0, lastScore = null, examTimer = null, draftCreated = false;
  const toast = document.getElementById('toast');
- function notify(msg) { toast.textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2600); }
+ let toastTimer;
+ function notify(msg) { toast.textContent = msg; toast.classList.remove('hiding'); toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => { toast.classList.add('hiding'); setTimeout(() => { toast.classList.remove('show','hiding'); }, 220); }, 2800); }
  function go(tab) { panels.forEach(p => p.classList.toggle('hidden', p.id !== 'tab-' + tab)); navItems.forEach(n => n.classList.toggle('active', n.dataset.tab === tab)); document.getElementById('sidebar').classList.remove('open'); window.scrollTo({top:0,behavior:'smooth'}); }
  navItems.forEach(n => n.addEventListener('click', () => go(n.dataset.tab)));
  document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => go(b.dataset.go)));
