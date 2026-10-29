@@ -1133,6 +1133,8 @@ aside {
    const button = event.target.closest('[data-publish-content]');
    if (!button) return;
    const id = button.dataset.publishContent;
+   const authorName = window.prompt('Nama admin yang menerbitkan materi ini:');
+   if (!authorName || !authorName.trim()) { notify('Penerbitan dibatalkan. Nama admin wajib diisi.'); return; }
    button.disabled = true;
    button.textContent = 'Menerbitkan…';
    try {
@@ -1143,7 +1145,7 @@ aside {
      const item = (result.contents || []).find(content => content.id === id);
      if (!item) throw new Error('Draf tidak ditemukan. Muat ulang daftar konten.');
      const publishResponse = await fetch('/api/content', {method:'PATCH',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({
-       contentId:item.id,title:item.title,topic:item.topic,subjectId:item.subject_id,status:'published',
+       contentId:item.id,title:item.title,topic:item.topic,subjectId:item.subject_id,authorName:authorName.trim(),status:'published',
        draft:{summary:item.summary,keyPoints:item.key_points,example:item.example,questions:item.questions}
      })});
      const published = await publishResponse.json();
