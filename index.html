@@ -987,6 +987,7 @@ aside {
      if (!response.ok) throw new Error(result.error || (publish ? 'Gagal menerbitkan materi.' : 'Gagal menyimpan draf.'));
      if (result.content && result.content.id) currentAIDraft.contentId = result.content.id;
      currentAIDraft.status = publish ? 'published' : 'draft';
+     await loadAdminContents();
      if (publish) {
        button.textContent = '✓ Materi diterbitkan';
        document.getElementById('pdfUploadStatus').textContent = 'Backend mengonfirmasi materi berhasil diterbitkan.';
