@@ -44,7 +44,7 @@ module.exports = async function handler(req, res) {
     if (subjectId && !validSubjects.includes(subjectId)) return send(res, 400, { error: 'Mata pelajaran tidak valid.' });
     try {
       const params = new URLSearchParams({
-        select: 'id,subject_id,status,title,topic,summary,key_points,example,questions,created_at,published',
+        select: 'id,subject_id,status,title,topic,summary,key_points,example,questions,author_name,created_at,published',
         order: 'created_at.desc',
         limit: '100'
       });
@@ -72,17 +72,18 @@ module.exports = async function handler(req, res) {
   if (typeof body === 'string') { try { body = JSON.parse(body); } catch { body = {}; } }
   const title = typeof body?.title === 'string' ? body.title.trim().slice(0, 160) : '';
   const topic = typeof body?.topic === 'string' ? body.topic.trim().slice(0, 100) : '';
+  const authorName = typeof body?.authorName === 'string' ? body.authorName.trim().slice(0, 100) : '';
   const subjectId = typeof body?.subjectId === 'string' ? body.subjectId : 'matematika-wajib';
   const status = body?.status === 'published' ? 'published' : 'draft';
   const id = typeof body?.contentId === 'string' ? body.contentId : '';
   const draft = body?.draft;
   const validSubjects = ['matematika-wajib','matematika-lanjut','kimia','fisika','fiqih'];
   if (!validSubjects.includes(subjectId)) return send(res, 400, { error: 'Pilih mata pelajaran yang valid.' });
-  if (!title || !topic || !draft || typeof draft.summary !== 'string' || !Array.isArray(draft.questions)) {
+  if (!title || !topic || !authorName || !draft || typeof draft.summary !== 'string' || !Array.isArray(draft.questions)) {
     return send(res, 400, { error: 'Data materi tidak lengkap. Buat atau periksa draf AI terlebih dahulu.' });
   }
   const row = {
-    title, topic, subject_id: subjectId, status,
+    title, topic, subject_id: subjectId, status, author_name: authorName,
     summary: draft.summary.slice(0, 12000),
     key_points: Array.isArray(draft.keyPoints) ? draft.keyPoints.slice(0, 30).map(v => String(v).slice(0, 1000)) : [],
     example: typeof draft.example === 'string' ? draft.example.slice(0, 12000) : '',
