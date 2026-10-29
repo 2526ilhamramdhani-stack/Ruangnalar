@@ -134,7 +134,6 @@ module.exports = async function handler(req, res) {
             grouped.get(section.content_id).push(section);
           }
           for (const item of contents) item.handoutSections = grouped.get(item.id) || [];
-          if (!sectionsResult.response.ok) contents.handoutWarning = 'Bagian Handout terstruktur belum tersedia. Admin perlu memeriksa migration Supabase.';
         }
       }
       return send(res, 200, { contents });
