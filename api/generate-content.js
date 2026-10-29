@@ -38,8 +38,8 @@ module.exports = async function handler(req, res) {
   }
   if (!isAuthenticated(req)) return send(res, 401, { error: 'Sesi Admin tidak valid. Silakan masuk kembali.' });
 
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) return send(res, 503, { error: 'AI belum dikonfigurasi. Tambahkan OPENAI_API_KEY di Vercel.' });
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) return send(res, 503, { error: 'AI belum dikonfigurasi. Tambahkan GEMINI_API_KEY di Vercel.' });
 
   let body = req.body;
   if (typeof body === 'string') {
@@ -51,31 +51,63 @@ module.exports = async function handler(req, res) {
   if (!title || !sourceText) return send(res, 400, { error: 'Judul dan teks materi wajib diisi.' });
   if (sourceText.length > 50000) return send(res, 413, { error: 'Teks materi terlalu panjang. Batas saat ini 50.000 karakter.' });
 
+  const model = (process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite').trim();
+  if (!/^gemini-[a-zA-Z0-9.-]+$/.test(model)) {
+    return send(res, 503, { error: 'Nilai GEMINI_MODEL tidak valid. Gunakan nama model Gemini yang tersedia.' });
+  }
+
+  const prompt = 'Buat draf pembelajaran matematika SMA berbahasa Indonesia berdasarkan data di bawah. Ini draf untuk ditinjau admin, bukan untuk langsung dipublikasikan. Gunakan hanya fakta yang didukung sumber. Jika sumber tidak cukup, nyatakan keterbatasannya. Jangan mengarang kutipan atau rumus. Periksa kebenaran matematika untuk setiap soal, kunci, dan pembahasan. Keluaran wajib berupa json valid dengan kunci summary (string), keyPoints (array string), example (string), questions (array tepat 5 objek; setiap objek berisi question (string), options (array tepat 4 string), answerIndex (integer 0-3), explanation (string)).\nJudul: ' + title + '\nTopik: ' + topic + '\n\nSUMBER MATERI:\n' + sourceText;
+
   try {
-    const upstream = await fetch('https://api.openai.com/v1/responses', {
+    const upstream = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent', {
       method: 'POST',
-      headers: { Authorization: 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
+      headers: { 'x-goog-api-key': apiKey, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: process.env.OPENAI_MODEL || 'gpt-4.1-mini',
-        instructions: 'Kamu adalah asisten penyusun materi matematika SMA berbahasa Indonesia. Gunakan hanya fakta yang didukung sumber. Jika sumber tidak cukup, nyatakan keterbatasannya. Jangan mengarang kutipan atau rumus. Kembalikan jawaban sebagai json valid dengan kunci summary (string), keyPoints (array string), example (string), questions (array 5 objek dengan keys question, options (array tepat 4 string), answerIndex (integer 0-3), explanation (string)). Buat soal beragam dan periksa jawaban serta pembahasannya secara matematis.',
-        text: { format: { type: 'json_object' } },
-        input: 'Susun draf pembelajaran berdasarkan data berikut. Ini draf untuk ditinjau admin, bukan untuk langsung dipublikasikan. Format keluaran wajib json valid.\nJudul: ' + title + '\nTopik: ' + topic + '\n\nSUMBER MATERI:\n' + sourceText
+        systemInstruction: {
+          parts: [{ text: 'Kamu adalah asisten penyusun materi matematika SMA yang teliti. Jawab dalam bahasa Indonesia. Ikuti format json yang diminta pengguna dan jangan menambahkan teks di luar objek json.' }]
+        },
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseMimeType: 'application/json',
+          temperature: 0.3,
+          maxOutputTokens: 8192
+        }
       })
     });
+
     const data = await upstream.json();
     if (!upstream.ok) {
       const message = data?.error?.message || 'Penyedia AI mengembalikan kesalahan.';
-      return send(res, upstream.status === 429 ? 429 : 502, { error: message.slice(0, 500) });
+      if (upstream.status === 429) {
+        return send(res, 429, { error: 'Kuota gratis Gemini sedang habis atau batas permintaan tercapai. Tunggu sebentar lalu coba lagi. Detail: ' + message.slice(0, 250) });
+      }
+      if (upstream.status === 400 || upstream.status === 403) {
+        return send(res, 502, { error: 'Gemini menolak permintaan. Periksa GEMINI_API_KEY, akses model, dan pengaturan API di Google AI Studio. Detail: ' + message.slice(0, 250) });
+      }
+      return send(res, 502, { error: ('Layanan Gemini gagal: ' + message).slice(0, 500) });
     }
-    const outputText = (data.output || []).flatMap(item => item.content || []).filter(item => item.type === 'output_text').map(item => item.text).join('\n').trim();
-    if (!outputText) return send(res, 502, { error: 'AI tidak mengembalikan teks yang dapat digunakan.' });
+
+    const candidate = data?.candidates?.[0];
+    const outputText = (candidate?.content?.parts || []).map(part => part.text || '').join('\n').trim();
+    if (!outputText) {
+      const reason = candidate?.finishReason ? ' Alasan: ' + candidate.finishReason + '.' : '';
+      return send(res, 502, { error: 'Gemini tidak mengembalikan teks yang dapat digunakan.' + reason });
+    }
+
     let draft;
-    try { draft = JSON.parse(outputText); } catch { return send(res, 502, { error: 'Respons AI belum berbentuk JSON valid. Silakan coba lagi.' }); }
+    try { draft = JSON.parse(outputText); } catch { return send(res, 502, { error: 'Respons Gemini belum berbentuk json valid. Silakan coba lagi.' }); }
     if (typeof draft.summary !== 'string' || !Array.isArray(draft.keyPoints) || !Array.isArray(draft.questions)) {
       return send(res, 502, { error: 'Struktur draf AI tidak sesuai format yang diharapkan.' });
     }
+    if (draft.questions.length !== 5 || draft.questions.some(q =>
+      !q || typeof q.question !== 'string' || !Array.isArray(q.options) || q.options.length !== 4 ||
+      !Number.isInteger(q.answerIndex) || q.answerIndex < 0 || q.answerIndex > 3 || typeof q.explanation !== 'string'
+    )) {
+      return send(res, 502, { error: 'Format soal dari AI tidak lengkap. Silakan buat draf ulang dan periksa hasilnya.' });
+    }
+    if (typeof draft.example !== 'string') draft.example = '';
     return send(res, 200, { draft });
-  } catch (error) {
-    return send(res, 502, { error: 'Tidak dapat menghubungi layanan AI saat ini.' });
+  } catch {
+    return send(res, 502, { error: 'Tidak dapat menghubungi layanan Gemini saat ini.' });
   }
 };
