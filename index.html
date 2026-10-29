@@ -425,9 +425,31 @@ h1 { font-family: var(--site-font-heading); font-size: clamp(29px,3.2vw,43px); l
  document.getElementById('prevQuestion').addEventListener('click',()=>{if(questionIndex>0){questionIndex--;persistPracticeProgress();renderQuestion();}});
  document.getElementById('nextQuestion').addEventListener('click',()=>{questionIndex=questionIndex===questionBank.length-1?0:questionIndex+1;persistPracticeProgress();renderQuestion();});
  renderQuestion();
- document.getElementById('saveProgress').addEventListener('click', () => {
-   if (persistPracticeProgress()) notify('Progres latihan berhasil disimpan di perangkat ini.');
-   else notify('Penyimpanan tidak tersedia di browser ini.');
+ const saveLessonButton = document.getElementById('saveProgress');
+ const savedLessonKey = 'ruangnalar_saved_lessons_v1';
+ function isLessonSaved() {
+   try { return (JSON.parse(localStorage.getItem(savedLessonKey) || '[]')).some(item => item.id === 'fungsi-komposisi'); }
+   catch { return false; }
+ }
+ function renderSaveLessonButton() {
+   const saved = isLessonSaved();
+   saveLessonButton.textContent = saved ? '★ Materi tersimpan' : '☆ Simpan materi';
+   saveLessonButton.setAttribute('aria-pressed', String(saved));
+ }
+ renderSaveLessonButton();
+ saveLessonButton.addEventListener('click', () => {
+   try {
+     const saved = JSON.parse(localStorage.getItem(savedLessonKey) || '[]').filter(item => item.id !== 'fungsi-komposisi');
+     if (!isLessonSaved()) {
+       saved.push({id:'fungsi-komposisi', title:'Fungsi Komposisi', savedAt:new Date().toISOString()});
+       localStorage.setItem(savedLessonKey, JSON.stringify(saved));
+       notify('Materi Fungsi Komposisi disimpan di perangkat ini.');
+     } else {
+       localStorage.setItem(savedLessonKey, JSON.stringify(saved));
+       notify('Materi dihapus dari daftar tersimpan.');
+     }
+     renderSaveLessonButton();
+   } catch { notify('Penyimpanan tidak tersedia di browser ini.'); }
  });
  const examQuestions = [
   {topic:'Komposisi Fungsi',q:'Jika f(x)=2x+1 dan g(x)=x²−3, maka (g ∘ f)(x) adalah …',options:['4x²+4x−2','4x²+4x−3','2x²+1','4x²−3'],answer:0,why:'g(f(x))=(2x+1)²−3=4x²+4x−2.'},
