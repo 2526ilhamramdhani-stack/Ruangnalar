@@ -158,8 +158,39 @@ ${sourceText}`;
     try { draft = JSON.parse(outputText); } catch {
       return send(res, 502, { error: 'Respons AI belum berupa JSON valid. Draf belum disimpan. Coba lagi atau kurangi panjang sumber.' });
     }
-    if (!isObject(draft) || typeof draft.summary !== 'string' || !Array.isArray(draft.keyPoints) || typeof draft.example !== 'string') {
-      return send(res, 502, { error: 'Struktur ringkasan kompatibilitas tidak sesuai format.' });
+    // Backward compatibility: some model responses prioritize the structured handout
+    // and omit legacy top-level fields still used by the editor and older clients.
+    // Derive those fields from the validated handout instead of rejecting a useful draft.
+    if (isObject(draft) && !isObject(draft.sections) && isObject(draft.draft)) draft = draft.draft;
+    if (!isObject(draft)) {
+      return send(res, 502, { error: 'Respons AI tidak berbentuk objek materi. Draf belum disimpan; coba ulangi.' });
+    }
+    const handoutSections = isObject(draft.sections) ? draft.sections : {};
+    const overview = isObject(handoutSections.overview) ? handoutSections.overview : {};
+    const realWorld = isObject(handoutSections.real_world) ? handoutSections.real_world : {};
+    const realExamples = Array.isArray(realWorld.examples) ? realWorld.examples : [];
+    const slides = isObject(handoutSections.slides) && Array.isArray(handoutSections.slides.slides)
+      ? handoutSections.slides.slides : [];
+    const cheatSheet = isObject(handoutSections.cheatsheet) ? handoutSections.cheatsheet : {};
+    const keyConcepts = Array.isArray(cheatSheet.keyConcepts) ? cheatSheet.keyConcepts : [];
+    if (typeof draft.summary !== 'string' || !draft.summary.trim()) {
+      draft.summary = typeof overview.summary === 'string' ? overview.summary : '';
+    }
+    if (!Array.isArray(draft.keyPoints) || !draft.keyPoints.length) {
+      draft.keyPoints = [
+        ...(Array.isArray(overview.learningObjectives) ? overview.learningObjectives : []),
+        ...(Array.isArray(overview.topicMap) ? overview.topicMap : []),
+        ...keyConcepts.map(item => typeof item === 'string' ? item : item?.concept).filter(Boolean)
+      ].filter(value => typeof value === 'string' && value.trim()).slice(0, 12);
+    }
+    if (typeof draft.example !== 'string' || !draft.example.trim()) {
+      const firstExample = realExamples[0];
+      draft.example = firstExample
+        ? [firstExample.title, firstExample.context, firstExample.explanation, firstExample.takeaway].filter(value => typeof value === 'string' && value.trim()).join(' — ')
+        : (slides.find(slide => typeof slide.workedExample === 'string' && slide.workedExample.trim()) || {}).workedExample || '';
+    }
+    if (typeof draft.summary !== 'string' || !draft.summary.trim() || !Array.isArray(draft.keyPoints) || !draft.keyPoints.length || typeof draft.example !== 'string' || !draft.example.trim()) {
+      return send(res, 502, { error: 'AI belum menghasilkan ringkasan, poin penting, dan contoh yang cukup. Draf belum disimpan; coba lagi atau periksa isi PDF.' });
     }
     const validationError = validateHandout(draft);
     if (validationError) return send(res, 502, { error: 'Draf belum memenuhi standar Handout Pintar: ' + validationError + ' Draf belum disimpan; coba ulangi atau tinjau sumber.' });
