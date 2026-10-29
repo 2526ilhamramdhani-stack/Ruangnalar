@@ -91,6 +91,10 @@ h1 { font-family: var(--site-font-heading); font-size: clamp(29px,3.2vw,43px); l
 .stat-num { font-size:20px;font-weight:850;letter-spacing:-.7px;line-height:1.1; }
 .stat-label { font-size:10px;color:var(--muted);margin-top:5px; }
 .course-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px; }
+#dashboardSubjectGrid .course-card { display:flex; flex-direction:column; }
+#dashboardSubjectGrid .course-body { display:flex; flex:1; flex-direction:column; }
+#dashboardSubjectGrid .course-body .btn { margin-top:12px; width:100%; }
+#dashboardSubjectGrid .course-empty { padding:18px; border:1px dashed var(--line); border-radius:14px; }
 .course-card { overflow:hidden; transition:transform .18s ease,box-shadow .18s ease; }
 .course-card:hover { transform:translateY(-3px);box-shadow:var(--shadow); }
 .course-top { min-height:106px;display:flex;align-items:center;justify-content:space-between;padding:17px; }
@@ -614,14 +618,11 @@ aside {
   <header class="topbar"><div style="display:flex;align-items:center;gap:10px;min-width:0"><button class="mobile-menu" id="menuButton" aria-label="Buka menu">☰</button><label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="searchInput" placeholder="Cari materi, bab, atau topik..." aria-label="Cari materi" /></label></div><div class="profile"><div class="avatar">SN</div><div><div class="profile-name">Siswa Nalar</div><div class="profile-role">RuangNalar</div></div></div></header>
   <div class="content">
     <section id="tab-home" class="tab-panel">
-      <div class="hero"><div><div class="eyebrow"><span class="dot"></span> Ruang belajar personalmu</div><h1>Naik level,<br/>satu konsep tiap hari.</h1><p>Belajar Matematika dengan langkah yang lebih jelas. Pahami konsepnya, latih strateginya, dan ukur perkembanganmu.</p><button class="btn btn-dark" data-go="materi">Lanjutkan belajar <span>↗</span></button></div><div class="hero-graphic"><div class="orbit"><div class="math-tile">ƒ(x)</div><div class="float-chip one">x → y</div><div class="float-chip two">∑ + √</div></div></div></div>
-      <div class="stats"><div class="stat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5m0 14h17M7 15l4-5 3 3 5-7"/></svg></div><div><div class="stat-num">3 <span style="font-size:10px;color:var(--good)">topik</span></div><div class="stat-label">Siap kamu pelajari</div></div></div><div class="stat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></svg></div><div><div class="stat-num" id="answeredCount">0</div><div class="stat-label">Soal dijawab di sesi ini</div></div></div><div class="stat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg></div><div><div class="stat-num" id="scoreCount">—</div><div class="stat-label">Nilai latihan terakhir</div></div></div></div>
-      <div class="section-heading"><div><h2>Jalur belajarmu</h2><p>Pilih topik dan mulai dari fondasi yang kuat.</p></div><button class="text-link" data-go="materi">Lihat semua →</button></div>
-      <div class="course-grid">
-       <article class="course-card"><div class="course-top blue"><span class="pill">BAB 01 · DASAR</span><span class="course-emoji">𝑓(x)</span></div><div class="course-body"><h3>Konsep Fungsi</h3><p>Domain, kodomain, range, dan cara membaca pemetaan.</p><div class="progress-row"><span>Progress contoh</span><b>0%</b></div><div class="progress"><span style="width:0%"></span></div></div></article>
-       <article class="course-card"><div class="course-top purple"><span class="pill">BAB 02 · INTI</span><span class="course-emoji">∘</span></div><div class="course-body"><h3>Komposisi Fungsi</h3><p>Menggabungkan fungsi lewat pasangan terurut dan aljabar.</p><div class="progress-row"><span>Materi tersedia</span><b>3 bagian</b></div><div class="progress"><span style="width:35%"></span></div></div></article>
-       <article class="course-card"><div class="course-top green"><span class="pill">BAB 03 · LANJUTAN</span><span class="course-emoji">↔</span></div><div class="course-body"><h3>Fungsi Invers</h3><p>Menemukan fungsi kebalikan dan menguji identitas komposisi.</p><div class="progress-row"><span>Materi tersedia</span><b>2 bagian</b></div><div class="progress"><span style="width:20%"></span></div></div></article>
-      </div>
+      <div class="hero"><div><div class="eyebrow"><span class="dot"></span> Ruang belajar personalmu</div><h1>Naik level,<br/>satu konsep tiap hari.</h1><p>Jelajahi berbagai mata pelajaran, pahami konsep lewat materi, lalu ukur pemahamanmu melalui latihan dan simulasi.</p><button class="btn btn-dark" data-go="materi">Lanjutkan belajar <span>↗</span></button></div><div class="hero-graphic"><div class="orbit"><div class="math-tile">ƒ(x)</div><div class="float-chip one">x → y</div><div class="float-chip two">∑ + √</div></div></div></div>
+      <div class="stats"><div class="stat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5z"/><path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20"/></svg></div><div><div class="stat-num" id="dashboardMaterialCount">—</div><div class="stat-label">Materi terbit tersedia</div></div></div><div class="stat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></svg></div><div><div class="stat-num" id="answeredCount">0</div><div class="stat-label">Soal latihan terjawab</div></div></div><div class="stat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg></div><div><div class="stat-num" id="scoreCount">—</div><div class="stat-label">Akurasi latihan saat ini</div></div></div></div>
+      <div class="section-heading"><div><h2>Jelajahi mata pelajaran</h2><p>Jumlah materi diambil langsung dari perpustakaan yang diterbitkan admin.</p></div><button class="text-link" data-go="materi">Lihat semua →</button></div>
+      <div id="dashboardSubjectGrid" class="course-grid" aria-live="polite"><div class="panel"><p class="muted">Memuat ringkasan mata pelajaran…</p></div></div>
+      <p class="muted" style="margin-top:14px">Catatan: progres latihan dan materi tersimpan saat ini disimpan di perangkat ini. Sinkronisasi progres lintas perangkat akan ditambahkan setelah akun siswa tersedia.</p>
     </section>
     <section id="tab-materi" class="tab-panel hidden">
       <div class="subject-hub panel">
@@ -891,6 +892,7 @@ aside {
    const correctCount = Object.values(questionAnswers).filter(a=>a.correct).length;
    lastScore = completed ? Math.round(correctCount / completed * 100) : null;
    document.getElementById('scoreCount').textContent = lastScore === null ? '—' : lastScore + '%';
+   renderDashboardProgress();
  }
  document.getElementById('checkAnswer').addEventListener('click',()=>{
    if (answered) return;
@@ -914,6 +916,18 @@ aside {
  renderQuestion();
  const saveLessonButton = document.getElementById('saveProgress');
  const savedLessonKey = 'ruangnalar_saved_lessons_v1';
+ function getSavedLessonCount() {
+   try { const value=JSON.parse(localStorage.getItem(savedLessonKey)||'[]'); return Array.isArray(value)?value.length:0; }
+   catch { return 0; }
+ }
+ function renderDashboardProgress() {
+   const answeredNode=document.getElementById('answeredCount');
+   const scoreNode=document.getElementById('scoreCount');
+   if(answeredNode) answeredNode.textContent=String(Object.keys(questionAnswers).length);
+   const total=Object.keys(questionAnswers).length;
+   const correct=Object.values(questionAnswers).filter(item=>item&&item.correct).length;
+   if(scoreNode) scoreNode.textContent=total?Math.round(correct/total*100)+'%':'—';
+ }
  function isLessonSaved() {
    try { return (JSON.parse(localStorage.getItem(savedLessonKey) || '[]')).some(item => item.id === 'fungsi-komposisi'); }
    catch { return false; }
@@ -924,6 +938,7 @@ aside {
    saveLessonButton.setAttribute('aria-pressed', String(saved));
  }
  renderSaveLessonButton();
+ renderDashboardProgress();
  saveLessonButton.addEventListener('click', () => {
    try {
      const saved = JSON.parse(localStorage.getItem(savedLessonKey) || '[]').filter(item => item.id !== 'fungsi-komposisi');
@@ -1132,6 +1147,38 @@ aside {
  }
  subjectSelect.addEventListener('change', updateTopicOptions);
  updateTopicOptions();
+ async function loadDashboardSubjects() {
+   const grid=document.getElementById('dashboardSubjectGrid');
+   const totalNode=document.getElementById('dashboardMaterialCount');
+   if(!grid)return;
+   const subjects=Object.entries(subjectLabels);
+   const colors=['blue','green','orange','purple','blue'];
+   const icons={'matematika-wajib':'ƒ(x)','matematika-lanjut':'∑','kimia':'⚗','fisika':'⚡','fiqih':'✦'};
+   grid.innerHTML='<div class="panel"><p class="muted">Mengambil jumlah materi dari database…</p></div>';
+   const results=await Promise.all(subjects.map(async ([id,name])=>{
+     try {
+       const response=await fetch('/api/content?subjectId='+encodeURIComponent(id),{cache:'no-store'});
+       const data=await response.json();
+       if(!response.ok) throw new Error(data.error||'Gagal memuat');
+       return {id,name,items:Array.isArray(data.contents)?data.contents:[],error:false};
+     } catch { return {id,name,items:[],error:true}; }
+   }));
+   const successful=results.filter(item=>!item.error);
+   if(totalNode) totalNode.textContent=successful.length===subjects.length?String(results.reduce((sum,item)=>sum+item.items.length,0)):'—';
+   grid.innerHTML=results.map((item,index)=>{
+     const count=item.error?'Belum dapat dimuat':item.items.length+' materi tersedia';
+     const description=item.error?'Periksa koneksi atau konfigurasi database.':item.items.length?'Pilih materi yang ingin kamu pelajari.':'Materi akan tampil setelah admin menerbitkannya.';
+     return '<article class="course-card"><div class="course-top '+colors[index%colors.length]+'"><span class="pill">'+(item.error?'STATUS MATERI':'PERPUSTAKAAN BELAJAR')+'</span><span class="course-emoji" aria-hidden="true">'+icons[item.id]+'</span></div><div class="course-body"><h3>'+escapeHtml(item.name)+'</h3><p>'+escapeHtml(description)+'</p><div class="progress-row"><span>'+escapeHtml(item.name)+'</span><b>'+escapeHtml(count)+'</b></div><button class="btn btn-ghost" type="button" data-dashboard-subject="'+escapeHtml(item.id)+'">Jelajahi materi →</button></div></article>';
+   }).join('');
+ }
+ document.getElementById('dashboardSubjectGrid').addEventListener('click',event=>{
+   const button=event.target.closest('[data-dashboard-subject]');
+   if(!button)return;
+   const target=document.querySelector('#subjectGrid [data-subject="'+button.dataset.dashboardSubject+'"]');
+   if(target)target.click();
+   go('materi');
+ });
+ loadDashboardSubjects();
  // Load published materials only after subjectLabels and selectedSubjectId are initialized.
  loadPublishedContents(selectedSubjectId);
  document.getElementById('subjectGrid').addEventListener('click', event => {
