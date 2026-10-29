@@ -58,3 +58,17 @@ Langkah setup:
 Endpoint publik hanya mengembalikan materi yang berstatus terbit. Penulisan dibatasi ke sesi Admin yang valid; service-role key tidak dikirim ke browser. Data yang sudah diterbitkan dapat dibaca pengunjung website. Jangan menerbitkan dokumen yang berisi data pribadi/rahasia.
 
 PDF diekstrak di browser menggunakan PDF.js. Jika PDF berupa hasil scan atau foto, teks tidak bisa diambil tanpa OCR; gunakan PDF yang teksnya dapat diseleksi atau tempelkan teks materi secara manual. UI kini menampilkan kesalahan ekstraksi yang lebih spesifik dan mencoba CDN alternatif jika pustaka utama gagal dimuat.
+
+
+## Pengelompokan mata pelajaran dan status draf
+
+Migration tambahan `supabase/migrations/20261029010000_subjects_and_drafts.sql` menambahkan `subject_id` dan `status` secara kompatibel ke tabel `learning_contents`. Jalankan file SQL tersebut di Supabase SQL Editor **sebelum** menggunakan versi aplikasi yang memakai filter mata pelajaran dan penyimpanan draf.
+
+Slug mata pelajaran yang digunakan:
+- `matematika-wajib`
+- `matematika-lanjut`
+- `kimia`
+- `fisika`
+- `fiqih`
+
+Materi publik hanya diambil jika `published = true` dan `status = 'published'`. Draf admin disimpan dengan status `draft` dan tidak akan tampil pada daftar materi siswa. API tetap mensyaratkan sesi Admin untuk menyimpan atau memperbarui konten.
