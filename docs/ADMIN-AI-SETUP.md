@@ -92,3 +92,32 @@ Migration ini juga menambahkan metadata sumber dan peninjauan admin ke `learning
 - Google Drive belum terhubung melalui OAuth. Tabel arsip hanya menyimpan metadata/referensi file, bukan token OAuth.
 - API konten lama masih menggunakan sesi cookie Admin untuk menulis dan endpoint materi publik masih dapat dibaca tanpa login. Perubahan ke akses siswa wajib login harus dilakukan bersama alur autentikasi siswa dan pengujian agar tidak mengunci admin atau merusak materi yang sudah diterbitkan.
 - Untuk kebijakan privasi, jangan menyimpan token Google Drive, service-role key, atau rahasia lain pada kolom metadata maupun frontend.
+
+
+## Kontrak permanen Handout Pintar untuk setiap unggahan
+
+Setiap kali Admin menjalankan **Buat draf AI** dari file/teks sumber, backend api/generate-content.js memakai kontrak generasi yang sama. Ketentuan ini bukan instruksi opsional untuk Admin.
+
+Bagian wajib yang dihasilkan:
+1. Overview, tujuan belajar, prasyarat, dan peta topik.
+2. Mind map dengan cabang konsep dan alternatif teks.
+3. Contoh penerapan nyata.
+4. Minimal lima slide materi yang menjelaskan tujuan, uraian, contoh, saran visual, miskonsepsi, dan cek pemahaman.
+5. Cheatsheet konsep/rumus sesuai mata pelajaran dan kondisi penggunaannya.
+6. Mnemonik atau strategi mengingat yang relevan.
+7. Penutup motivasional; kutipan atau ungkapan tidak boleh diberi atribusi palsu.
+8. Macam-macam tipe soal dan strategi penyelesaian.
+9. Ide serta variasi konsep soal.
+10. Sumber utama, referensi pendukung yang benar-benar tersedia, dan catatan keterbatasan.
+11. Dua modul latihan awal, masing-masing tepat 10 soal (20 soal total). Setiap soal memakai opsi A–E, kunci, pembahasan, konsep, tingkat kesulitan, dan catatan sumber.
+
+Backend memvalidasi struktur utama, minimal tiga slide, dua modul, jumlah soal, dan lima opsi sebelum mengembalikan draf. Draf yang gagal validasi tidak boleh disimpan atau diterbitkan lewat alur normal. Validasi bentuk bukan jaminan bahwa seluruh fakta atau jawaban benar; Admin tetap harus memeriksa rumus, referensi, kunci, pembahasan, dan kesesuaian materi sebelum publikasi.
+
+Struktur bagian disimpan di tabel handout_sections sebagai data terstruktur. API konten mengupayakan penyimpanan bagian terlebih dahulu sebagai draf, dan baru mengubah status menjadi published setelah penyimpanan bagian berhasil. Pastikan migration 20261029030000_student_progress_handouts_archive.sql sudah diterapkan di Supabase sebelum menggunakan penyimpanan Handout terstruktur.
+
+### Batasan yang perlu diketahui
+
+- Antarmuka unggah saat ini menerima PDF. DOCX dan PPTX belum boleh dianggap didukung sampai ekstraksi dan validasinya benar-benar diimplementasikan.
+- PDF berbasis teks dapat diekstrak; PDF hasil scan membutuhkan OCR yang belum tersedia.
+- Referensi internet hanya boleh diisi jika pencarian/sumbernya benar-benar tersedia. Generator tidak boleh mengarang URL atau menyatakan sudah browsing tanpa bukti.
+- Penyimpanan bagian Handout membutuhkan Supabase dan migration yang sesuai. File migration di repository tidak otomatis diterapkan ke database.
