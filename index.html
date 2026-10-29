@@ -486,6 +486,7 @@ button:disabled { cursor: not-allowed; opacity: .58; transform: none !important;
 .material-card { position:relative; min-width:0; overflow:hidden; display:flex; flex-direction:column; background:#FFFFFF; border:1px solid #D4DEE2; border-radius:17px; box-shadow:0 5px 16px rgba(23,43,58,.04); transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease,background-color .22s ease; }
 .material-card-accent { height:5px; background:linear-gradient(90deg,#31AAA9 0%,#F8E0A4 100%); }
 /* Kartu memakai warna penuh, bukan sekadar aksen; teks dan kontrol tetap kontras. */
+.material-card[hidden], .material-topic-group[hidden], [data-search-empty][hidden] { display:none !important; }
 .material-card-grid > .material-card:nth-child(6n+1) { background:#DDF3EC; border-color:#B6E2D5; }
 .material-card-grid > .material-card:nth-child(6n+1) .material-card-accent { background:#279B8C; }
 .material-card-grid > .material-card:nth-child(6n+1) .material-details summary { background:#C3E9DD; color:#124E47; }
@@ -1035,7 +1036,23 @@ aside {
     notify('Kamu telah keluar dari Admin.');
   });
   refreshAdminSession();
- document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter'){const q=e.target.value.toLowerCase();if(!q.trim())return; if(q.includes('invers')||q.includes('hots')||q.includes('ide')) go('ide'); else if(q.includes('soal')||q.includes('latihan')||q.includes('komposisi')) go('latihan'); else go('materi');notify('Menampilkan bagian yang paling sesuai dengan pencarian.');}});
+ const searchInput=document.getElementById('searchInput');
+  function applyMaterialSearch(){
+    const query=(searchInput?.value||'').trim().toLocaleLowerCase('id');
+    const list=document.getElementById('publishedContentList');
+    if(!list)return;
+    const cards=[...list.querySelectorAll('.material-card')];
+    let visible=0;
+    cards.forEach(card=>{const matches=!query||card.textContent.toLocaleLowerCase('id').includes(query);card.hidden=!matches;if(matches)visible++;});
+    list.querySelectorAll('.material-topic-group').forEach(group=>{group.hidden=!group.querySelector('.material-card:not([hidden])');});
+    let empty=list.querySelector('[data-search-empty]');
+    if(query&&cards.length&&visible===0){
+      if(!empty){empty=document.createElement('div');empty.dataset.searchEmpty='true';empty.className='empty-subject';empty.innerHTML='<strong>Tidak ada materi yang cocok.</strong><p class="muted">Coba kata kunci lain atau pilih mata pelajaran berbeda.</p>';list.appendChild(empty);}
+      empty.hidden=false;
+    }else if(empty){empty.hidden=true;}
+  }
+  searchInput.addEventListener('input',()=>{if(!searchInput.value.trim()||!document.getElementById('tab-materi').classList.contains('hidden'))applyMaterialSearch();});
+  searchInput.addEventListener('keydown',e=>{if(e.key!=='Enter')return;const q=searchInput.value.trim();if(!q)return;go('materi');applyMaterialSearch();notify('Hasil pencarian materi untuk mata pelajaran yang sedang dipilih.');});
  document.getElementById('adminPreview').addEventListener('click', async event => {
    const saveButton = event.target.closest('#saveAIDraft');
    const publishButton = event.target.closest('#publishAIDraft');
@@ -1198,6 +1215,7 @@ aside {
      if (!items.length) { list.innerHTML = '<div class="empty-subject"><strong>Belum ada materi untuk '+escapeHtml(subjectLabels[subjectId] || 'mata pelajaran ini')+'.</strong><p class="muted">Materi akan tampil di sini setelah admin menerbitkannya dengan mata pelajaran yang sesuai.</p></div>'; return; }
      const grouped = items.reduce((groups, item) => { const topic = String(item.topic || 'Materi umum'); (groups[topic] ||= []).push(item); return groups; }, {});
      list.innerHTML = Object.entries(grouped).map(([topic, topicItems]) => '<section class="material-topic-group"><div class="material-group-heading"><span class="type-pill">'+escapeHtml(topic)+'</span><span class="muted">'+topicItems.length+' materi</span></div><div class="material-card-grid">'+topicItems.map(item => '<article class="material-card"><div class="material-card-accent" aria-hidden="true"></div><div class="material-card-body"><div class="material-card-meta"><span>'+escapeHtml(String(subjectLabels[item.subject_id] || item.subject_id || 'Mata pelajaran'))+'</span><span class="material-dot" aria-hidden="true">•</span><span>Materi belajar</span></div><h3>'+escapeHtml(String(item.title || 'Tanpa judul'))+'</h3><p class="material-summary">'+escapeHtml(String(item.summary || 'Deskripsi materi belum tersedia.'))+'</p><div class="material-author"><span class="material-author-avatar" aria-hidden="true">'+escapeHtml(String(item.author_name || 'A').trim().slice(0,1).toUpperCase())+'</span><span><small>Diterbitkan oleh</small><strong>'+escapeHtml(String(item.author_name || 'Penerbit belum dicatat'))+'</strong></span></div><details class="material-details"><summary>Buka materi <span aria-hidden="true">↗</span></summary><div class="material-article-content">'+(Array.isArray(item.key_points)&&item.key_points.length?'<h4>Poin penting</h4><ul>'+item.key_points.map(p=>'<li>'+escapeHtml(String(p))+'</li>').join('')+'</ul>':'')+(item.example?'<h4>Contoh dan penjelasan</h4><p>'+escapeHtml(String(item.example))+'</p>':'')+(Array.isArray(item.questions)&&item.questions.length?'<h4>Latihan ('+item.questions.length+' soal)</h4>'+item.questions.map((q,i)=>'<div class="exam-item"><b>'+(i+1)+'. '+escapeHtml(String(q.question||''))+'</b><ol type="A">'+(Array.isArray(q.options)?q.options:[]).map(o=>'<li>'+escapeHtml(String(o))+'</li>').join('')+'</ol><p><b>Jawaban:</b> '+escapeHtml(String((q.options||[])[q.answerIndex]||'Perlu ditinjau'))+'</p><p class="muted">'+escapeHtml(String(q.explanation||''))+'</p></div>').join(''):'<p class="muted">Detail materi belum ditambahkan.</p>')+'</div></details></div></article>').join('')+'</div></section>').join('');
+   applyMaterialSearch();
    } catch (error) {
      list.innerHTML = '<p class="muted">'+escapeHtml(error.message || 'Database belum tersedia.')+'</p>';
      const count = document.getElementById('publishedSubjectCount');
