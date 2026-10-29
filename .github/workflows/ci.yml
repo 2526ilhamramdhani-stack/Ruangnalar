@@ -28,11 +28,11 @@ jobs:
           cat > /tmp/check-inline.js <<'NODE'
           const fs = require('node:fs');
           const html = fs.readFileSync('index.html', 'utf8');
-          const scripts = [...html.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script>/gi)]
-            .filter(match => !/\\bsrc\\s*=/.test(match[1]))
+          const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
+            .filter(match => !/\bsrc\s*=/.test(match[1]))
             .map(match => match[2])
             .filter(script => script.trim());
-          fs.writeFileSync('/tmp/ruangnalar-inline.js', scripts.join('\\n;\\n'));
+          fs.writeFileSync('/tmp/ruangnalar-inline.js', scripts.join('\n;\n'));
           NODE
           node /tmp/check-inline.js
           node --check /tmp/ruangnalar-inline.js
