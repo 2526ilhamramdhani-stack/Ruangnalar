@@ -25,7 +25,16 @@ jobs:
           node --check api/admin-auth.js
       - name: Check inline browser JavaScript syntax
         run: |
-          node -e \"const fs=require('fs'); const h=fs.readFileSync('index.html','utf8'); const scripts=[...h.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script>/gi)].filter(m=>!\\bsrc\\s*=\\/i.test(m[1])).map(m=>m[2]).filter(s=>s.trim()); fs.writeFileSync('/tmp/ruangnalar-inline.js',scripts.join('\\n;\\n'));\"
+          cat > /tmp/check-inline.js <<'NODE'
+          const fs = require('node:fs');
+          const html = fs.readFileSync('index.html', 'utf8');
+          const scripts = [...html.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script>/gi)]
+            .filter(match => !/\\bsrc\\s*=/.test(match[1]))
+            .map(match => match[2])
+            .filter(script => script.trim());
+          fs.writeFileSync('/tmp/ruangnalar-inline.js', scripts.join('\\n;\\n'));
+          NODE
+          node /tmp/check-inline.js
           node --check /tmp/ruangnalar-inline.js
       - name: Verify key product invariants
         run: |
