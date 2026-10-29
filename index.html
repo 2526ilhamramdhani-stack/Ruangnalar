@@ -514,6 +514,20 @@ aside {
 .float-chip { background:#203747; color:#FFFFFF; border-color:#526B79; }
 .article,.panel,.course-card { overflow-wrap:anywhere; }
 
+.admin-library-head { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; }
+.admin-library-head h3 { margin:0 0 5px; }
+.admin-library-head p { margin:0; }
+.admin-library-filters { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:16px; }
+.admin-content-list { display:grid; gap:10px; margin-top:12px; }
+.admin-content-row { display:flex; justify-content:space-between; align-items:center; gap:14px; border:1px solid var(--rn-border); border-radius:13px; padding:14px; background:var(--rn-light); }
+.admin-content-row h4 { margin:0 0 4px; color:var(--rn-navy); }
+.admin-content-row p { margin:0; font-size:13px; }
+.admin-content-actions { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.content-status { display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:5px 9px; font-size:11px; font-weight:800; }
+.content-status.draft { background:#FFF1D6; color:#70451B; }
+.content-status.published { background:#DDF4F0; color:#124846; }
+@media(max-width:680px) { .admin-library-head,.admin-content-row { align-items:stretch; flex-direction:column; } .admin-library-filters { grid-template-columns:1fr; } }
+
 </style>
 </head>
 <body>
@@ -559,7 +573,16 @@ aside {
     <section id="tab-latihan" class="tab-panel hidden"><div class="page-title"><div><div class="eyebrow">LATIHAN ADAPTIF</div><h1>Latihan Topik</h1><p>Pilih jawaban, cek pembahasan, lalu gunakan penjelasan untuk memahami prosesnya.</p></div><span class="pill" id="questionCountPill" style="background:var(--panel-soft);color:var(--site-primary)">10 soal latihan</span></div><div class="two-col"><div class="panel"><div class="question-label" id="questionLabel">SOAL 01 · KOMPOSISI ALJABAR</div><h2 id="questionText" style="font-size:20px;line-height:1.5;letter-spacing:-.4px">Diketahui f(x) = 3x − 1 dan g(x) = 2x² − 3. Tentukan (g ∘ f)(x).</h2><div class="quiz-options" id="quizOptions"><button class="option" data-answer="A"><span class="letter">A</span><span>9x² − 6x + 3</span></button><button class="option" data-answer="B"><span class="letter">B</span><span>18x² − 12x − 1</span></button><button class="option" data-answer="C"><span class="letter">C</span><span>9x² − 6x − 1</span></button><button class="option" data-answer="D"><span class="letter">D</span><span>18x² − 6x − 1</span></button></div><div id="quizFeedback" class="hidden" aria-live="polite"></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button id="checkAnswer" class="btn btn-primary">Periksa jawaban</button><button id="retryAnswer" class="btn btn-ghost hidden">Ulangi soal</button><button id="prevQuestion" class="btn btn-ghost">← Sebelumnya</button><button id="nextQuestion" class="btn btn-soft">Soal berikutnya →</button></div></div><div style="display:grid;align-content:start;gap:14px"><div class="panel"><h3>Strategi cepat</h3><p class="muted">Substitusikan fungsi yang berada di dalam komposisi terlebih dahulu. Tulis tanda kurung sebelum mengembangkan bentuk kuadrat.</p><div class="equation">2(3x − 1)² − 3</div><p class="muted">Pastikan konstanta −3 di luar kuadrat tetap ikut dihitung.</p></div><div class="panel"><h3>Target latihan</h3><div class="progress-row"><span>Soal selesai</span><b id="practiceStatus">0 / 1</b></div><div class="progress"><span id="practiceProgress" style="width:0%"></span></div></div></div></div></section>
     <section id="tab-simulasi" class="tab-panel hidden"><div class="page-title"><div><div class="eyebrow">UJI PEMAHAMAN</div><h1>Simulasi Ujian</h1><p>Latihan formatif per bab dan sumatif untuk menguji pemahaman beberapa konsep sekaligus.</p></div></div><div class="course-grid"><article class="course-card"><div class="course-top blue"><span class="pill">EVALUASI PER BAB</span><span class="course-emoji">📝</span></div><div class="course-body"><h3>Simulasi Formatif</h3><p>Fokus pada komposisi fungsi, substitusi aljabar, dan pemetaan pasangan terurut.</p><div class="progress-row"><span>Jumlah soal</span><b>10 soal · 30 menit</b></div><button class="btn btn-primary" style="width:100%" data-exam="formatif">Mulai formatif →</button></div></article><article class="course-card"><div class="course-top purple"><span class="pill">EVALUASI KOMPREHENSIF</span><span class="course-emoji">🏆</span></div><div class="course-body"><h3>Simulasi Sumatif</h3><p>Gabungkan konsep komposisi, invers, domain, dan pemecahan masalah.</p><div class="progress-row"><span>Jumlah soal & durasi</span><b>15 soal · 45 menit</b></div><button class="btn btn-ghost" style="width:100%" data-exam="sumatif">Mulai sumatif →</button></div></article></div><div class="panel" id="examPanel" style="margin-top:18px"><h3>Pilih simulasi untuk memulai</h3><p class="muted">Formatif: 10 soal dalam 30 menit. Sumatif: 15 soal dalam 45 menit. Hasil masih dihitung di browser dan belum tersimpan ke server.</p></div></section>
     <section id="tab-ide" class="tab-panel hidden"><div class="page-title"><div><div class="eyebrow">HIGHER-ORDER THINKING SKILLS</div><h1>Ide Penyelesaian</h1><p>Bedah alasan di balik langkah penyelesaian, bukan sekadar menghafal hasil akhir.</p></div></div><div class="panel article"><div class="type-pill">INVERS FUNGSI · STRATEGI</div><h2 style="font-size:22px;letter-spacing:-.6px">Mengapa pangkat tiga dan akar pangkat tiga saling membatalkan?</h2><p>Perhatikan dua fungsi berikut: <b>f(x) = x³ + 5</b> dan <b>g(x) = ∛(x − 5)</b>. Strategi terbaik adalah membaca operasi yang dilakukan fungsi pertama, lalu membalik urutannya.</p><h3>Langkah 1 — Susun operasi kebalikan</h3><p>Fungsi f mengalikan input dengan dirinya tiga kali, lalu menambahkan 5. Fungsi g mengurangi 5 lebih dahulu, kemudian mengambil akar pangkat tiga. Urutan operasi kebalikan harus dibalik.</p><div class="equation">f(g(x)) = (∛(x − 5))³ + 5 = x</div><h3>Langkah 2 — Verifikasi dari arah sebaliknya</h3><div class="equation">g(f(x)) = ∛((x³ + 5) − 5) = x</div><p>Kedua komposisi kembali ke input awal. Karena akar pangkat tiga berlaku untuk bilangan real negatif maupun positif, identitas ∛(x³) = x berlaku untuk semua x real.</p><div class="callout"><b>Jebakan umum:</b> jangan menyederhanakan ∛(x − 5) menjadi ∛x − 5. Angka −5 berada di dalam tanda akar. Selain itu, periksa kedua arah komposisi, bukan hanya satu.</div><h3>Intuisi geometri: simetri terhadap y = x</h3><p>Jika f(a) = b, maka fungsi invers mengembalikan b menjadi a. Titik (a,b) pada grafik f berpasangan dengan titik (b,a) pada grafik f⁻¹. Pertukaran koordinat ini merupakan pencerminan terhadap garis y = x.</p><button class="btn btn-primary" data-go="latihan">Uji pemahamanmu →</button></div></section>
-    <section id="tab-admin" class="tab-panel hidden"><div class="page-title"><div><div class="eyebrow">WORKSPACE ADMIN · AI CONTENT</div><h1>AI Content Studio</h1><p>Masukkan dokumen PDF atau teks materi. Siapkan sumber untuk dirangkum menjadi pelajaran interaktif, bank soal, dan ide penyelesaian.</p></div></div><div id="adminLoginPanel" class="panel" style="max-width:520px;margin-bottom:18px"><h3>Login Admin</h3><p class="muted">Masuk untuk menggunakan fitur AI Content Studio.</p><form id="adminLoginForm"><div class="field"><label for="adminPassword">Kata sandi Admin</label><input id="adminPassword" type="password" autocomplete="current-password" required /></div><button class="btn btn-primary" type="submit">Masuk sebagai Admin</button><p id="adminLoginStatus" class="muted" role="status" style="margin-top:10px"></p></form></div><div id="adminWorkspace" class="hidden"><div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button id="adminLogout" class="btn btn-ghost" type="button">Keluar dari Admin</button></div><div class="two-col"><form id="adminForm" class="panel admin-form"><div class="field"><label for="contentTitle">Judul materi</label><input id="contentTitle" value="Fungsi Komposisi dan Invers" required /></div><div class="field"><label for="contentSubject">Mata pelajaran</label><select id="contentSubject" required><option value="matematika-wajib">Matematika Wajib</option><option value="matematika-lanjut">Matematika Lanjut</option><option value="kimia">Kimia</option><option value="fisika">Fisika</option><option value="fiqih">Fiqih</option></select></div><div class="field"><label for="contentTopic">Kategori / topik</label><select id="contentTopic" required><option>Komposisi Fungsi</option><option>Fungsi Invers</option><option>Domain dan Range</option><option>HOTS</option></select></div><div class="field"><label for="pdfUpload">Dokumen sumber (PDF)</label><div class="upload-dropzone" id="pdfDropzone" role="button" tabindex="0" aria-controls="pdfUpload" aria-label="Pilih atau letakkan file PDF di sini"><input id="pdfUpload" type="file" accept=".pdf,application/pdf" multiple hidden /><span class="upload-symbol" aria-hidden="true">↑</span><div class="upload-copy"><strong>Tarik dan letakkan PDF di sini</strong><span>atau <button type="button" id="choosePdf" class="upload-link">pilih file</button></span><small>PDF saja · maksimal 20 MB per file · bisa memilih beberapa dokumen</small></div></div><div id="pdfFileList" class="file-list" aria-live="polite"></div><p id="pdfUploadStatus" class="upload-status">Belum ada PDF dipilih. File yang dipilih akan muncul di sini.</p><div class="upload-help"><span aria-hidden="true">ⓘ</span><span><strong>File PDF diekstrak di browser setelah kamu meminta draf AI. Teks hasil ekstraksi dikirim ke backend hanya setelah login Admin.</span></div></div><div class="field"><label for="rawContent">Materi teks tambahan (opsional)</label><textarea id="rawContent" placeholder="Tempel teks materi di sini, atau unggah PDF di atas."></textarea></div><div class="notice"><span>✦</span><span>Draf AI diproses melalui backend yang dilindungi sesi Admin. PDF mentah tetap di browser; teks hasil ekstraksi dikirim ke layanan AI. Periksa hasil sebelum digunakan.</span></div><button class="btn btn-primary" type="submit">✦ Buat draf AI</button></form><div class="panel"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><h3 style="margin:0">Preview hasil</h3><span class="pill" id="draftBadge">BELUM DIBUAT</span></div><div id="adminPreview" class="muted" style="margin-top:18px">Tambahkan teks materi atau PDF, lalu buat draf AI untuk menghasilkan ringkasan, poin penting, contoh, dan 5 soal.</div></div></div></div></section>
+    <section id="tab-admin" class="tab-panel hidden"><div class="page-title"><div><div class="eyebrow">WORKSPACE ADMIN · AI CONTENT</div><h1>AI Content Studio</h1><p>Masukkan dokumen PDF atau teks materi. Siapkan sumber untuk dirangkum menjadi pelajaran interaktif, bank soal, dan ide penyelesaian.</p></div></div><div id="adminLoginPanel" class="panel" style="max-width:520px;margin-bottom:18px"><h3>Login Admin</h3><p class="muted">Masuk untuk menggunakan fitur AI Content Studio.</p><form id="adminLoginForm"><div class="field"><label for="adminPassword">Kata sandi Admin</label><input id="adminPassword" type="password" autocomplete="current-password" required /></div><button class="btn btn-primary" type="submit">Masuk sebagai Admin</button><p id="adminLoginStatus" class="muted" role="status" style="margin-top:10px"></p></form></div><div id="adminWorkspace" class="hidden"><div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button id="adminLogout" class="btn btn-ghost" type="button">Keluar dari Admin</button></div><div class="two-col"><form id="adminForm" class="panel admin-form"><div class="field"><label for="contentTitle">Judul materi</label><input id="contentTitle" value="Fungsi Komposisi dan Invers" required /></div><div class="field"><label for="contentSubject">Mata pelajaran</label><select id="contentSubject" required><option value="matematika-wajib">Matematika Wajib</option><option value="matematika-lanjut">Matematika Lanjut</option><option value="kimia">Kimia</option><option value="fisika">Fisika</option><option value="fiqih">Fiqih</option></select></div><div class="field"><label for="contentTopic">Kategori / topik</label><select id="contentTopic" required><option>Komposisi Fungsi</option><option>Fungsi Invers</option><option>Domain dan Range</option><option>HOTS</option></select></div><div class="field"><label for="pdfUpload">Dokumen sumber (PDF)</label><div class="upload-dropzone" id="pdfDropzone" role="button" tabindex="0" aria-controls="pdfUpload" aria-label="Pilih atau letakkan file PDF di sini"><input id="pdfUpload" type="file" accept=".pdf,application/pdf" multiple hidden /><span class="upload-symbol" aria-hidden="true">↑</span><div class="upload-copy"><strong>Tarik dan letakkan PDF di sini</strong><span>atau <button type="button" id="choosePdf" class="upload-link">pilih file</button></span><small>PDF saja · maksimal 20 MB per file · bisa memilih beberapa dokumen</small></div></div><div id="pdfFileList" class="file-list" aria-live="polite"></div><p id="pdfUploadStatus" class="upload-status">Belum ada PDF dipilih. File yang dipilih akan muncul di sini.</p><div class="upload-help"><span aria-hidden="true">ⓘ</span><span><strong>File PDF diekstrak di browser setelah kamu meminta draf AI. Teks hasil ekstraksi dikirim ke backend hanya setelah login Admin.</span></div></div><div class="field"><label for="rawContent">Materi teks tambahan (opsional)</label><textarea id="rawContent" placeholder="Tempel teks materi di sini, atau unggah PDF di atas."></textarea></div><div class="notice"><span>✦</span><span>Draf AI diproses melalui backend yang dilindungi sesi Admin. PDF mentah tetap di browser; teks hasil ekstraksi dikirim ke layanan AI. Periksa hasil sebelum digunakan.</span></div><button class="btn btn-primary" type="submit">✦ Buat draf AI</button></form><div class="panel"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><h3 style="margin:0">Preview hasil</h3><span class="pill" id="draftBadge">BELUM DIBUAT</span></div><div id="adminPreview" class="muted" style="margin-top:18px">Tambahkan teks materi atau PDF, lalu buat draf AI untuk menghasilkan ringkasan, poin penting, contoh, dan 5 soal.</div></div></div>
+      <div class="panel" id="adminContentManagement" style="margin-top:18px">
+        <div class="admin-library-head"><div><h3>Pengelolaan Materi</h3><p class="muted">Periksa status konten yang tersimpan. Draf tidak tampil di perpustakaan siswa sampai diterbitkan.</p></div><button type="button" class="btn btn-ghost" id="refreshAdminContents">Muat ulang</button></div>
+        <div class="admin-library-filters">
+          <div class="field"><label for="adminContentSubjectFilter">Mata pelajaran</label><select id="adminContentSubjectFilter"><option value="">Semua mata pelajaran</option><option value="matematika-wajib">Matematika Wajib</option><option value="matematika-lanjut">Matematika Lanjut</option><option value="kimia">Kimia</option><option value="fisika">Fisika</option><option value="fiqih">Fiqih</option></select></div>
+          <div class="field"><label for="adminContentStatusFilter">Status konten</label><select id="adminContentStatusFilter"><option value="all">Semua status</option><option value="draft">Draf</option><option value="published">Terbit</option></select></div>
+        </div>
+        <div id="adminContentList" class="admin-content-list" aria-live="polite"><p class="muted">Daftar konten akan dimuat setelah sesi Admin terverifikasi.</p></div>
+      </div>
+    </div></section>
   </div>
 </main>
 </div>
@@ -913,6 +936,7 @@ aside {
       const authenticated = response.ok && data.authenticated === true;
       adminLoginPanel.classList.toggle('hidden', authenticated);
       adminWorkspace.classList.toggle('hidden', !authenticated);
+      if (authenticated) await loadAdminContents();
       return authenticated;
     } catch {
       adminLoginStatus.textContent = 'Backend Admin belum tersedia. Periksa deployment Vercel.';
@@ -1013,6 +1037,57 @@ aside {
    const builtinMathLesson = document.getElementById('builtinMathLesson');
    if (builtinMathLesson) builtinMathLesson.hidden = selectedSubjectId !== 'matematika-wajib';
    loadPublishedContents(selectedSubjectId);
+ });
+ async function loadAdminContents() {
+   const list = document.getElementById('adminContentList');
+   if (!list) return;
+   list.innerHTML = '<p class="muted">Memuat konten tersimpan…</p>';
+   const subjectFilter = document.getElementById('adminContentSubjectFilter')?.value || '';
+   const statusFilter = document.getElementById('adminContentStatusFilter')?.value || 'all';
+   const query = new URLSearchParams({admin:'1'});
+   if (subjectFilter) query.set('subjectId', subjectFilter);
+   try {
+     const response = await fetch('/api/content?' + query.toString(), {credentials:'same-origin',cache:'no-store'});
+     const result = await response.json();
+     if (!response.ok) throw new Error(result.error || 'Gagal memuat konten admin.');
+     let items = Array.isArray(result.contents) ? result.contents : [];
+     if (statusFilter !== 'all') items = items.filter(item => item.status === statusFilter);
+     if (!items.length) { list.innerHTML = '<div class="empty-subject"><strong>Tidak ada konten pada filter ini.</strong><p class="muted">Coba filter lain atau buat draf baru melalui AI Content Studio.</p></div>'; return; }
+     list.innerHTML = items.map(item => '<article class="admin-content-row"><div><span class="content-status '+(item.status === 'published' ? 'published' : 'draft')+'">'+(item.status === 'published' ? '● Terbit' : '● Draf')+'</span><h4>'+escapeHtml(String(item.title || 'Tanpa judul'))+'</h4><p>'+escapeHtml(subjectLabels[item.subject_id] || item.subject_id || 'Mata pelajaran belum diatur')+' · '+escapeHtml(String(item.topic || 'Tanpa kategori'))+'</p></div><div class="admin-content-actions">'+(item.status === 'draft' ? '<button type="button" class="btn btn-primary" data-publish-content="'+escapeHtml(String(item.id))+'">Terbitkan</button>' : '<span class="muted">Sudah tersedia untuk siswa</span>')+'</div></article>').join('');
+   } catch (error) {
+     list.innerHTML = '<p class="muted">'+escapeHtml(error.message || 'Gagal memuat konten.')+'</p>';
+   }
+ }
+ document.getElementById('refreshAdminContents')?.addEventListener('click', loadAdminContents);
+ document.getElementById('adminContentSubjectFilter')?.addEventListener('change', loadAdminContents);
+ document.getElementById('adminContentStatusFilter')?.addEventListener('change', loadAdminContents);
+ document.getElementById('adminContentList')?.addEventListener('click', async event => {
+   const button = event.target.closest('[data-publish-content]');
+   if (!button) return;
+   const id = button.dataset.publishContent;
+   button.disabled = true;
+   button.textContent = 'Menerbitkan…';
+   try {
+     const allQuery = new URLSearchParams({admin:'1'});
+     const response = await fetch('/api/content?' + allQuery.toString(), {credentials:'same-origin',cache:'no-store'});
+     const result = await response.json();
+     if (!response.ok) throw new Error(result.error || 'Gagal memuat draf.');
+     const item = (result.contents || []).find(content => content.id === id);
+     if (!item) throw new Error('Draf tidak ditemukan. Muat ulang daftar konten.');
+     const publishResponse = await fetch('/api/content', {method:'PATCH',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({
+       contentId:item.id,title:item.title,topic:item.topic,subjectId:item.subject_id,status:'published',
+       draft:{summary:item.summary,keyPoints:item.key_points,example:item.example,questions:item.questions}
+     })});
+     const published = await publishResponse.json();
+     if (!publishResponse.ok) throw new Error(published.error || 'Materi gagal diterbitkan.');
+     notify('Materi berhasil diterbitkan.');
+     await loadAdminContents();
+     await loadPublishedContents(selectedSubjectId);
+   } catch (error) {
+     button.disabled = false;
+     button.textContent = 'Coba lagi';
+     notify(error.message || 'Gagal menerbitkan materi.');
+   }
  });
  async function loadPublishedContents(subjectId = selectedSubjectId) {
    const list = document.getElementById('publishedContentList');
