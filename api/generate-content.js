@@ -51,7 +51,7 @@ module.exports = async function handler(req, res) {
   if (!title || !sourceText) return send(res, 400, { error: 'Judul dan teks materi wajib diisi.' });
   if (sourceText.length > 50000) return send(res, 413, { error: 'Teks materi terlalu panjang. Batas saat ini 50.000 karakter.' });
 
-  const model = (process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite').trim();
+  const model = (process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite').trim();
   if (!/^gemini-[a-zA-Z0-9.-]+$/.test(model)) {
     return send(res, 503, { error: 'Nilai GEMINI_MODEL tidak valid. Gunakan nama model Gemini yang tersedia.' });
   }
