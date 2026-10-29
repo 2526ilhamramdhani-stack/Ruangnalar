@@ -1296,7 +1296,7 @@ aside {
      let items = Array.isArray(result.contents) ? result.contents : [];
      if (statusFilter !== 'all') items = items.filter(item => item.status === statusFilter);
      if (!items.length) { list.innerHTML = '<div class="empty-subject"><strong>Tidak ada konten pada filter ini.</strong><p class="muted">Coba filter lain atau buat draf baru melalui AI Content Studio.</p></div>'; return; }
-     list.innerHTML = items.map(item => '<article class="admin-content-row"><div><span class="content-status '+(item.status === 'published' ? 'published' : 'draft')+'">'+(item.status === 'published' ? '● Terbit' : '● Draf')+'</span><h4>'+escapeHtml(String(item.title || 'Tanpa judul'))+'</h4><p>'+escapeHtml(subjectLabels[item.subject_id] || item.subject_id || 'Mata pelajaran belum diatur')+' · '+escapeHtml(String(item.topic || 'Tanpa kategori'))+'</p></div><div class="admin-content-actions">'+(item.status === 'draft' ? '<button type="button" class="btn btn-primary" data-publish-content="'+escapeHtml(String(item.id))+'">Terbitkan</button>' : '<span class="muted">Sudah tersedia untuk siswa</span>')+'</div></article>').join('');
+     list.innerHTML = items.map(item => '<article class="admin-content-row"><div><span class="content-status '+(item.status === 'published' ? 'published' : 'draft')+'">'+(item.status === 'published' ? '● Terbit' : '● Draf')+'</span><h4>'+escapeHtml(String(item.title || 'Tanpa judul'))+'</h4><p>'+escapeHtml(subjectLabels[item.subject_id] || item.subject_id || 'Mata pelajaran belum diatur')+' · '+escapeHtml(String(item.topic || 'Tanpa kategori'))+'</p></div><div class="admin-content-actions">'+(item.status === 'draft' ? '<button type="button" class="btn btn-primary" data-publish-content="'+escapeHtml(String(item.id))+'">Terbitkan</button>' : '<span class="muted">Sudah tersedia untuk siswa</span>')+'<button type="button" class="btn btn-ghost" data-delete-content="'+escapeHtml(String(item.id))+'" data-content-title="'+escapeHtml(String(item.title || 'Tanpa judul'))+'" aria-label="Hapus handout '+escapeHtml(String(item.title || 'Tanpa judul'))+'" style="color:#9B2525;border-color:#E8B8B8">Hapus handout</button></div></article>').join('');
    } catch (error) {
      list.innerHTML = '<p class="muted">'+escapeHtml(error.message || 'Gagal memuat konten.')+'</p>';
    }
@@ -1305,6 +1305,28 @@ aside {
  document.getElementById('adminContentSubjectFilter')?.addEventListener('change', loadAdminContents);
  document.getElementById('adminContentStatusFilter')?.addEventListener('change', loadAdminContents);
  document.getElementById('adminContentList')?.addEventListener('click', async event => {
+   const deleteButton = event.target.closest('[data-delete-content]');
+   if (deleteButton) {
+     const id = deleteButton.dataset.deleteContent;
+     const title = deleteButton.dataset.contentTitle || 'handout ini';
+     const confirmed = window.confirm('Yakin ingin menghapus handout berikut?\\n\\n“' + title + '”\\n\\nMateri dan seluruh bagian handout-nya akan dihapus permanen dan tidak bisa dibatalkan.');
+     if (!confirmed) return;
+     deleteButton.disabled = true;
+     deleteButton.textContent = 'Menghapus…';
+     try {
+       const response = await fetch('/api/content?id=' + encodeURIComponent(id), {method:'DELETE',credentials:'same-origin',cache:'no-store'});
+       const result = await response.json();
+       if (!response.ok) throw new Error(result.error || 'Handout gagal dihapus.');
+       notify('Handout “' + (result.content?.title || title) + '” berhasil dihapus.');
+       await loadAdminContents();
+       await loadPublishedContents(selectedSubjectId);
+     } catch (error) {
+       deleteButton.disabled = false;
+       deleteButton.textContent = 'Hapus handout';
+       notify(error.message || 'Handout gagal dihapus.');
+     }
+     return;
+   }
    const button = event.target.closest('[data-publish-content]');
    if (!button) return;
    const id = button.dataset.publishContent;
