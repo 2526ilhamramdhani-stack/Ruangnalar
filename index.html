@@ -322,7 +322,6 @@ h1 { font-family: var(--site-font-heading); font-size: clamp(29px,3.2vw,43px); l
        (Array.isArray(q.options) ? q.options : []).map(option => '<li>' + escapeHtml(String(option)) + '</li>').join('') + '</ol><p><b>Jawaban:</b> ' +
        escapeHtml(String((q.options || [])[q.answerIndex] || 'Perlu ditinjau')) + '</p><p class="muted">' + escapeHtml(q.explanation || '') + '</p></div>').join('') +
        '<div class="upload-help"><span aria-hidden="true">ⓘ</span><span>Draf dibuat AI dari teks sumber. Periksa rumus, kunci jawaban, dan pembahasan sebelum digunakan. Draf belum dipublikasikan atau disimpan ke database.</span></div>';
-     document.getElementById('publishDraft').classList.remove('hidden');
      draftCreated = true;
      status.textContent = selectedPdfFiles.length + ' PDF diekstrak di browser. Teks sumber dikirim ke backend AI setelah login.';
      notify('Draf AI berhasil dibuat. Periksa kembali ketepatan matematika sebelum digunakan.');
