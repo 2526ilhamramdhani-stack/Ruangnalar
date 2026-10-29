@@ -57,7 +57,7 @@ module.exports = async function handler(req, res) {
         headers: { apikey: config.key, Authorization: 'Bearer ' + config.key }
       });
       const rows = await response.json();
-      if (!response.ok) return send(res, 502, { error: 'Gagal mengambil materi dari database. Jalankan migration subject/draft terbaru di Supabase.' });
+      if (!response.ok) return send(res, 502, { error: 'Gagal mengambil materi dari database. Pastikan seluruh migration learning_contents, subjects/drafts, dan author sudah dijalankan di Supabase.' });
       return send(res, 200, { contents: rows });
     } catch {
       return send(res, 502, { error: 'Tidak dapat menghubungi database saat ini.' });
@@ -99,7 +99,7 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify(row)
     });
     const data = await response.json();
-    if (!response.ok) return send(res, 502, { error: 'Gagal menyimpan materi. Pastikan migration subject/draft terbaru sudah dijalankan di Supabase.' });
+    if (!response.ok) return send(res, 502, { error: 'Gagal menyimpan materi. Pastikan seluruh migration learning_contents, subjects/drafts, dan author sudah dijalankan di Supabase.' });
     if (req.method === 'PATCH' && (!Array.isArray(data) || !data.length)) return send(res, 404, { error: 'Draf tidak ditemukan.' });
     return send(res, req.method === 'PATCH' ? 200 : 201, { content: Array.isArray(data) ? data[0] : null });
   } catch {
