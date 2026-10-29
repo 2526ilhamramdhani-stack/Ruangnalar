@@ -159,6 +159,25 @@ h1 { font-family: var(--site-font-heading); font-size: clamp(29px,3.2vw,43px); l
 @media(max-width:720px) { .layout{grid-template-columns:1fr} aside{position:fixed;z-index:5;left:0;top:0;bottom:0;width:260px;transform:translateX(-105%);transition:transform .23s ease;box-shadow:var(--shadow)} aside.open{transform:translateX(0)} .mobile-menu{display:inline-grid;place-items:center;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);width:38px;height:38px} .topbar{gap:12px;padding:0 16px;height:67px}.search{width:100%;max-width:290px}.profile-name,.profile-role{display:none}.content{padding:24px 16px 38px}.hero{grid-template-columns:1fr;padding:25px}.hero-graphic{display:none}h1{letter-spacing:-1.2px}.stats{gap:8px}.stat{padding:12px;align-items:flex-start;flex-direction:column;gap:9px}.stat-num{font-size:18px}.course-grid{grid-template-columns:1fr}.course-top{min-height:88px}.two-col{grid-template-columns:1fr}.page-title{flex-direction:column;align-items:stretch}.section-heading{margin-top:25px} }
 @media(max-width:390px) { .stats{grid-template-columns:1fr}.stat{flex-direction:row;align-items:center}.search{width:auto;flex:1}.profile{display:none}.hero h1{font-size:29px}.btn{width:100%} }
 
+
+/* Admin form contrast: readable labels and entered text on light surfaces */
+#adminLoginPanel,#adminWorkspace .panel { color:#17233D; }
+#adminLoginPanel h3,#adminWorkspace h3,#adminWorkspace h4 { color:#17233D; }
+#adminLoginPanel .muted,#adminWorkspace .muted { color:#374151; }
+#adminLoginPanel .field label,#adminWorkspace .field label { color:#17233D; font-weight:750; }
+#adminLoginPanel input,#adminWorkspace input:not([type="file"]),#adminWorkspace textarea,#adminWorkspace select {
+  color:#17233D !important;
+  -webkit-text-fill-color:#17233D;
+  background-color:#FFFFFF !important;
+  border:1px solid #C9CEE0;
+  caret-color:#4546B5;
+}
+#adminLoginPanel input::placeholder,#adminWorkspace input::placeholder,#adminWorkspace textarea::placeholder { color:#667085; opacity:1; }
+#adminLoginPanel input:focus,#adminWorkspace input:focus,#adminWorkspace textarea:focus,#adminWorkspace select:focus {
+  border-color:#5B5CE2; box-shadow:0 0 0 3px #5b5ce226;
+}
+#adminLoginStatus { color:#374151; }
+
 /* RuangNalar motion and popup polish */
 @keyframes rn-toast-in {
   0% { opacity:0; transform:translate(-50%,18px) scale(.96); }
