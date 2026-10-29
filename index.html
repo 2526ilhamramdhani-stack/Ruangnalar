@@ -650,6 +650,26 @@ aside {
 }
 @media(prefers-reduced-motion:reduce) { .rn-slide-progress > span { transition:none; } }
 
+
+.rn-presentation[hidden]{display:none!important}.rn-presentation{position:fixed;inset:0;z-index:10000;display:flex;flex-direction:column;background:#101F2A;color:#F5F8FA;isolation:isolate}
+.rn-presentation-bar{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px clamp(16px,4vw,48px);border-bottom:1px solid #2A414E;background:#142936}
+.rn-presentation-brand{display:flex;align-items:center;gap:12px;min-width:0}.rn-presentation-mark{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:#F8E0A4;color:#172B3A;font-weight:900;font-size:15px}
+.rn-presentation-brand-copy{min-width:0}.rn-presentation-brand-copy strong{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rn-presentation-brand-copy span{display:block;color:#A9BBC5;font-size:11px;margin-top:3px}
+.rn-presentation-actions{display:flex;align-items:center;gap:9px}.rn-presentation-actions button{border:1px solid #3A5360;border-radius:10px;padding:9px 12px;color:#EAF1F4;background:#203946;font-size:12px;font-weight:750}.rn-presentation-actions button:hover{background:#2A4857}
+.rn-presentation-actions button:focus-visible,.rn-presentation button:focus-visible{outline:3px solid #72D5CB;outline-offset:3px}
+.rn-presentation-main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr);align-items:stretch;padding:clamp(12px,3vh,30px) clamp(12px,5vw,72px);overflow:auto}
+.rn-presentation-main .rn-slide-deck{display:flex;flex-direction:column;width:min(1120px,100%);min-height:min(690px,100%);margin:auto;border:1px solid #354D59;border-radius:20px;overflow:hidden;background:#172C38;box-shadow:0 28px 90px #07131b66}
+.rn-presentation-main .rn-slide-progress{background:#2D4653;flex-shrink:0}.rn-presentation-main .rn-slide-stage{display:flex;flex:1;padding:clamp(14px,3vw,36px)}
+.rn-presentation-main .rn-learning-slide{flex:1;min-height:clamp(360px,62vh,650px);padding:clamp(22px,5vw,62px);border:1px solid #DCE8E7;border-radius:14px;background:linear-gradient(145deg,#FFF 0%,#F5F9F8 100%);box-shadow:0 18px 45px #07131b22}
+.rn-presentation-main .rn-learning-slide h5{font-size:clamp(28px,4vw,46px);max-width:900px;margin-bottom:24px}.rn-presentation-main .rn-slide-explanation{font-size:clamp(16px,1.55vw,19px);line-height:1.95;max-width:920px}
+.rn-presentation-main .rn-slide-goal{margin-bottom:26px}.rn-presentation-main .rn-slide-goal p{font-size:15px}
+.rn-presentation-main .rn-slide-example,.rn-presentation-main .rn-slide-check,.rn-presentation-main .rn-slide-mistake{margin-top:24px;padding:18px 21px}
+.rn-presentation-main .rn-slide-example p,.rn-presentation-main .rn-slide-check p,.rn-presentation-main .rn-slide-mistake p{font-size:15px;line-height:1.85}
+.rn-presentation-main .rn-slide-controls{padding:18px clamp(14px,3vw,36px) 22px}.rn-presentation-main .rn-slide-controls .btn{min-height:42px}
+.rn-presentation-hint{color:#A9BBC5;font-size:11px;text-align:center;padding:0 12px 12px}
+.rn-open-presentation{margin:0 0 18px;display:flex;align-items:center;gap:9px;width:100%;justify-content:center;padding:13px 16px;border-radius:12px;border:1px solid #C4E4DF;color:#124846;background:linear-gradient(110deg,#DDF4F0,#F1F8E9);font-size:13px;font-weight:850}.rn-open-presentation:hover{background:#C9EBE5}
+@media(max-width:600px){.rn-presentation-bar{min-height:60px;padding:10px 12px}.rn-presentation-brand-copy span{max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rn-presentation-actions button{padding:9px}.rn-presentation-actions .rn-fullscreen-label{display:none}.rn-presentation-main{padding:10px}.rn-presentation-main .rn-slide-deck{min-height:0;border-radius:14px}.rn-presentation-main .rn-slide-stage{padding:10px}.rn-presentation-main .rn-learning-slide{min-height:0;padding:20px}.rn-presentation-main .rn-learning-slide h5{font-size:27px}.rn-presentation-main .rn-slide-explanation{font-size:15px;line-height:1.8}}
+
 </style>
 </head>
 <body>
@@ -706,6 +726,11 @@ aside {
 </main>
 </div>
 </div>
+
+<div class="rn-presentation" id="rnPresentation" hidden aria-hidden="true">
+<header class="rn-presentation-bar"><div class="rn-presentation-brand"><span class="rn-presentation-mark" aria-hidden="true">R</span><div class="rn-presentation-brand-copy"><strong id="rnPresentationTitle">RuangNalar · Mode Belajar</strong><span>Fokus pada satu konsep dalam satu waktu</span></div></div><div class="rn-presentation-actions"><button type="button" id="rnPresentationFullscreen" aria-label="Aktifkan layar penuh">⛶ <span class="rn-fullscreen-label">Layar penuh</span></button><button type="button" id="rnPresentationClose" aria-label="Keluar dari mode presentasi">✕ <span class="rn-fullscreen-label">Keluar</span></button></div></header>
+<main class="rn-presentation-main" id="rnPresentationMain"></main><div class="rn-presentation-hint">Gunakan tombol ← / → untuk berpindah slide · Esc untuk keluar</div></div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
@@ -1357,7 +1382,7 @@ aside {
      if (count) count.textContent = items.length + (items.length === 1 ? ' materi' : ' materi');
      if (!items.length) { list.innerHTML = '<div class="empty-subject"><strong>Belum ada materi untuk '+escapeHtml(subjectLabels[subjectId] || 'mata pelajaran ini')+'.</strong><p class="muted">Materi akan tampil di sini setelah admin menerbitkannya dengan mata pelajaran yang sesuai.</p></div>'; return; }
      const grouped = items.reduce((groups, item) => { const topic = String(item.topic || 'Materi umum'); (groups[topic] ||= []).push(item); return groups; }, {});
-     list.innerHTML = Object.entries(grouped).map(([topic, topicItems]) => '<section class="material-topic-group"><div class="material-group-heading"><span class="type-pill">'+escapeHtml(topic)+'</span><span class="muted">'+topicItems.length+' materi</span></div><div class="material-card-grid">'+topicItems.map(item => '<article class="material-card"><div class="material-card-accent" aria-hidden="true"></div><div class="material-card-body"><div class="material-card-meta"><span>'+escapeHtml(String(subjectLabels[item.subject_id] || item.subject_id || 'Mata pelajaran'))+'</span><span class="material-dot" aria-hidden="true">•</span><span>Materi belajar</span></div><h3>'+escapeHtml(String(item.title || 'Tanpa judul'))+'</h3><p class="material-summary">'+escapeHtml(String(item.summary || 'Deskripsi materi belum tersedia.'))+'</p><div class="material-author"><span class="material-author-avatar" aria-hidden="true">'+escapeHtml(String(item.author_name || 'A').trim().slice(0,1).toUpperCase())+'</span><span><small>Diterbitkan oleh</small><strong>'+escapeHtml(String(item.author_name || 'Penerbit belum dicatat'))+'</strong></span></div><details class="material-details"><summary>Buka materi <span aria-hidden="true">↗</span></summary><div class="material-article-content">'+(Array.isArray(item.key_points)&&item.key_points.length?'<h4>Poin penting</h4><ul>'+item.key_points.map(p=>'<li>'+escapeHtml(String(p))+'</li>').join('')+'</ul>':'')+(item.example?'<h4>Contoh dan penjelasan</h4><p>'+escapeHtml(String(item.example))+'</p>':'')+(Array.isArray(item.handoutSections)&&item.handoutSections.length?'':Array.isArray(item.questions)&&item.questions.length?'<h4>Latihan ('+item.questions.length+' soal)</h4>'+item.questions.map((q,i)=>'<div class="exam-item"><b>'+(i+1)+'. '+escapeHtml(String(q.question||''))+'</b><ol type="A">'+(Array.isArray(q.options)?q.options:[]).map(o=>'<li>'+escapeHtml(String(o))+'</li>').join('')+'</ol><p><b>Jawaban:</b> '+escapeHtml(String((q.options||[])[q.answerIndex]||'Perlu ditinjau'))+'</p><p class="muted">'+escapeHtml(String(q.explanation||''))+'</p></div>').join(''):'<p class="muted">Detail materi belum ditambahkan.</p>')+renderHandoutSections(item)+'</div></details></div></article>').join('')+'</div></section>').join('');
+     list.innerHTML = Object.entries(grouped).map(([topic, topicItems]) => '<section class="material-topic-group"><div class="material-group-heading"><span class="type-pill">'+escapeHtml(topic)+'</span><span class="muted">'+topicItems.length+' materi</span></div><div class="material-card-grid">'+topicItems.map(item => '<article class="material-card"><div class="material-card-accent" aria-hidden="true"></div><div class="material-card-body"><div class="material-card-meta"><span>'+escapeHtml(String(subjectLabels[item.subject_id] || item.subject_id || 'Mata pelajaran'))+'</span><span class="material-dot" aria-hidden="true">•</span><span>Materi belajar</span></div><h3>'+escapeHtml(String(item.title || 'Tanpa judul'))+'</h3><p class="material-summary">'+escapeHtml(String(item.summary || 'Deskripsi materi belum tersedia.'))+'</p><div class="material-author"><span class="material-author-avatar" aria-hidden="true">'+escapeHtml(String(item.author_name || 'A').trim().slice(0,1).toUpperCase())+'</span><span><small>Diterbitkan oleh</small><strong>'+escapeHtml(String(item.author_name || 'Penerbit belum dicatat'))+'</strong></span></div><details class="material-details"><summary>Buka materi <span aria-hidden="true">↗</span></summary><button type="button" class="rn-open-presentation" data-open-presentation>▶ &nbsp; Mulai belajar dalam mode presentasi <span aria-hidden="true">↗</span></button><div class="material-article-content">'+(Array.isArray(item.key_points)&&item.key_points.length?'<h4>Poin penting</h4><ul>'+item.key_points.map(p=>'<li>'+escapeHtml(String(p))+'</li>').join('')+'</ul>':'')+(item.example?'<h4>Contoh dan penjelasan</h4><p>'+escapeHtml(String(item.example))+'</p>':'')+(Array.isArray(item.handoutSections)&&item.handoutSections.length?'':Array.isArray(item.questions)&&item.questions.length?'<h4>Latihan ('+item.questions.length+' soal)</h4>'+item.questions.map((q,i)=>'<div class="exam-item"><b>'+(i+1)+'. '+escapeHtml(String(q.question||''))+'</b><ol type="A">'+(Array.isArray(q.options)?q.options:[]).map(o=>'<li>'+escapeHtml(String(o))+'</li>').join('')+'</ol><p><b>Jawaban:</b> '+escapeHtml(String((q.options||[])[q.answerIndex]||'Perlu ditinjau'))+'</p><p class="muted">'+escapeHtml(String(q.explanation||''))+'</p></div>').join(''):'<p class="muted">Detail materi belum ditambahkan.</p>')+renderHandoutSections(item)+'</div></details></div></article>').join('')+'</div></section>').join('');
    applyMaterialSearch();
    } catch (error) {
      list.innerHTML = '<p class="muted">'+escapeHtml(error.message || 'Database belum tersedia.')+'</p>';
@@ -1385,6 +1410,52 @@ aside {
    const progress = deck.querySelector('[data-slide-progress]');
    if (progress) progress.style.width = ((next + 1) / slides.length * 100) + '%';
  });
+
+ function closeRuangNalarPresentation() {
+   const overlay = document.getElementById('rnPresentation');
+   if (!overlay || overlay.hidden) return;
+   overlay.hidden = true; overlay.setAttribute('aria-hidden','true'); document.body.style.overflow = '';
+   document.getElementById('rnPresentationMain').innerHTML = '';
+   if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+ }
+ async function openRuangNalarPresentation(button) {
+   const card = button.closest('.material-card');
+   const source = card && card.querySelector('.material-article-content .rn-slide-deck');
+   if (!source) { notify('Slide belum tersedia untuk materi ini. Minta Admin membuat ulang draft handout dengan bagian slide.'); return; }
+   const overlay = document.getElementById('rnPresentation'), main = document.getElementById('rnPresentationMain');
+   const title = card.querySelector('h3');
+   document.getElementById('rnPresentationTitle').textContent = title ? title.textContent + ' · RuangNalar' : 'RuangNalar · Mode Belajar';
+   main.innerHTML = '';
+   const deck = source.cloneNode(true); deck.dataset.currentSlide = '0';
+   const slides = Array.from(deck.querySelectorAll('[data-slide-index]'));
+   slides.forEach((slide,index)=>{slide.hidden = index !== 0;});
+   const prev = deck.querySelector('[data-slide-prev]'), next = deck.querySelector('[data-slide-next]');
+   if (prev) prev.disabled = true; if (next) next.disabled = slides.length < 2;
+   const counter = deck.querySelector('[data-slide-counter]'); if (counter) counter.textContent = 'Slide 1 dari ' + slides.length;
+   const progress = deck.querySelector('[data-slide-progress]'); if (progress) progress.style.width = (slides.length ? 100/slides.length : 0) + '%';
+   main.appendChild(deck); overlay.hidden = false; overlay.setAttribute('aria-hidden','false'); document.body.style.overflow = 'hidden';
+   document.getElementById('rnPresentationClose').focus();
+   try { if (overlay.requestFullscreen) await overlay.requestFullscreen(); } catch (_) {}
+ }
+ document.addEventListener('click', event => {
+   const open = event.target.closest('[data-open-presentation]');
+   if (open) { openRuangNalarPresentation(open); return; }
+   if (event.target.closest('#rnPresentationClose')) { closeRuangNalarPresentation(); return; }
+   if (event.target.closest('#rnPresentationFullscreen')) {
+     const overlay = document.getElementById('rnPresentation');
+     if (!document.fullscreenElement && overlay && overlay.requestFullscreen) overlay.requestFullscreen().catch(()=>{});
+     else if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+   }
+ });
+ document.addEventListener('keydown', event => {
+   const overlay = document.getElementById('rnPresentation'); if (!overlay || overlay.hidden) return;
+   if (event.key === 'Escape') { closeRuangNalarPresentation(); return; }
+   if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+   const main = document.getElementById('rnPresentationMain');
+   const control = main.querySelector(event.key === 'ArrowRight' ? '[data-slide-next]' : '[data-slide-prev]');
+   if (control && !control.disabled) { event.preventDefault(); control.click(); }
+ });
+
  function escapeHtml(str){return str.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 })();
 </script>
