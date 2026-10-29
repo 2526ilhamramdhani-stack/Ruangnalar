@@ -279,24 +279,48 @@ h1 { font-family: var(--site-font-heading); font-size: clamp(29px,3.2vw,43px); l
    const status = document.getElementById('pdfUploadStatus');
    if (!title || (!sourceText && selectedPdfFiles.length === 0)) { notify('Tambahkan teks materi atau pilih minimal satu file PDF.'); return; }
    if (selectedPdfFiles.length) {
-     if (!window.pdfjsLib) { notify('Pustaka pembaca PDF belum tersedia. Coba lagi atau masukkan teks secara manual.'); return; }
      try {
+       if (!window.pdfjsLib) {
+         status.textContent = 'Memuat pustaka pembaca PDF…';
+         const loadPdfLibrary = src => new Promise((resolve, reject) => {
+           const script = document.createElement('script');
+           script.src = src;
+           script.onload = () => window.pdfjsLib ? resolve() : reject(new Error('Pustaka PDF tidak tersedia.'));
+           script.onerror = () => reject(new Error('CDN pembaca PDF tidak dapat diakses.'));
+           document.head.appendChild(script);
+         });
+         try { await loadPdfLibrary('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'); }
+         catch { await loadPdfLibrary('https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js'); }
+       }
+       if (!window.pdfjsLib) throw new Error('Pustaka pembaca PDF gagal dimuat. Periksa koneksi internet lalu muat ulang halaman.');
        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-       status.textContent = 'Mengekstrak teks dari PDF…';
+       let extractedChars = 0;
        for (const file of selectedPdfFiles) {
-         const pdf = await window.pdfjsLib.getDocument({data: await file.arrayBuffer()}).promise;
-         sourceText += '\n\n[Sumber PDF: ' + file.name + ']\n';
+         status.textContent = 'Mengekstrak teks: ' + file.name + '…';
+         let pdf;
+         try {
+           pdf = await window.pdfjsLib.getDocument({data: await file.arrayBuffer()}).promise;
+         } catch (workerError) {
+           pdf = await window.pdfjsLib.getDocument({data: await file.arrayBuffer(), disableWorker:true, useSystemFonts:true}).promise;
+         }
+         let fileText = '';
          for (let pageNo = 1; pageNo <= pdf.numPages; pageNo++) {
+           status.textContent = 'Mengekstrak ' + file.name + ' · halaman ' + pageNo + '/' + pdf.numPages + '…';
            const page = await pdf.getPage(pageNo);
            const textContent = await page.getTextContent();
-           sourceText += textContent.items.map(item => item.str || '').join(' ') + '\n';
-           if (sourceText.length > 48000) break;
+           fileText += textContent.items.map(item => item.str || '').filter(Boolean).join(' ') + '\n';
+           if (sourceText.length + fileText.length > 48000) break;
          }
+         if (!fileText.trim()) throw new Error('PDF "' + file.name + '" tidak berisi teks yang bisa disalin. Jika dokumen berupa scan/foto, diperlukan OCR.');
+         sourceText += '\n\n[Sumber PDF: ' + file.name + ']\n' + fileText;
+         extractedChars += fileText.trim().length;
          if (sourceText.length > 48000) break;
        }
-     } catch {
-       status.textContent = 'Gagal membaca salah satu PDF.';
-       notify('PDF tidak dapat dibaca. Pastikan PDF berisi teks, bukan hasil scan gambar.');
+       if (!extractedChars) throw new Error('Tidak ada teks yang berhasil diekstrak dari PDF. Coba PDF berbasis teks atau tempelkan teks secara manual.');
+       status.textContent = 'Teks PDF berhasil dibaca (' + extractedChars.toLocaleString('id-ID') + ' karakter). Mengirim ke AI…';
+     } catch (error) {
+       status.textContent = error.message || 'Gagal membaca PDF.';
+       notify(error.message || 'PDF tidak dapat dibaca.');
        return;
      }
    }
