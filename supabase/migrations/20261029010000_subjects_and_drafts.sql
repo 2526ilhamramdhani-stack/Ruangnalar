@@ -5,8 +5,7 @@ alter table public.learning_contents
   add column if not exists status text not null default 'published';
 
 update public.learning_contents
-set status = case when published then 'published' else 'draft' end
-where status is null or status not in ('draft','published');
+set status = case when published then 'published' else 'draft' end;
 
 alter table public.learning_contents
   drop constraint if exists learning_contents_subject_id_check;
