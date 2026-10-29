@@ -107,7 +107,7 @@ module.exports = async function handler(req, res) {
     if (subjectId && !SUBJECTS.includes(subjectId)) return send(res, 400, { error: 'Mata pelajaran tidak valid.' });
     try {
       const params = new URLSearchParams({
-        select: 'id,subject_id,status,title,topic,summary,key_points,example,questions,author_name,created_at,published,source_file_name,source_file_mime_type,source_references,handout_version,reviewed_at',
+        select: 'id,subject_id,status,title,topic,summary,key_points,example,questions,author_name,created_at,published',
         order: 'created_at.desc',
         limit: '100'
       });
@@ -128,13 +128,13 @@ module.exports = async function handler(req, res) {
             order: 'position.asc'
           });
           const sectionsResult = await dbRequest(config, 'handout_sections?' + sectionParams.toString());
-          if (!sectionsResult.response.ok) return send(res, 502, { error: 'Materi tersedia, tetapi bagian Handout gagal dimuat. Pastikan migration Handout sudah diterapkan.' });
           const grouped = new Map();
-          for (const section of Array.isArray(sectionsResult.data) ? sectionsResult.data : []) {
+          for (const section of (sectionsResult.response.ok && Array.isArray(sectionsResult.data) ? sectionsResult.data : [])) {
             if (!grouped.has(section.content_id)) grouped.set(section.content_id, []);
             grouped.get(section.content_id).push(section);
           }
           for (const item of contents) item.handoutSections = grouped.get(item.id) || [];
+          if (!sectionsResult.response.ok) contents.handoutWarning = 'Bagian Handout terstruktur belum tersedia. Admin perlu memeriksa migration Supabase.';
         }
       }
       return send(res, 200, { contents });
@@ -174,7 +174,7 @@ module.exports = async function handler(req, res) {
     example: typeof draft.example === 'string' ? draft.example.slice(0, 12000) : '',
     questions,
     published: false,
-    source_references: isObject(draft.sections?.sources) ? draft.sections.sources : []
+    source_references: Array.isArray(draft.sections?.sources?.references) ? draft.sections.sources.references : []
   };
   try {
     let contentId = id;
