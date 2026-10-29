@@ -366,9 +366,55 @@ h1 { font-family: var(--site-font-heading); font-size: clamp(29px,3.2vw,43px); l
  document.getElementById('nextQuestion').addEventListener('click',()=>{questionIndex=questionIndex===questionBank.length-1?0:questionIndex+1;renderQuestion();});
  renderQuestion();
  document.getElementById('saveProgress').addEventListener('click', () => notify('Simulasi: fitur simpan progres akan memerlukan akun dan database.'));
- document.querySelectorAll('[data-exam]').forEach(b => b.addEventListener('click', () => {
-   if(examTimer) clearInterval(examTimer); let remain=b.dataset.exam==='formatif'?300:1800; const panel=document.getElementById('examPanel'); panel.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><span class="type-pill">SIMULASI '+b.dataset.exam.toUpperCase()+'</span><h3 style="margin-bottom:4px">Mode ujian dimulai</h3><p class="muted" style="margin:0">Timer demo sedang berjalan. Belum menyimpan nilai ke server.</p></div><div style="font-size:25px;font-weight:850;color:var(--site-primary)" id="timerDisplay">'+fmt(remain)+'</div></div><div class="exam-item"><h4>1. Berapakah hasil (g ∘ f)(x) jika f(x)=3x−1 dan g(x)=2x²−3?</h4><p>Pilih jawaban pada tab Latihan Topik untuk mencoba soal contoh.</p><button class="btn btn-soft" id="examPractice">Buka soal contoh →</button></div><button class="btn btn-ghost" id="stopExam">Akhiri simulasi</button>'; document.getElementById('examPractice').addEventListener('click',()=>go('latihan')); document.getElementById('stopExam').addEventListener('click',()=>{clearInterval(examTimer);panel.innerHTML='<h3>Simulasi diakhiri</h3><p class="muted">Hasil ujian belum direkam karena ini adalah preview front-end.</p>';notify('Simulasi demo diakhiri.');}); examTimer=setInterval(()=>{remain--;const el=document.getElementById('timerDisplay');if(el)el.textContent=fmt(remain);if(remain<=0){clearInterval(examTimer);notify('Waktu demo habis.');}},1000); notify('Simulasi '+b.dataset.exam+' dimulai.');
- }));
+ const examQuestions = [
+  {topic:'Komposisi Fungsi',q:'Jika f(x)=2x+1 dan g(x)=x²−3, maka (g ∘ f)(x) adalah …',options:['4x²+4x−2','4x²+4x−3','2x²+1','4x²−3'],answer:0,why:'g(f(x))=(2x+1)²−3=4x²+4x−2.'},
+  {topic:'Komposisi Fungsi',q:'Diketahui f(x)=x−2 dan g(x)=3x+4. Nilai (g ∘ f)(2) adalah …',options:['4','6','8','10'],answer:0,why:'f(2)=0 dan g(0)=4.'},
+  {topic:'Fungsi Invers',q:'Jika f(x)=4x−8, fungsi inversnya adalah …',options:['(x−8)/4','(x+8)/4','4x+8','x/4−8'],answer:1,why:'Dari y=4x−8 diperoleh x=(y+8)/4, sehingga f⁻¹(x)=(x+8)/4.'},
+  {topic:'Domain',q:'Domain fungsi h(x)=1/(x+5) adalah …',options:['Semua real kecuali x=−5','Semua real kecuali x=5','x>−5','Semua bilangan real'],answer:0,why:'Penyebut tidak boleh nol, sehingga x+5≠0 atau x≠−5.'},
+  {topic:'Komposisi Fungsi',q:'Jika f(x)=x² dan g(x)=x+1, nilai (f ∘ g)(2) adalah …',options:['5','6','8','9'],answer:3,why:'g(2)=3 lalu f(3)=3²=9.'},
+  {topic:'Komposisi Fungsi',q:'Diketahui f(x)=3x−2 dan g(x)=2x+1. Bentuk (f ∘ g)(x) adalah …',options:['6x+1','6x−1','5x−1','6x+3'],answer:0,why:'f(g(x))=3(2x+1)−2=6x+1.'},
+  {topic:'Fungsi Invers',q:'Jika f(x)=x/3+2, maka f⁻¹(x) adalah …',options:['3x+6','3x−6','(x−2)/3','x/3−2'],answer:1,why:'y=x/3+2, tukar x dan y lalu selesaikan: x=3y−6, jadi y=3x−6.'},
+  {topic:'Domain',q:'Domain fungsi p(x)=√(x−4) pada bilangan real adalah …',options:['x<4','x≤4','x≥4','Semua real'],answer:2,why:'Isi akar harus tidak negatif: x−4≥0 sehingga x≥4.'},
+  {topic:'Penalaran',q:'f(x)=x+3 dan g(x)=2x. Selisih (g ∘ f)(1) dengan (f ∘ g)(1), dengan urutan pertama dikurangi kedua, adalah …',options:['0','2','3','4'],answer:1,why:'g(f(1))=g(4)=8, sedangkan f(g(1))=f(2)=5. Selisihnya 8−5=3.'},
+  {topic:'Fungsi Invers',q:'Jika f(x)=x³+6, maka f⁻¹(x) adalah …',options:['∛(x)+6','∛(x−6)','∛(x+6)','(x−6)³'],answer:1,why:'Dari y=x³+6 diperoleh x³=y−6, sehingga inversnya ∛(x−6).'}
+ ];
+ let activeExam = null, examAnswers = {}, examQuestionIndex = 0, examRemaining = 0, examSubmitted = false;
+ function renderExamQuestion() {
+   if (!activeExam || examSubmitted) return;
+   const panel = document.getElementById('examPanel');
+   const q = activeExam.questions[examQuestionIndex];
+   const chosen = examAnswers[examQuestionIndex];
+   panel.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap"><div><span class="type-pill">SIMULASI '+activeExam.label.toUpperCase()+'</span><h3 style="margin:8px 0 4px">Soal '+(examQuestionIndex+1)+' dari '+activeExam.questions.length+'</h3><p class="muted" style="margin:0">'+escapeHtml(q.topic)+' · '+Object.keys(examAnswers).length+' soal telah dijawab</p></div><div style="font-size:25px;font-weight:850;color:var(--site-primary)" id="timerDisplay">'+fmt(examRemaining)+'</div></div><div class="progress" style="margin:16px 0"><span style="width:'+((examQuestionIndex+1)/activeExam.questions.length*100)+'%"></span></div><div class="exam-item"><h4>'+escapeHtml(q.q)+'</h4><div class="quiz-options" id="examOptions">'+q.options.map((v,i)=>'<button type="button" class="option '+(chosen===i?'selected':'')+'" data-exam-answer="'+i+'"><span class="letter">'+String.fromCharCode(65+i)+'</span><span>'+escapeHtml(v)+'</span></button>').join('')+'</div></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px"><button type="button" class="btn btn-ghost" id="examPrev" '+(examQuestionIndex===0?'disabled':'')+'>← Sebelumnya</button><button type="button" class="btn btn-soft" id="examNext">'+(examQuestionIndex===activeExam.questions.length-1?'Tinjau jawaban':'Berikutnya →')+'</button><button type="button" class="btn btn-primary" id="submitExam">Kumpulkan ujian</button></div><p class="muted" style="margin-top:12px;font-size:12px">Jawaban dapat diubah sebelum dikumpulkan. Hasil ini dihitung di browser dan belum tersimpan ke akun.</p>';
+   panel.querySelectorAll('[data-exam-answer]').forEach(btn=>btn.addEventListener('click',()=>{examAnswers[examQuestionIndex]=Number(btn.dataset.examAnswer);renderExamQuestion();}));
+   document.getElementById('examPrev').addEventListener('click',()=>{if(examQuestionIndex>0){examQuestionIndex--;renderExamQuestion();}});
+   document.getElementById('examNext').addEventListener('click',()=>{examQuestionIndex=examQuestionIndex===activeExam.questions.length-1?0:examQuestionIndex+1;renderExamQuestion();});
+   document.getElementById('submitExam').addEventListener('click',()=>submitExam(false));
+ }
+ function submitExam(byTimeout) {
+   if(!activeExam||examSubmitted)return;
+   examSubmitted=true;
+   if(examTimer){clearInterval(examTimer);examTimer=null;}
+   const correct=activeExam.questions.reduce((n,q,i)=>n+(examAnswers[i]===q.answer?1:0),0);
+   const wrong=Object.keys(examAnswers).length-correct;
+   const unanswered=activeExam.questions.length-Object.keys(examAnswers).length;
+   const score=Math.round(correct/activeExam.questions.length*100);
+   const panel=document.getElementById('examPanel');
+   panel.innerHTML='<span class="type-pill">'+(byTimeout?'WAKTU HABIS':'UJIAN SELESAI')+'</span><h3 style="font-size:24px;margin:12px 0 4px">Nilai kamu: '+score+'</h3><p class="muted">'+correct+' benar · '+wrong+' salah · '+unanswered+' belum dijawab · '+activeExam.questions.length+' soal</p><div class="progress"><span style="width:'+score+'%"></span></div><h3 style="margin-top:22px">Pembahasan jawaban</h3>'+activeExam.questions.map((q,i)=>'<div class="exam-item" style="margin-top:12px"><b>'+ (i+1)+'. '+escapeHtml(q.q)+'</b><p style="margin:8px 0">Jawaban benar: <b>'+escapeHtml(q.options[q.answer])+'</b></p><p class="muted" style="margin:0">'+escapeHtml(q.why)+'</p><p style="margin:6px 0 0;color:'+(examAnswers[i]===q.answer?'var(--good)':'var(--warning)')+'">'+(examAnswers[i]===q.answer?'Jawaban kamu benar':examAnswers[i]===undefined?'Belum dijawab':'Jawaban kamu: '+escapeHtml(q.options[examAnswers[i]]))+'</p></div>').join('')+'<button type="button" class="btn btn-primary" id="restartExam" style="margin-top:16px">Ulangi simulasi</button><button type="button" class="btn btn-ghost" id="backExam" style="margin:16px 0 0 8px">Kembali ke latihan</button>';
+   document.getElementById('restartExam').addEventListener('click',()=>startExam(activeExam.label));
+   document.getElementById('backExam').addEventListener('click',()=>go('latihan'));
+   notify(byTimeout?'Waktu habis. Hasil ujian ditampilkan.':'Ujian dikumpulkan. Hasilmu siap dilihat.');
+ }
+ function startExam(kind) {
+   if(examTimer){clearInterval(examTimer);examTimer=null;}
+   const isFormative=kind==='formatif';
+   const pool=isFormative?examQuestions.slice(0,5):examQuestions;
+   activeExam={label:kind,questions:pool};
+   examAnswers={};examQuestionIndex=0;examSubmitted=false;examRemaining=isFormative?300:1800;
+   renderExamQuestion();
+   examTimer=setInterval(()=>{examRemaining--;const el=document.getElementById('timerDisplay');if(el)el.textContent=fmt(examRemaining);if(examRemaining<=0)submitExam(true);},1000);
+   notify('Simulasi '+kind+' dimulai. Semangat!');
+ }
+ document.querySelectorAll('[data-exam]').forEach(b=>b.addEventListener('click',()=>startExam(b.dataset.exam)));
  function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
  document.getElementById('adminForm').addEventListener('submit', e=>{e.preventDefault();const title=document.getElementById('contentTitle').value.trim();const topic=document.getElementById('contentTopic').value;const raw=document.getElementById('rawContent').value.trim(); if(!title||!raw){notify('Isi judul dan materi terlebih dahulu.');return;} draftCreated=true;document.getElementById('draftBadge').textContent='DRAF DEMO';document.getElementById('adminPreview').innerHTML='<div class="type-pill">'+escapeHtml(topic.toUpperCase())+'</div><h3>'+escapeHtml(title)+'</h3><p class="muted">Rangkuman (pratinjau simulasi): Materi ini membahas konsep inti '+escapeHtml(topic.toLowerCase())+'. Pahami definisi dan urutan proses, kemudian verifikasi dengan substitusi serta contoh.</p><div class="equation">(g ∘ f)(x) = g(f(x))</div><h3>Soal contoh</h3><p class="muted">Jika f(x)=3x−1 dan g(x)=2x²−3, tentukan (g ∘ f)(x).</p><p class="muted"><b>Pembahasan:</b> 2(3x−1)²−3 = 18x²−12x−1.</p><p class="muted" style="margin-top:14px">Jumlah karakter sumber: '+raw.length+'. Ini contoh lokal, bukan hasil panggilan AI.</p>';document.getElementById('publishDraft').classList.remove('hidden');notify('Preview draf demo dibuat.');});
  document.getElementById('publishDraft').addEventListener('click',()=>{if(!draftCreated)return;notify('Publish belum aktif: perlu autentikasi admin dan database.');});
