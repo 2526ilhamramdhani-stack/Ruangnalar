@@ -58,6 +58,7 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify({
         model: process.env.OPENAI_MODEL || 'gpt-4.1-mini',
         instructions: 'Kamu adalah asisten penyusun materi matematika SMA berbahasa Indonesia. Gunakan hanya fakta yang didukung sumber. Jika sumber tidak cukup, nyatakan keterbatasannya. Jangan mengarang kutipan atau rumus. Kembalikan jawaban sebagai JSON valid dengan kunci summary (string), keyPoints (array string), example (string), questions (array 5 objek dengan keys question, options (array tepat 4 string), answerIndex (integer 0-3), explanation (string)). Buat soal beragam dan periksa jawaban serta pembahasannya secara matematis.',
+        text: { format: { type: 'json_object' } },
         input: 'Susun draf pembelajaran berdasarkan data berikut. Ini draf untuk ditinjau admin, bukan untuk langsung dipublikasikan.\nJudul: ' + title + '\nTopik: ' + topic + '\n\nSUMBER MATERI:\n' + sourceText
       })
     });
