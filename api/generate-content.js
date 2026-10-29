@@ -99,12 +99,15 @@ module.exports = async function handler(req, res) {
     if (typeof draft.summary !== 'string' || !Array.isArray(draft.keyPoints) || !Array.isArray(draft.questions)) {
       return send(res, 502, { error: 'Struktur draf AI tidak sesuai format yang diharapkan.' });
     }
-    if (draft.questions.length !== 5 || draft.questions.some(q =>
-      !q || typeof q.question !== 'string' || !Array.isArray(q.options) || q.options.length !== 4 ||
-      !Number.isInteger(q.answerIndex) || q.answerIndex < 0 || q.answerIndex > 3 || typeof q.explanation !== 'string'
-    )) {
-      return send(res, 502, { error: 'Format soal dari AI tidak lengkap. Silakan buat draf ulang dan periksa hasilnya.' });
+    const validQuestions = draft.questions.length === 5 && draft.questions.every(q => {
+      if (!q || typeof q.question !== 'string' || !Array.isArray(q.options) || q.options.length !== 4) return false;
+      const answerIndex = typeof q.answerIndex === 'string' && q.answerIndex.trim() !== '' ? Number(q.answerIndex) : q.answerIndex;
+      return Number.isInteger(answerIndex) && answerIndex >= 0 && answerIndex <= 3 && typeof q.explanation === 'string';
+    });
+    if (!validQuestions) {
+      return send(res, 502, { error: 'Gemini belum menghasilkan tepat 5 soal dengan masing-masing 4 opsi, answerIndex 0–3, dan pembahasan. Coba buat draf ulang. Jika berulang, periksa konfigurasi model Gemini.' });
     }
+    draft.questions = draft.questions.map(q => ({ ...q, answerIndex: Number(q.answerIndex) }));
     if (typeof draft.example !== 'string') draft.example = '';
     return send(res, 200, { draft });
   } catch {
