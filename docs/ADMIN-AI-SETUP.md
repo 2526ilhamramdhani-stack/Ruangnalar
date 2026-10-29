@@ -72,3 +72,23 @@ Slug mata pelajaran yang digunakan:
 - `fiqih`
 
 Materi publik hanya diambil jika `published = true` dan `status = 'published'`. Draf admin disimpan dengan status `draft` dan tidak akan tampil pada daftar materi siswa. API tetap mensyaratkan sesi Admin untuk menyimpan atau memperbarui konten.
+
+
+## Fondasi akun siswa, progres, Handout Pintar, dan arsip
+
+Migration tambahan `supabase/migrations/20261029030000_student_progress_handouts_archive.sql` menyiapkan tabel:
+- `student_profiles`: profil dasar yang terhubung ke identitas Supabase Auth.
+- `learning_progress`: progres belajar per akun, mata pelajaran, jenis aktivitas, dan kunci progres.
+- `handout_sections`: bagian Handout terstruktur untuk overview, mind map, contoh nyata, slide, cheatsheet, modul latihan, dan sumber.
+- `archive_files`: metadata arsip, termasuk referensi file Google Drive yang dipilih.
+
+Migration ini juga menambahkan metadata sumber dan peninjauan admin ke `learning_contents`. Jalankan setelah tiga migration sebelumnya di Supabase SQL Editor. Menambahkan file migration ke GitHub **tidak** menjalankannya di proyek Supabase secara otomatis.
+
+### Status implementasi dan batasan
+
+- Skema dan kebijakan Row Level Security untuk progres siswa disiapkan, dengan akses berbasis `auth.uid()`.
+- Kebijakan ini belum berarti login siswa sudah tersedia di antarmuka. Alur login/registrasi Supabase Auth dan endpoint progres yang memverifikasi bearer token masih harus diimplementasikan sebelum fitur progres lintas perangkat dipakai.
+- Bagian Handout dan metadata arsip belum memiliki endpoint tulis khusus; penulisan sengaja belum dibuka langsung dari browser.
+- Google Drive belum terhubung melalui OAuth. Tabel arsip hanya menyimpan metadata/referensi file, bukan token OAuth.
+- API konten lama masih menggunakan sesi cookie Admin untuk menulis dan endpoint materi publik masih dapat dibaca tanpa login. Perubahan ke akses siswa wajib login harus dilakukan bersama alur autentikasi siswa dan pengujian agar tidak mengunci admin atau merusak materi yang sudah diterbitkan.
+- Untuk kebijakan privasi, jangan menyimpan token Google Drive, service-role key, atau rahasia lain pada kolom metadata maupun frontend.
