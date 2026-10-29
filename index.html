@@ -1082,7 +1082,7 @@ aside {
        const valid = Array.isArray(editedQuestions) && editedQuestions.length === 20 && editedQuestions.every(q => q && typeof q.question === 'string' && Array.isArray(q.options) && q.options.length === 5 && Number.isInteger(Number(q.answerIndex)) && Number(q.answerIndex) >= 0 && Number(q.answerIndex) <= 4 && typeof q.explanation === 'string');
        if (!valid) throw new Error('Bank soal harus berisi tepat 20 soal, masing-masing 5 opsi A–E, answerIndex 0–4, dan pembahasan.');
        const editedSections = JSON.parse(document.getElementById('editDraftSections').value);
-       if (!editedSections || !editedSections.slides || !Array.isArray(editedSections.slides.slides) || editedSections.slides.slides.length < 3) throw new Error('Struktur Handout tidak valid: minimal 3 slide wajib tersedia.');
+       if (!editedSections || !editedSections.slides || !Array.isArray(editedSections.slides.slides) || editedSections.slides.slides.length < 5) throw new Error('Struktur Handout tidak valid: minimal 5 slide wajib tersedia.');
        const normalizedQuestions = editedQuestions.map(q=>({...q,answerIndex:Number(q.answerIndex)}));
        const previousDraft = currentAIDraft.draft;
        if (!Array.isArray(previousDraft.practiceModules) || previousDraft.practiceModules.length !== 2) throw new Error('Dua modul latihan awal belum tersedia. Buat ulang draf AI.');
