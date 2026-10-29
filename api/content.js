@@ -159,11 +159,31 @@ module.exports = async function handler(req, res) {
     }
   }
 
-  if (!['POST','PATCH'].includes(req.method)) {
-    res.setHeader('Allow', 'GET, POST, PATCH');
+  if (!['POST','PATCH','DELETE'].includes(req.method)) {
+    res.setHeader('Allow', 'GET, POST, PATCH, DELETE');
     return send(res, 405, { error: 'Method tidak diizinkan.' });
   }
   if (!isAuthenticated(req)) return send(res, 401, { error: 'Sesi Admin tidak valid. Silakan masuk kembali.' });
+
+  // Deletion is a separate admin-only operation. The database FK cascades
+  // associated handout_sections and unlinks archive metadata safely.
+  if (req.method === 'DELETE') {
+    const url = new URL(req.url || '/', 'http://localhost');
+    const id = url.searchParams.get('id') || '';
+    if (!id || id.length > 100) return send(res, 400, { error: 'ID handout tidak valid.' });
+    try {
+      const removed = await dbRequest(config, 'learning_contents?id=eq.' + encodeURIComponent(id) + '&select=id,title', {
+        method: 'DELETE',
+        headers: { Prefer: 'return=representation' }
+      });
+      if (!removed.response.ok) return send(res, 502, { error: 'Handout gagal dihapus dari database. Tidak ada perubahan yang dikonfirmasi.' });
+      const rows = Array.isArray(removed.data) ? removed.data : [];
+      if (!rows.length) return send(res, 404, { error: 'Handout tidak ditemukan atau sudah dihapus.' });
+      return send(res, 200, { deleted: true, content: rows[0] });
+    } catch {
+      return send(res, 502, { error: 'Tidak dapat menghubungi database untuk menghapus handout.' });
+    }
+  }
   let body = req.body;
   if (typeof body === 'string') { try { body = JSON.parse(body); } catch { body = {}; } }
   const title = typeof body?.title === 'string' ? body.title.trim().slice(0, 160) : '';
