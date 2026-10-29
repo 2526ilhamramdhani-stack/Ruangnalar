@@ -62,7 +62,7 @@ PDF diekstrak di browser menggunakan PDF.js. Jika PDF berupa hasil scan atau fot
 
 ## Pengelompokan mata pelajaran dan status draf
 
-Migration tambahan `supabase/migrations/20261029010000_subjects_and_drafts.sql` menambahkan `subject_id` dan `status` secara kompatibel ke tabel `learning_contents`. Jalankan file SQL tersebut di Supabase SQL Editor **sebelum** menggunakan versi aplikasi yang memakai filter mata pelajaran dan penyimpanan draf.
+Migration tambahan `supabase/migrations/20261029010000_subjects_and_drafts.sql` menambahkan `subject_id` dan `status` secara kompatibel ke tabel `learning_contents`. Jalankan file SQL tersebut di Supabase SQL Editor **sebelum** menggunakan versi aplikasi yang memakai filter mata pelajaran dan penyimpanan draf. Jalankan juga migration `20261029020000_learning_content_author.sql` agar kolom `author_name` tersedia karena API membacanya.
 
 Slug mata pelajaran yang digunakan:
 - `matematika-wajib`
