@@ -485,31 +485,31 @@ button:disabled { cursor: not-allowed; opacity: .58; transform: none !important;
 .material-card-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
 .material-card { position:relative; min-width:0; overflow:hidden; display:flex; flex-direction:column; background:#FFFFFF; border:1px solid #D4DEE2; border-radius:17px; box-shadow:0 5px 16px rgba(23,43,58,.04); transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease,background-color .22s ease; }
 .material-card-accent { height:5px; background:linear-gradient(90deg,#31AAA9 0%,#F8E0A4 100%); }
-    /* Variasi warna kartu: pastel lembut dengan kontras teks yang tetap nyaman dibaca. */
-    .material-card-grid > .material-card:nth-child(6n+1) { background:#F0F8F6; border-color:#C9E6DF; }
-    .material-card-grid > .material-card:nth-child(6n+1) .material-card-accent { background:linear-gradient(90deg,#269C91,#BCE8D8); }
-    .material-card-grid > .material-card:nth-child(6n+1) .material-details summary { background:#D9F0E9; color:#15564F; }
-    .material-card-grid > .material-card:nth-child(6n+1) .material-author-avatar { background:#CDECE3; color:#15564F; }
-    .material-card-grid > .material-card:nth-child(6n+2) { background:#F3F4FC; border-color:#D8DCF5; }
-    .material-card-grid > .material-card:nth-child(6n+2) .material-card-accent { background:linear-gradient(90deg,#7378D8,#C9C7FA); }
-    .material-card-grid > .material-card:nth-child(6n+2) .material-details summary { background:#E4E5FB; color:#3E428D; }
-    .material-card-grid > .material-card:nth-child(6n+2) .material-author-avatar { background:#DFE1FA; color:#3E428D; }
-    .material-card-grid > .material-card:nth-child(6n+3) { background:#FFF6EB; border-color:#F1DFC5; }
-    .material-card-grid > .material-card:nth-child(6n+3) .material-card-accent { background:linear-gradient(90deg,#E39A42,#F6D6A0); }
-    .material-card-grid > .material-card:nth-child(6n+3) .material-details summary { background:#FBE8CB; color:#81501B; }
-    .material-card-grid > .material-card:nth-child(6n+3) .material-author-avatar { background:#F8E4C4; color:#81501B; }
-    .material-card-grid > .material-card:nth-child(6n+4) { background:#FDF0F3; border-color:#F0D2DD; }
-    .material-card-grid > .material-card:nth-child(6n+4) .material-card-accent { background:linear-gradient(90deg,#D96F93,#F5C4D5); }
-    .material-card-grid > .material-card:nth-child(6n+4) .material-details summary { background:#F9DDE7; color:#8B3152; }
-    .material-card-grid > .material-card:nth-child(6n+4) .material-author-avatar { background:#F7D9E4; color:#8B3152; }
-    .material-card-grid > .material-card:nth-child(6n+5) { background:#EEF6FD; border-color:#CFE2F5; }
-    .material-card-grid > .material-card:nth-child(6n+5) .material-card-accent { background:linear-gradient(90deg,#438BCB,#B4D9F7); }
-    .material-card-grid > .material-card:nth-child(6n+5) .material-details summary { background:#DCECFB; color:#245982; }
-    .material-card-grid > .material-card:nth-child(6n+5) .material-author-avatar { background:#D5E9FA; color:#245982; }
-    .material-card-grid > .material-card:nth-child(6n) { background:#F5F2FA; border-color:#E0D6EF; }
-    .material-card-grid > .material-card:nth-child(6n) .material-card-accent { background:linear-gradient(90deg,#9574C7,#D7C5F1); }
-    .material-card-grid > .material-card:nth-child(6n) .material-details summary { background:#E9DFF6; color:#60418D; }
-    .material-card-grid > .material-card:nth-child(6n) .material-author-avatar { background:#E7DDF4; color:#60418D; }
+/* Kartu memakai warna penuh, bukan sekadar aksen; teks dan kontrol tetap kontras. */
+.material-card-grid > .material-card:nth-child(6n+1) { background:#DDF3EC; border-color:#B6E2D5; }
+.material-card-grid > .material-card:nth-child(6n+1) .material-card-accent { background:#279B8C; }
+.material-card-grid > .material-card:nth-child(6n+1) .material-details summary { background:#C3E9DD; color:#124E47; }
+.material-card-grid > .material-card:nth-child(6n+1) .material-author-avatar { background:#B7E4D7; color:#124E47; }
+.material-card-grid > .material-card:nth-child(6n+2) { background:#E6E8FC; border-color:#C9CDF5; }
+.material-card-grid > .material-card:nth-child(6n+2) .material-card-accent { background:#7479D8; }
+.material-card-grid > .material-card:nth-child(6n+2) .material-details summary { background:#D4D7FA; color:#363B83; }
+.material-card-grid > .material-card:nth-child(6n+2) .material-author-avatar { background:#D0D3F8; color:#363B83; }
+.material-card-grid > .material-card:nth-child(6n+3) { background:#FFEACD; border-color:#F2D5A8; }
+.material-card-grid > .material-card:nth-child(6n+3) .material-card-accent { background:#D88A2F; }
+.material-card-grid > .material-card:nth-child(6n+3) .material-details summary { background:#F8DDB2; color:#754613; }
+.material-card-grid > .material-card:nth-child(6n+3) .material-author-avatar { background:#F6D8A8; color:#754613; }
+.material-card-grid > .material-card:nth-child(6n+4) { background:#FBE0E9; border-color:#EFC1D1; }
+.material-card-grid > .material-card:nth-child(6n+4) .material-card-accent { background:#D5688D; }
+.material-card-grid > .material-card:nth-child(6n+4) .material-details summary { background:#F4CADA; color:#812D4C; }
+.material-card-grid > .material-card:nth-child(6n+4) .material-author-avatar { background:#F2C5D6; color:#812D4C; }
+.material-card-grid > .material-card:nth-child(6n+5) { background:#DDEDFC; border-color:#BDD9F3; }
+.material-card-grid > .material-card:nth-child(6n+5) .material-card-accent { background:#438BCB; }
+.material-card-grid > .material-card:nth-child(6n+5) .material-details summary { background:#C8E1F8; color:#204E78; }
+.material-card-grid > .material-card:nth-child(6n+5) .material-author-avatar { background:#C5DFF7; color:#204E78; }
+.material-card-grid > .material-card:nth-child(6n) { background:#EBE1F7; border-color:#D5C3EB; }
+.material-card-grid > .material-card:nth-child(6n) .material-card-accent { background:#9574C7; }
+.material-card-grid > .material-card:nth-child(6n) .material-details summary { background:#DCCCF0; color:#57397F; }
+.material-card-grid > .material-card:nth-child(6n) .material-author-avatar { background:#D9C8EE; color:#57397F; }
 .material-card-body { display:flex; flex-direction:column; align-items:flex-start; flex:1; padding:18px; }
 .material-card-meta { display:flex; align-items:center; flex-wrap:wrap; gap:7px; color:#52616B; font-size:11px; font-weight:700; }
 .material-dot { color:#31AAA9; }
@@ -526,7 +526,7 @@ button:disabled { cursor: not-allowed; opacity: .58; transform: none !important;
 .material-details[open] summary { background:#172B3A; color:#FFFFFF; }
 .material-article-content { padding:15px 2px 2px; color:#334155; font-size:14px; line-height:1.75; overflow-wrap:anywhere; }
 .material-article-content h4 { margin:15px 0 6px; color:#172B3A; }
-.material-card:hover,.material-card:focus-within { transform:translateY(-4px); border-color:#31AAA9; background:#FBFEFD; box-shadow:0 16px 34px rgba(23,43,58,.12); }
+.material-card:hover,.material-card:focus-within { transform:translateY(-4px); box-shadow:0 16px 34px rgba(23,43,58,.16); }
 .material-card:hover .material-card-accent,.material-card:focus-within .material-card-accent { height:6px; }
 .subject-card { transition:transform .22s ease,background-color .22s ease,border-color .22s ease,box-shadow .22s ease,color .22s ease; }
 .subject-card:hover,.subject-card:focus-visible { transform:translateY(-3px); background:#2A4857; border-color:#31AAA9; color:#FFFFFF; box-shadow:0 12px 26px rgba(7,21,29,.2); }
