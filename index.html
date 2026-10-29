@@ -6,26 +6,26 @@
 <title>RuangNalar — Belajar Matematika</title>
 <style>
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   --site-primary: #5B5CE2;
   --site-secondary: #E8E8FF;
   --site-background: #FFFFFF;
   --site-on-primary: #FFFFFF;
   --site-on-secondary: #292A76;
-  --site-on-background: #111827;
+  --site-on-background: #000000;
   --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --site-font-heading: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --site-heading-scale: 1;
   --site-spacing-scale: 1;
   --site-radius-scale: 1;
   --site-decoration-opacity: 1;
-  --ink: light-dark(#111827,#F1F5F9);
-  --muted: light-dark(#4B5563,#A5ADBF);
-  --panel: light-dark(#FFFFFF,#1B1D30);
-  --panel-soft: light-dark(#F3F5FC,#252743);
-  --line: light-dark(#E5E7EB,#343650);
-  --good: light-dark(#16794A,#70D7A4);
-  --warning: light-dark(#B56A16,#F5BD68);
+  --ink: #000000;
+  --muted: #333333;
+  --panel: #FFFFFF;
+  --panel-soft: #F3F5FC;
+  --line: #E5E7EB;
+  --good: #16794A;
+  --warning: #B56A16;
   --shadow: 0 14px 40px rgba(38, 40, 90, .07);
 }
 * { box-sizing: border-box; }
@@ -64,7 +64,7 @@ main { min-width: 0; }
 h1,h2,h3,p { margin-top: 0; }
 h1 { font-family: var(--site-font-heading); font-size: clamp(29px,3.2vw,43px); line-height: 1.13; letter-spacing: -1.7px; margin: 13px 0 13px; font-weight: 820; }
 .hero { background: radial-gradient(circle at 88% 10%,#8e8dff5c,transparent 30%), linear-gradient(120deg,#f0efff 0%,#e8ebff 55%,#e2e7ff 100%); color: #25264F; padding: clamp(25px,4vw,39px); border-radius: calc(24px * var(--site-radius-scale)); display: grid; grid-template-columns: minmax(0,1.4fr) minmax(180px,.8fr); gap: 18px; position: relative; overflow: hidden; }
-.hero p { font-size: 13px; max-width: 470px; line-height: 1.75; color: #66688E; margin-bottom: 22px; }
+.hero p { font-size: 13px; max-width: 470px; line-height: 1.75; color: #333333; margin-bottom: 22px; }
 .hero .eyebrow { color: #5554D1; }
 .btn { border: 0; padding: 12px 16px; border-radius: calc(11px * var(--site-radius-scale)); font-weight: 750; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: transform .18s ease, opacity .18s ease; }
 .btn:hover { transform: translateY(-1px); }
