@@ -28,3 +28,24 @@ Simpan variabel, lalu lakukan **redeploy** agar tersedia pada deployment baru. J
 - Jangan masukkan data pribadi/sensitif siswa ke materi sumber.
 - Jangan gunakan draf AI untuk penilaian resmi sebelum semua soal dan jawaban diverifikasi guru.
 - Endpoint memerlukan deployment Vercel yang mendukung Node.js Functions. Setelah branch digabung, uji endpoint di deployment Preview terlebih dahulu.
+
+## Mengaktifkan database dan publikasi materi
+
+Fitur simpan/terbitkan menggunakan Supabase Postgres. Kode endpoint sudah tersedia, tetapi database belum aktif sampai kamu membuat/menghubungkan proyek Supabase dan mengisi variabel berikut di Vercel:
+
+- `SUPABASE_URL`: Project URL dari Supabase → Project Settings → API.
+- `SUPABASE_SERVICE_ROLE_KEY`: secret/service-role key dari Supabase → Project Settings → API Keys. Simpan **hanya** di Vercel server environment; jangan masukkan ke HTML, chat, atau GitHub.
+
+Langkah setup:
+
+1. Buat proyek Supabase baru di https://supabase.com/ jika belum punya.
+2. Buka **SQL Editor** pada proyek tersebut.
+3. Jalankan seluruh SQL dari file `supabase/migrations/20261029000000_learning_contents.sql` di repository.
+4. Tambahkan `SUPABASE_URL` dan `SUPABASE_SERVICE_ROLE_KEY` di Vercel untuk Production (serta Preview bila diperlukan).
+5. Redeploy proyek Vercel.
+6. Login Admin, buat draf AI, periksa seluruh materi/soal, lalu klik **Simpan & terbitkan materi**.
+7. Buka menu **Materi Belajar**. Materi terbitan akan muncul di bagian **Materi dari Admin**.
+
+Endpoint publik hanya mengembalikan materi yang berstatus terbit. Penulisan dibatasi ke sesi Admin yang valid; service-role key tidak dikirim ke browser. Data yang sudah diterbitkan dapat dibaca pengunjung website. Jangan menerbitkan dokumen yang berisi data pribadi/rahasia.
+
+PDF diekstrak di browser menggunakan PDF.js. Jika PDF berupa hasil scan atau foto, teks tidak bisa diambil tanpa OCR; gunakan PDF yang teksnya dapat diseleksi atau tempelkan teks materi secara manual. UI kini menampilkan kesalahan ekstraksi yang lebih spesifik dan mencoba CDN alternatif jika pustaka utama gagal dimuat.
