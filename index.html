@@ -375,7 +375,7 @@ h1 { font-family: var(--site-font-heading); font-size: clamp(29px,3.2vw,43px); l
   {topic:'Komposisi Fungsi',q:'Diketahui f(x)=3x−2 dan g(x)=2x+1. Bentuk (f ∘ g)(x) adalah …',options:['6x+1','6x−1','5x−1','6x+3'],answer:0,why:'f(g(x))=3(2x+1)−2=6x+1.'},
   {topic:'Fungsi Invers',q:'Jika f(x)=x/3+2, maka f⁻¹(x) adalah …',options:['3x+6','3x−6','(x−2)/3','x/3−2'],answer:1,why:'y=x/3+2, tukar x dan y lalu selesaikan: x=3y−6, jadi y=3x−6.'},
   {topic:'Domain',q:'Domain fungsi p(x)=√(x−4) pada bilangan real adalah …',options:['x<4','x≤4','x≥4','Semua real'],answer:2,why:'Isi akar harus tidak negatif: x−4≥0 sehingga x≥4.'},
-  {topic:'Penalaran',q:'f(x)=x+3 dan g(x)=2x. Selisih (g ∘ f)(1) dengan (f ∘ g)(1), dengan urutan pertama dikurangi kedua, adalah …',options:['0','2','3','4'],answer:1,why:'g(f(1))=g(4)=8, sedangkan f(g(1))=f(2)=5. Selisihnya 8−5=3.'},
+  {topic:'Penalaran',q:'f(x)=x+3 dan g(x)=2x. Selisih (g ∘ f)(1) dengan (f ∘ g)(1), dengan urutan pertama dikurangi kedua, adalah …',options:['0','2','3','4'],answer:2,why:'g(f(1))=g(4)=8, sedangkan f(g(1))=f(2)=5. Selisihnya 8−5=3.'},
   {topic:'Fungsi Invers',q:'Jika f(x)=x³+6, maka f⁻¹(x) adalah …',options:['∛(x)+6','∛(x−6)','∛(x+6)','(x−6)³'],answer:1,why:'Dari y=x³+6 diperoleh x³=y−6, sehingga inversnya ∛(x−6).'}
  ];
  let activeExam = null, examAnswers = {}, examQuestionIndex = 0, examRemaining = 0, examSubmitted = false;
