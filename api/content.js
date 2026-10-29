@@ -36,19 +36,35 @@ module.exports = async function handler(req, res) {
   const config = databaseConfig();
   if (!config) return send(res, 503, { error: 'Database belum dikonfigurasi. Tambahkan SUPABASE_URL dan SUPABASE_SERVICE_ROLE_KEY di Vercel, lalu redeploy.' });
   if (req.method === 'GET') {
+    const url = new URL(req.url || '/', 'http://localhost');
+    const adminView = url.searchParams.get('admin') === '1';
+    if (adminView && !isAuthenticated(req)) return send(res, 401, { error: 'Sesi Admin tidak valid. Silakan masuk kembali.' });
+    const subjectId = url.searchParams.get('subjectId');
+    const validSubjects = ['matematika-wajib','matematika-lanjut','kimia','fisika','fiqih'];
+    if (subjectId && !validSubjects.includes(subjectId)) return send(res, 400, { error: 'Mata pelajaran tidak valid.' });
     try {
-      const response = await fetch(config.url + '/rest/v1/learning_contents?select=id,title,topic,summary,key_points,example,questions,created_at&published=eq.true&order=created_at.desc&limit=100', {
+      const params = new URLSearchParams({
+        select: 'id,subject_id,status,title,topic,summary,key_points,example,questions,created_at,published',
+        order: 'created_at.desc',
+        limit: '100'
+      });
+      if (subjectId) params.set('subject_id', 'eq.' + subjectId);
+      if (!adminView) {
+        params.set('published', 'eq.true');
+        params.set('status', 'eq.published');
+      }
+      const response = await fetch(config.url + '/rest/v1/learning_contents?' + params.toString(), {
         headers: { apikey: config.key, Authorization: 'Bearer ' + config.key }
       });
       const rows = await response.json();
-      if (!response.ok) return send(res, 502, { error: 'Gagal mengambil materi dari database. Pastikan migration Supabase sudah dijalankan.' });
+      if (!response.ok) return send(res, 502, { error: 'Gagal mengambil materi dari database. Jalankan migration subject/draft terbaru di Supabase.' });
       return send(res, 200, { contents: rows });
     } catch {
       return send(res, 502, { error: 'Tidak dapat menghubungi database saat ini.' });
     }
   }
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'GET, POST');
+  if (!['POST','PATCH'].includes(req.method)) {
+    res.setHeader('Allow', 'GET, POST, PATCH');
     return send(res, 405, { error: 'Method tidak diizinkan.' });
   }
   if (!isAuthenticated(req)) return send(res, 401, { error: 'Sesi Admin tidak valid. Silakan masuk kembali.' });
@@ -56,27 +72,35 @@ module.exports = async function handler(req, res) {
   if (typeof body === 'string') { try { body = JSON.parse(body); } catch { body = {}; } }
   const title = typeof body?.title === 'string' ? body.title.trim().slice(0, 160) : '';
   const topic = typeof body?.topic === 'string' ? body.topic.trim().slice(0, 100) : '';
+  const subjectId = typeof body?.subjectId === 'string' ? body.subjectId : 'matematika-wajib';
+  const status = body?.status === 'published' ? 'published' : 'draft';
+  const id = typeof body?.contentId === 'string' ? body.contentId : '';
   const draft = body?.draft;
+  const validSubjects = ['matematika-wajib','matematika-lanjut','kimia','fisika','fiqih'];
+  if (!validSubjects.includes(subjectId)) return send(res, 400, { error: 'Pilih mata pelajaran yang valid.' });
   if (!title || !topic || !draft || typeof draft.summary !== 'string' || !Array.isArray(draft.questions)) {
-    return send(res, 400, { error: 'Data draf tidak lengkap. Buat draf AI terlebih dahulu.' });
+    return send(res, 400, { error: 'Data materi tidak lengkap. Buat atau periksa draf AI terlebih dahulu.' });
   }
   const row = {
-    title, topic,
+    title, topic, subject_id: subjectId, status,
     summary: draft.summary.slice(0, 12000),
     key_points: Array.isArray(draft.keyPoints) ? draft.keyPoints.slice(0, 30).map(v => String(v).slice(0, 1000)) : [],
     example: typeof draft.example === 'string' ? draft.example.slice(0, 12000) : '',
     questions: draft.questions.slice(0, 20),
-    published: true
+    published: status === 'published'
   };
   try {
-    const response = await fetch(config.url + '/rest/v1/learning_contents', {
-      method: 'POST',
+    const endpoint = config.url + '/rest/v1/learning_contents' + (req.method === 'PATCH' ? '?id=eq.' + encodeURIComponent(id) : '');
+    if (req.method === 'PATCH' && !id) return send(res, 400, { error: 'ID draf tidak ditemukan. Simpan draf terlebih dahulu.' });
+    const response = await fetch(endpoint, {
+      method: req.method,
       headers: { apikey: config.key, Authorization: 'Bearer ' + config.key, 'Content-Type': 'application/json', Prefer: 'return=representation' },
       body: JSON.stringify(row)
     });
     const data = await response.json();
-    if (!response.ok) return send(res, 502, { error: 'Gagal menyimpan materi. Pastikan tabel learning_contents sudah dibuat dari migration Supabase.' });
-    return send(res, 201, { content: data[0] });
+    if (!response.ok) return send(res, 502, { error: 'Gagal menyimpan materi. Pastikan migration subject/draft terbaru sudah dijalankan di Supabase.' });
+    if (req.method === 'PATCH' && (!Array.isArray(data) || !data.length)) return send(res, 404, { error: 'Draf tidak ditemukan.' });
+    return send(res, req.method === 'PATCH' ? 200 : 201, { content: Array.isArray(data) ? data[0] : null });
   } catch {
     return send(res, 502, { error: 'Tidak dapat menyimpan materi ke database saat ini.' });
   }
