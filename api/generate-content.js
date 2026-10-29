@@ -47,7 +47,11 @@ module.exports = async function handler(req, res) {
   }
   const title = typeof body?.title === 'string' ? body.title.trim().slice(0, 160) : '';
   const topic = typeof body?.topic === 'string' ? body.topic.trim().slice(0, 100) : '';
+  const subjectId = typeof body?.subjectId === 'string' ? body.subjectId : 'matematika-wajib';
+  const subjectLabels = {'matematika-wajib':'Matematika Wajib','matematika-lanjut':'Matematika Lanjut','kimia':'Kimia','fisika':'Fisika','fiqih':'Fiqih'};
+  const subject = subjectLabels[subjectId];
   const sourceText = typeof body?.sourceText === 'string' ? body.sourceText.trim() : '';
+  if (!subject) return send(res, 400, { error: 'Pilih mata pelajaran yang valid.' });
   if (!title || !sourceText) return send(res, 400, { error: 'Judul dan teks materi wajib diisi.' });
   if (sourceText.length > 50000) return send(res, 413, { error: 'Teks materi terlalu panjang. Batas saat ini 50.000 karakter.' });
 
@@ -56,7 +60,7 @@ module.exports = async function handler(req, res) {
     return send(res, 503, { error: 'Nilai GEMINI_MODEL tidak valid. Gunakan nama model Gemini yang tersedia.' });
   }
 
-  const prompt = 'Buat draf pembelajaran matematika SMA berbahasa Indonesia berdasarkan data di bawah. Ini draf untuk ditinjau admin, bukan untuk langsung dipublikasikan. Gunakan hanya fakta yang didukung sumber. Jika sumber tidak cukup, nyatakan keterbatasannya. Jangan mengarang kutipan atau rumus. Periksa kebenaran matematika untuk setiap soal, kunci, dan pembahasan. Keluaran wajib berupa json valid dengan kunci summary (string), keyPoints (array string), example (string), questions (array tepat 5 objek; setiap objek berisi question (string), options (array tepat 4 string), answerIndex (integer 0-3), explanation (string)).\nJudul: ' + title + '\nTopik: ' + topic + '\n\nSUMBER MATERI:\n' + sourceText;
+  const prompt = 'Buat draf pembelajaran SMA berbahasa Indonesia untuk mata pelajaran ' + subject + ' berdasarkan sumber. Ini draf untuk ditinjau admin, bukan untuk langsung dipublikasikan. Gunakan hanya fakta yang didukung sumber. Jika sumber tidak cukup, nyatakan keterbatasannya. Jangan mengarang kutipan, data, rumus, atau ketentuan. Pastikan ringkasan, contoh, soal, kunci, dan pembahasan sesuai bidang ' + subject + '. Keluaran wajib berupa JSON valid dengan kunci summary (string), keyPoints (array string), example (string), questions (array tepat 5 objek; setiap objek berisi question (string), options (array tepat 4 string), answerIndex (integer 0-3), explanation (string)).\nMata pelajaran: ' + subject + '\nJudul: ' + title + '\nTopik: ' + topic + '\n\nSUMBER MATERI:\n' + sourceText;
 
   try {
     const upstream = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent', {
@@ -64,7 +68,7 @@ module.exports = async function handler(req, res) {
       headers: { 'x-goog-api-key': apiKey, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         systemInstruction: {
-          parts: [{ text: 'Kamu adalah asisten penyusun materi matematika SMA yang teliti. Jawab dalam bahasa Indonesia. Ikuti format json yang diminta pengguna dan jangan menambahkan teks di luar objek json.' }]
+          parts: [{ text: 'Kamu adalah asisten penyusun materi pembelajaran SMA yang teliti untuk berbagai mata pelajaran. Jawab dalam bahasa Indonesia dan ikuti mata pelajaran yang diminta. Ikuti format json yang diminta pengguna dan jangan menambahkan teks di luar objek json.' }]
         },
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
         generationConfig: {
