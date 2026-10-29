@@ -803,16 +803,16 @@ aside {
        '<div class="type-pill">' + escapeHtml(topic.toUpperCase()) + '</div><h3>' + escapeHtml(title) + '</h3>' +
        '<h3>Ringkasan materi</h3><p>' + escapeHtml(draft.summary || '') + '</p><h3>Poin penting</h3><ul>' +
        points.map(point => '<li>' + escapeHtml(String(point)) + '</li>').join('') + '</ul><h3>Contoh</h3><p>' + escapeHtml(draft.example || 'Tidak ada contoh dari AI.') + '</p>' +
-       '<h3>Bank soal (' + questions.length + ')</h3>' + questions.map((q,i) => '<div class="exam-item"><b>' + (i+1) + '. ' + escapeHtml(q.question || '') + '</b><ol type="A">' +
+       '<h3>Handout Pintar</h3><p>Overview, mind map, penerapan nyata, slide materi, cheatsheet, mnemonik, penutup motivasi, tipe soal, ide konsep, dan sumber.</p><h3>Pratinjau slide (' + ((draft.sections && draft.sections.slides && draft.sections.slides.slides) || []).length + ')</h3>' + (((draft.sections && draft.sections.slides && draft.sections.slides.slides) || []).map((slide,i)=>'<div class="exam-item"><b>'+(i+1)+'. '+escapeHtml(slide.title || '')+'</b><p>'+escapeHtml(slide.explanation || '')+'</p><p class="muted">Tujuan: '+escapeHtml(slide.learningGoal || '')+'</p></div>').join('')) + '<h3>Modul latihan (2 modul × 10 soal)</h3><p>Jumlah soal: ' + questions.length + '. Setiap soal memakai opsi A–E.</p><h3>Bank soal (' + questions.length + ')</h3>' + questions.map((q,i) => '<div class="exam-item"><b>' + (i+1) + '. ' + escapeHtml(q.question || '') + '</b><ol type="A">' +
        (Array.isArray(q.options) ? q.options : []).map(option => '<li>' + escapeHtml(String(option)) + '</li>').join('') + '</ol><p><b>Jawaban:</b> ' +
        escapeHtml(String((q.options || [])[q.answerIndex] || 'Perlu ditinjau')) + '</p><p class="muted">' + escapeHtml(q.explanation || '') + '</p></div>').join('') +
-       '<details class="draft-edit-panel" open><summary>Edit draf sebelum disimpan</summary><p class="muted">Perubahan di bawah akan digunakan saat menyimpan atau menerbitkan materi.</p><div class="field"><label for="editDraftSummary">Ringkasan</label><textarea id="editDraftSummary" rows="4">'+escapeHtml(draft.summary || '')+'</textarea></div><div class="field"><label for="editDraftKeyPoints">Poin penting (satu poin per baris)</label><textarea id="editDraftKeyPoints" rows="4">'+escapeHtml(points.join('\n'))+'</textarea></div><div class="field"><label for="editDraftExample">Contoh / penjelasan</label><textarea id="editDraftExample" rows="4">'+escapeHtml(draft.example || '')+'</textarea></div><div class="field"><label for="editDraftQuestions">Bank soal dalam format JSON</label><textarea id="editDraftQuestions" rows="12" spellcheck="false">'+escapeHtml(JSON.stringify(questions,null,2))+'</textarea><small>Setiap soal harus memiliki question, 4 options, answerIndex 0–3, dan explanation.</small></div></details>' +
+       '<details class="draft-edit-panel" open><summary>Edit draf sebelum disimpan</summary><p class="muted">Perubahan di bawah akan digunakan saat menyimpan atau menerbitkan materi.</p><div class="field"><label for="editDraftSummary">Ringkasan</label><textarea id="editDraftSummary" rows="4">'+escapeHtml(draft.summary || '')+'</textarea></div><div class="field"><label for="editDraftKeyPoints">Poin penting (satu poin per baris)</label><textarea id="editDraftKeyPoints" rows="4">'+escapeHtml(points.join('\n'))+'</textarea></div><div class="field"><label for="editDraftExample">Contoh / penjelasan</label><textarea id="editDraftExample" rows="4">'+escapeHtml(draft.example || '')+'</textarea></div><div class="field"><label for="editDraftQuestions">Bank soal dalam format JSON</label><textarea id="editDraftQuestions" rows="12" spellcheck="false">'+escapeHtml(JSON.stringify(questions,null,2))+'</textarea><small>Harus tepat 20 soal gabungan, masing-masing 5 opsi A–E, answerIndex 0–4, dan pembahasan.</small></div><div class="field"><label for="editDraftSections">Struktur Handout (JSON)</label><textarea id="editDraftSections" rows="16" spellcheck="false">'+escapeHtml(JSON.stringify(draft.sections || {},null,2))+'</textarea><small>Edit dengan hati-hati agar struktur bagian Handout tetap valid.</small></div></details>' +
        '<div class="upload-help"><span aria-hidden="true">ⓘ</span><span>Draf dibuat AI dari teks sumber. Periksa rumus, kunci jawaban, dan pembahasan sebelum digunakan. Draf belum dipublikasikan atau disimpan ke database.</span></div>';
      currentAIDraft = {title, topic, subjectId, authorName:document.getElementById('contentAuthor').value.trim(), draft, status:'draft'};
      document.getElementById('adminPreview').insertAdjacentHTML('beforeend', '<div class="upload-help" style="margin-top:16px"><span>✓</span><span>Draf AI siap ditinjau. Simpan sebagai draf untuk melanjutkan nanti, atau terbitkan setelah konten diperiksa.</span></div><button type="button" class="btn btn-ghost" id="saveAIDraft" style="margin-top:12px;margin-right:8px">Simpan sebagai draf</button><button type="button" class="btn btn-primary" id="publishAIDraft" style="margin-top:12px">Terbitkan materi</button>');
      draftCreated = true;
      status.textContent = selectedPdfFiles.length + ' PDF berhasil diekstrak. Teks dikirim ke AI; draf belum tersimpan sampai kamu menerbitkannya.';
-     notify('Draf AI berhasil dibuat. Periksa kembali ketepatan matematika sebelum digunakan.');
+     notify('Draf AI siap ditinjau. Periksa materi, slide, sumber, 20 soal, kunci, dan pembahasan.');
    } catch (error) {
      document.getElementById('draftBadge').textContent = 'GAGAL';
      document.getElementById('adminPreview').textContent = error.message || 'Tidak dapat membuat draf AI.';
@@ -1079,13 +1079,21 @@ aside {
      const questionEditor = document.getElementById('editDraftQuestions');
      if (questionEditor) {
        const editedQuestions = JSON.parse(questionEditor.value);
-       const valid = Array.isArray(editedQuestions) && editedQuestions.length === 5 && editedQuestions.every(q => q && typeof q.question === 'string' && Array.isArray(q.options) && q.options.length === 4 && Number.isInteger(Number(q.answerIndex)) && Number(q.answerIndex) >= 0 && Number(q.answerIndex) <= 3 && typeof q.explanation === 'string');
-       if (!valid) throw new Error('Periksa format bank soal: harus tepat 5 soal, 4 opsi, answerIndex 0–3, dan pembahasan.');
+       const valid = Array.isArray(editedQuestions) && editedQuestions.length === 20 && editedQuestions.every(q => q && typeof q.question === 'string' && Array.isArray(q.options) && q.options.length === 5 && Number.isInteger(Number(q.answerIndex)) && Number(q.answerIndex) >= 0 && Number(q.answerIndex) <= 4 && typeof q.explanation === 'string');
+       if (!valid) throw new Error('Bank soal harus berisi tepat 20 soal, masing-masing 5 opsi A–E, answerIndex 0–4, dan pembahasan.');
+       const editedSections = JSON.parse(document.getElementById('editDraftSections').value);
+       if (!editedSections || !editedSections.slides || !Array.isArray(editedSections.slides.slides) || editedSections.slides.slides.length < 3) throw new Error('Struktur Handout tidak valid: minimal 3 slide wajib tersedia.');
+       const normalizedQuestions = editedQuestions.map(q=>({...q,answerIndex:Number(q.answerIndex)}));
+       const previousDraft = currentAIDraft.draft;
+       if (!Array.isArray(previousDraft.practiceModules) || previousDraft.practiceModules.length !== 2) throw new Error('Dua modul latihan awal belum tersedia. Buat ulang draf AI.');
        currentAIDraft.draft = {
+         ...previousDraft,
          summary:document.getElementById('editDraftSummary').value.trim(),
-         keyPoints:document.getElementById('editDraftKeyPoints').value.split('\n').map(value=>value.trim()).filter(Boolean),
+         keyPoints:document.getElementById('editDraftKeyPoints').value.split('\\n').map(value=>value.trim()).filter(Boolean),
          example:document.getElementById('editDraftExample').value.trim(),
-         questions:editedQuestions.map(q=>({...q,answerIndex:Number(q.answerIndex)}))
+         sections:editedSections,
+         questions:normalizedQuestions,
+         practiceModules:previousDraft.practiceModules.map((module,index)=>({...module,questions:normalizedQuestions.slice(index*10,index*10+10)}))
        };
        currentAIDraft.title = document.getElementById('contentTitle').value.trim();
        currentAIDraft.authorName = document.getElementById('contentAuthor').value.trim();
