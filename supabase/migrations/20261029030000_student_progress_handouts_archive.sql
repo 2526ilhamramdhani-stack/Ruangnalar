@@ -130,17 +130,17 @@ create policy archive_files_read_owner_or_published on public.archive_files
     owner_id = auth.uid() or visibility = 'published'
   );
 
--- Do not grant direct browser writes to handout sections or archive metadata yet.
--- The existing admin API remains the only write path until dedicated endpoints
--- validate student identity, Drive permissions, file ownership, and publication state.
+-- Do not grant direct browser writes to profile/progress, handout sections, or archive metadata yet.
+-- Writes remain server-mediated until dedicated endpoints validate the Supabase Auth
+-- bearer token and compute exam scores server-side. Do not let clients self-report grades.
 revoke all on public.student_profiles from anon;
 revoke all on public.learning_progress from anon;
 revoke all on public.handout_sections from anon;
 revoke all on public.archive_files from anon;
 revoke all on public.student_profiles from authenticated;
-grant select, insert, update on public.student_profiles to authenticated;
+grant select on public.student_profiles to authenticated;
 revoke all on public.learning_progress from authenticated;
-grant select, insert, update, delete on public.learning_progress to authenticated;
+grant select on public.learning_progress to authenticated;
 revoke all on public.handout_sections from authenticated;
 grant select on public.handout_sections to authenticated;
 revoke all on public.archive_files from authenticated;
