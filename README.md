@@ -38,3 +38,8 @@ The generated static website is placed in `dist/index.html`.
 ## Security
 
 Never put OpenAI/Gemini keys, Supabase service-role keys, or any other secret in `index.html` or `NEXT_PUBLIC_*` browser variables. Secrets must stay on the server.
+
+
+## Secure Admin AI backend (new)
+
+See [docs/ADMIN-AI-SETUP.md](docs/ADMIN-AI-SETUP.md) for Vercel environment variables and test steps. The Admin area now has a login gate, a signed HTTP-only session cookie, PDF text extraction in the browser, and an authenticated server endpoint that requests an AI-generated draft. This does not yet persist or publish content; database-backed content management is a separate next step.
