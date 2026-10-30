@@ -8,7 +8,7 @@ Fitur ini menggunakan Google Gemini API untuk membantu Admin membuat draf materi
 2. Masuk dengan akun Google dan buat API key.
 3. Simpan key tersebut sebagai rahasia. Jangan mengirimkannya ke chat atau memasukkannya ke repository.
 
-Google menyediakan free tier untuk model dan batas tertentu. Default RuangNalar adalah `gemini-2.5-flash-lite`, tetapi ketersediaan model dan kuota gratis mengikuti akun serta ketentuan Google. Periksa https://ai.google.dev/gemini-api/docs/pricing. Saat kuota habis, tunggu hingga tersedia kembali atau periksa batas penggunaan di Google AI Studio.
+Google menyediakan free tier untuk model dan batas tertentu. Default RuangNalar adalah `gemini-3.5-flash-lite`, tetapi ketersediaan model dan kuota gratis mengikuti akun serta ketentuan Google. Periksa https://ai.google.dev/gemini-api/docs/pricing. Saat kuota habis, tunggu hingga tersedia kembali atau periksa batas penggunaan di Google AI Studio.
 
 ## Environment variables di Vercel
 
@@ -17,7 +17,7 @@ Di Vercel, buka project RuangNalar → **Settings → Environment Variables**. T
 - `ADMIN_PASSWORD`: kata sandi kuat khusus Admin. Jangan gunakan kata sandi akun lain.
 - `ADMIN_SESSION_SECRET`: secret acak minimal 32 karakter. Buat secara lokal dengan `openssl rand -base64 48`.
 - `GEMINI_API_KEY`: API key dari Google AI Studio. Hanya digunakan server; jangan menaruhnya di `index.html`, variabel `NEXT_PUBLIC_*`, atau repository.
-- `GEMINI_MODEL` (opsional): nama model Gemini yang tersedia pada akun. Default kode saat ini `gemini-2.5-flash-lite`.
+- `GEMINI_MODEL` (opsional): nama model Gemini yang tersedia pada akun. Default kode saat ini `gemini-3.5-flash-lite`.
 
 Simpan variabel, lalu lakukan **redeploy** agar tersedia pada deployment baru. Setelah migrasi, `OPENAI_API_KEY` dan `OPENAI_MODEL` tidak lagi diperlukan oleh endpoint ini; kamu boleh menghapusnya dari Vercel setelah memastikan versi baru berjalan.
 
