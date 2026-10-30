@@ -18,6 +18,8 @@ jobs:
           node-version: 20
       - name: Build static site
         run: npm run build
+      - name: Run unit tests
+        run: npm test
       - name: Check serverless API syntax
         run: |
           node --check api/content.js
