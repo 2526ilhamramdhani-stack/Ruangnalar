@@ -89,3 +89,14 @@ test('DELETE clears the Admin session cookie', async () => {
   assert.equal(res.statusCode, 200);
   assert.match(res.headers['Set-Cookie'], /Max-Age=0/);
 });
+
+test('POST rejects an incorrect Admin password', async () => {
+  const res = mockResponse();
+  await handler({
+    method: 'POST',
+    headers: {},
+    body: { password: 'incorrect-password' }
+  }, res);
+  assert.equal(res.statusCode, 401);
+  assert.deepEqual(JSON.parse(res.body), { error: 'Kata sandi Admin tidak sesuai.' });
+});
