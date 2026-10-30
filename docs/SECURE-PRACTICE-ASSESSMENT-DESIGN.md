@@ -98,7 +98,7 @@ Expected product defaults:
 - Formative: 10 questions, 30 minutes.
 - Summative: 15 questions, 45 minutes.
 
-A timeout must be finalized by server logic even if the browser closes. A client timer is presentation only.
+A timeout must be finalized by server logic even if the browser closes. Use a scheduled worker/cron where available and also finalize expired attempts on the next authenticated read or submit request; unanswered items count as blank. A client timer is presentation only.
 
 ## 5. Data model direction
 
