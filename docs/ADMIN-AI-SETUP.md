@@ -111,7 +111,7 @@ Bagian wajib yang dihasilkan:
 10. Sumber utama, referensi pendukung yang benar-benar tersedia, dan catatan keterbatasan.
 11. Dua modul latihan awal, masing-masing tepat 10 soal (20 soal total). Setiap soal memakai opsi A–E, kunci, pembahasan, konsep, tingkat kesulitan, dan catatan sumber.
 
-Backend memvalidasi struktur utama, minimal tiga slide, dua modul, jumlah soal, dan lima opsi sebelum mengembalikan draf. Draf yang gagal validasi tidak boleh disimpan atau diterbitkan lewat alur normal. Validasi bentuk bukan jaminan bahwa seluruh fakta atau jawaban benar; Admin tetap harus memeriksa rumus, referensi, kunci, pembahasan, dan kesesuaian materi sebelum publikasi.
+Backend memvalidasi struktur utama, minimal lima slide, dua modul, jumlah soal, dan lima opsi sebelum mengembalikan draf. Draf yang gagal validasi tidak boleh disimpan atau diterbitkan lewat alur normal. Validasi bentuk bukan jaminan bahwa seluruh fakta atau jawaban benar; Admin tetap harus memeriksa rumus, referensi, kunci, pembahasan, dan kesesuaian materi sebelum publikasi.
 
 Struktur bagian disimpan di tabel handout_sections sebagai data terstruktur. API konten mengupayakan penyimpanan bagian terlebih dahulu sebagai draf, dan baru mengubah status menjadi published setelah penyimpanan bagian berhasil. Pastikan migration 20261029030000_student_progress_handouts_archive.sql sudah diterapkan di Supabase sebelum menggunakan penyimpanan Handout terstruktur.
 
