@@ -2,7 +2,7 @@
   "name": "ruangnalar-demo",
   "version": "1.0.0",
   "private": true,
-  "description": "RuangNalar interactive math e-learning front-end prototype",
+  "description": "RuangNalar learning platform with a responsive web frontend, Supabase-backed content, and Gemini-powered Handout drafts.",
   "scripts": {
     "build": "node build.js"
   }
