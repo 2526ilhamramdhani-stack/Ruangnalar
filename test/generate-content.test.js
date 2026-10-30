@@ -49,3 +49,13 @@ test('rejects a practice module that does not contain ten questions', () => {
   draft.practiceModules[0].questions.pop();
   assert.match(validateHandout(draft), /harus berisi tepat 10 soal/);
 });
+
+test('rejects a question that does not have exactly five options', () => {
+  assert.equal(validQuestion({ ...makeQuestion(), options: ['A', 'B', 'C', 'D'] }), false);
+});
+
+test('rejects a Handout when a required section is missing', () => {
+  const draft = makeHandout(5);
+  delete draft.sections.mindmap;
+  assert.match(validateHandout(draft), /mindmap/);
+});
