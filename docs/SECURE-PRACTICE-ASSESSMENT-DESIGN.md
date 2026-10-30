@@ -113,7 +113,9 @@ For practice, either use a separate `practice_attempts` table or extend the prog
 Database requirements:
 - foreign keys and unique constraints for idempotency;
 - RLS enabled;
-- students may read only their own attempts/results;
+- students may read only their own learner-safe attempt snapshots and permitted results;
+- answer-key snapshots live in a separate server-only table (or equivalent private storage) with no student SELECT policy or grant;
+- student-readable answer rows must not expose per-question correctness before finalization;
 - writes remain server-mediated until the API has complete validation;
 - service-role credentials never enter browser code;
 - use a database transaction/RPC for final submission and scoring to avoid partial results.
@@ -137,6 +139,7 @@ The exact schema must be checked against existing project migrations before impl
 
 - Anonymous requests cannot read answer keys from either question storage path.
 - Authenticated students receive only the learner-safe question projection.
+- Students cannot read answer-key snapshots through table queries, RPCs, or result endpoints before allowed review.
 - Admin can still preview/edit complete Handout content.
 - Practice answer feedback is computed by the server and tied to the verified student.
 - Formal assessments use server-generated attempts and server-side deadlines/scoring.
