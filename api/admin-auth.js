@@ -22,7 +22,8 @@ function safeEqual(a, b) {
 function validSession(req, secret) {
   const cookie = (req.headers.cookie || '').split(';').map(v => v.trim()).find(v => v.startsWith(COOKIE_NAME + '='));
   if (!cookie) return false;
-  const token = decodeURIComponent(cookie.slice(COOKIE_NAME.length + 1));
+  let token;
+  try { token = decodeURIComponent(cookie.slice(COOKIE_NAME.length + 1)); } catch { return false; }
   const dot = token.lastIndexOf('.');
   if (dot < 1) return false;
   const payload = token.slice(0, dot);
