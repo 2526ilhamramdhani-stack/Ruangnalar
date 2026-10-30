@@ -41,12 +41,12 @@ However, the product is **not yet ready to be treated as a complete student lear
 ### HIGH
 
 1. **Published content API exposes question answer fields.**  
-   `GET /api/content` selects and returns the `questions` JSON field for every published item. The generator's question contract stores `answerIndex` and explanations in those question objects. Therefore, anyone who can call the public endpoint can inspect the answer key before attempting a question. This is unsuitable for any question intended to be answered independently.  
-   **Recommended action:** separate learner-visible question payloads from answer keys; reveal correctness and explanations only through a controlled submission/review flow. Preserve current public lesson content while migrating safely.
+   `GET /api/content` selects and returns the `questions` JSON field for every published item. The generator stores `answerIndex` and explanations in those question objects. A second exposure path also exists: the endpoint returns complete `handoutSections.body` values, including `practice_module` question objects that contain `answerIndex` and explanations. The public frontend currently renders those fields as visible answer/review material. Therefore, callers can inspect the key directly in both the legacy question field and structured Handout modules before attempting a question.  
+   **Recommended action:** design a versioned learner payload that contains question text/options only, then add an authenticated or otherwise abuse-resistant submission/review endpoint that validates answers server-side and returns feedback only after submission. Migrate the frontend to that contract before stripping answer data from public responses; do not simply remove fields and silently break the current Handout experience. Preserve Admin preview access to full keys.
 
 2. **Admin login and AI generation have no application-level rate limiting.**  
-   The setup documentation explicitly records the lack of dedicated rate limiting. The password endpoint can be repeatedly attempted, and authenticated AI generation can incur provider usage/cost.  
-   **Recommended action:** add edge/server-side throttling and abuse controls, with safe handling that does not lock out the legitimate owner unexpectedly. Verify Vercel/platform limits rather than assuming they exist.
+   The setup documentation explicitly records the lack of dedicated rate limiting. The password endpoint can be repeatedly attempted, and authenticated AI generation can incur provider usage/cost. A per-instance in-memory counter would not be reliable on serverless deployments.  
+   **Recommended action:** add shared edge/server-side throttling and abuse controls, with safe handling that does not lock out the legitimate owner unexpectedly. Verify Vercel/platform limits rather than assuming they exist.
 
 3. **Student identity and progress are schema foundations, not a working student account feature.**  
    Migration 300 creates `student_profiles` and `learning_progress` with RLS, but the documentation confirms that student signup/login UI and bearer-token-verified progress endpoints are not implemented. Authenticated users are granted read-only access to these tables; writes are intentionally server-mediated.  
@@ -88,9 +88,9 @@ However, the product is **not yet ready to be treated as a complete student lear
 
 ### LOW
 
-12. **Admin cookie parsing is inconsistent for malformed cookie values.**  
-    `api/admin-auth.js` decodes the cookie without a local try/catch, while the other API handlers handle decode errors. A malformed cookie may cause an avoidable server error, but this does not appear to bypass authentication.  
-    **Recommended action:** make malformed-cookie handling consistently return unauthenticated.
+12. **Admin cookie parsing previously handled malformed values inconsistently.**  
+    At the audited baseline, `api/admin-auth.js` decoded the cookie without a local try/catch, while the other API handlers handled decode errors. A malformed cookie could cause an avoidable server error, but this did not appear to bypass authentication. A fix and regression tests are now proposed separately in PR #4.  
+    **Recommended action:** merge only after CI confirms the regression tests pass.
 
 13. **Build script deletes and recreates `dist/`.**  
     This is normal for a generated output directory, but contributors should not store source assets or user files there.  
@@ -108,8 +108,8 @@ However, the product is **not yet ready to be treated as a complete student lear
 
 ## Recommended implementation order
 
-1. Protect answer keys and define a safe question delivery/submission contract.
-2. Add rate limiting and harden Admin auth/session handling.
+1. Design a safe question delivery/submission contract that accounts for both `learning_contents.questions` and nested `handout_sections.body` practice modules; keep full answer data available only to Admin.
+2. Add shared rate limiting and harden Admin auth/session handling.
 3. Update README and deployment/model documentation.
 4. Implement Supabase student authentication and owner-scoped profile/progress APIs.
 5. Implement server-authoritative formative/summative assessment attempts and scoring.
