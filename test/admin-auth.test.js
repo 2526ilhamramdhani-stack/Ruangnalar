@@ -100,3 +100,16 @@ test('POST rejects an incorrect Admin password', async () => {
   assert.equal(res.statusCode, 401);
   assert.deepEqual(JSON.parse(res.body), { error: 'Kata sandi Admin tidak sesuai.' });
 });
+
+test('Admin auth fails closed when the session secret is too short', async () => {
+  const previousSecret = process.env.ADMIN_SESSION_SECRET;
+  process.env.ADMIN_SESSION_SECRET = 'too-short';
+  try {
+    const res = mockResponse();
+    await handler({ method: 'GET', headers: {} }, res);
+    assert.equal(res.statusCode, 503);
+    assert.match(JSON.parse(res.body).error, /minimal 32 karakter/);
+  } finally {
+    process.env.ADMIN_SESSION_SECRET = previousSecret;
+  }
+});
