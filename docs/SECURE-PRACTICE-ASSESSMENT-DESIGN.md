@@ -105,8 +105,9 @@ A timeout must be finalized by server logic even if the browser closes. Use a sc
 Prefer dedicated tables over storing official exam answers in a generic progress JSON blob.
 
 Potential additive tables:
-- `assessment_attempts`: `id`, `user_id`, `assessment_type`, `subject_id`, `content_id`, `status`, `question_snapshot`, `started_at`, `expires_at`, `submitted_at`, `score`, `created_at`.
-- `assessment_answers`: `id`, `attempt_id`, `question_id`, `selected_option`, `is_correct`, `answered_at`; unique `(attempt_id, question_id)`.
+- `assessment_attempts`: `id`, `user_id`, `assessment_type`, `subject_id`, `content_id`, `status`, **learner-safe** `question_snapshot` (no answer keys or explanations), `started_at`, `expires_at`, `submitted_at`, `score`, `created_at`.
+- `assessment_answer_keys`: `attempt_id`, `question_id`, `correct_option`, `explanation`; server-only table with no SELECT privileges for `anon` or `authenticated` roles.
+- `assessment_answers`: `id`, `attempt_id`, `question_id`, `selected_option`, `answered_at`; unique `(attempt_id, question_id)`. Do not expose `is_correct` or per-question correctness before final submission.
 
 For practice, either use a separate `practice_attempts` table or extend the progress model with a carefully constrained answer-history structure. Do not mix official exam scoring with self-reported client progress.
 
