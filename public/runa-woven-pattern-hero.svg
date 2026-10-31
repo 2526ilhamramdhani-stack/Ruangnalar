@@ -1,15 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
   <defs>
     <pattern id="woven-hero" width="48" height="48" patternUnits="userSpaceOnUse">
-      <g fill="none" stroke="#31AAA9" stroke-width="2.4" opacity=".62">
+      <g fill="none" stroke="#31AAA9" stroke-width="2.4" opacity=".58">
         <path d="M5 0v18 M13 0v18 M21 0v18 M29 0v18 M37 0v18 M45 0v18"/>
         <path d="M0 29h18 M0 37h18 M0 45h18"/>
       </g>
-      <g fill="none" stroke="#FAF9F6" stroke-width="2.2" opacity=".34">
+      <g fill="none" stroke="#FAF9F6" stroke-width="2.2" opacity=".48">
         <path d="M29 30h19 M29 38h19 M29 46h19"/>
         <path d="M30 0v18 M38 0v18 M46 0v18"/>
       </g>
-      <path d="M0 24h24v24" fill="none" stroke="#FFFFFF" stroke-width="1.8" opacity=".28"/>
+      <path d="M0 24h24v24" fill="none" stroke="#FFFFFF" stroke-width="1.8" opacity=".46"/>
     </pattern>
   </defs>
   <rect width="192" height="192" fill="url(#woven-hero)"/>
