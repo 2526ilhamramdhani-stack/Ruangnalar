@@ -597,8 +597,7 @@ aside {
 .draft-edit-panel summary { cursor:pointer; font-weight:800; color:var(--rn-navy); }
 .draft-edit-panel .field { margin-top:14px; }
 .draft-edit-panel textarea { width:100%; min-height:100px; resize:vertical; }
-.draft-edit-panel #editDraftQuestions { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:12px; line-height:1.55; }
-.draft-edit-panel small { color:var(--rn-muted); display:block; margin-top:5px; }
+.draft-edit-panel #editDraftQuestions { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:12px; line-height:1.55; }.draft-edit-panel small { color:var(--rn-muted); display:block; margin-top:5px; }
 
 
 /* Handout reader: transform generated slide text into a readable lesson deck */
@@ -1197,8 +1196,7 @@ body { font-family:'Lora',Georgia,serif!important; }
     linear-gradient(90deg,rgba(49,170,169,.055) 1px,transparent 1px),
     url('/runa-woven-pattern.svg'),
     radial-gradient(circle at 88% 15%,rgba(49,170,169,.13),transparent 30%),
-    linear-gradient(118deg,#172B3A 0%,#1B3443 74%,#203B4A 100%)!important;
-  background-size:34px 34px,34px 34px,clamp(145px,18vw,220px),auto,auto!important;
+    linear-gradient(118deg,#172B3A 0%,#1B3443 74%,#203B4A 100%)!important;  background-size:34px 34px,34px 34px,clamp(145px,18vw,220px),auto,auto!important;
   background-position:center,center,right 8% center,center,center!important;
   background-repeat:repeat,repeat,no-repeat,no-repeat,no-repeat!important;
   background-blend-mode:normal,normal,soft-light,normal,normal;
@@ -1599,6 +1597,174 @@ main { position:relative!important; min-width:0!important; }
   .content::before { background-size:100% 100%,150px 150px;opacity:.11; }
 }
 
+
+/* =========================================================
+   RuNa Hero — Slide 2 editorial composition (visual only)
+   ========================================================= */
+@font-face {
+  font-family: 'Adumu Regular';
+  src: url('/fonts/adumu.ttf') format('truetype');
+  font-display: swap;
+}
+.hero {
+  --hero-navy:#172B3A;
+  --hero-teal:#31AAA9;
+  --hero-cream:#F8E0A4;
+  position:relative!important;
+  display:block!important;
+  isolation:isolate!important;
+  min-height:330px!important;
+  padding:clamp(34px,4.5vw,58px)!important;
+  overflow:hidden!important;
+  border:1px solid rgba(49,170,169,.28)!important;
+  border-radius:12px!important;
+  background:#172B3A!important;
+  color:#FAF9F6!important;
+  box-shadow:0 18px 44px rgba(4,17,25,.2)!important;
+}
+.hero::before {
+  content:"";
+  position:absolute;
+  z-index:2;
+  top:26px;
+  right:clamp(24px,3.6vw,48px);
+  width:clamp(126px,14vw,184px);
+  aspect-ratio:720 / 416;
+  background:url('/runa-logo-slide7.svg') center/contain no-repeat;
+  pointer-events:none;
+}
+.hero::after {
+  content:"";
+  position:absolute;
+  z-index:0;
+  top:8%;
+  right:-7%;
+  bottom:-43%;
+  width:53%;
+  min-width:300px;
+  transform:rotate(-17deg);
+  transform-origin:center;
+  background:
+    linear-gradient(90deg,rgba(23,43,58,.04),rgba(23,43,58,.20)),
+    url('/runa-woven-pattern.svg') right center/176px 176px repeat;
+  opacity:.54;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.28) 18%,#000 68%);
+  mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.28) 18%,#000 68%);
+  pointer-events:none;
+}
+.hero > * { position:relative;z-index:1; }
+.hero .hero-copy {
+  position:relative;
+  z-index:3;
+  width:min(820px,76%);
+  padding-top:clamp(12px,2vw,24px);
+}
+.hero .eyebrow {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:0 0 19px;
+  color:var(--hero-teal)!important;
+  font-family:'Adumu Regular','Trebuchet MS',sans-serif!important;
+  font-size:12px!important;
+  font-weight:400!important;
+  letter-spacing:1.8px!important;
+  text-transform:uppercase!important;
+}
+.hero .dot { flex:0 0 8px;width:8px;height:8px;background:var(--hero-teal)!important;box-shadow:0 0 0 4px rgba(49,170,169,.16)!important; }
+.hero .hero-title-row {
+  display:flex;
+  align-items:baseline;
+  flex-wrap:wrap;
+  column-gap:clamp(14px,2vw,26px);
+  row-gap:3px;
+  max-width:900px;
+  margin:0 0 17px;
+}
+.hero .hero-title-main {
+  margin:0!important;
+  color:#FAF9F6!important;
+  font-family:'Adumu Regular','Trebuchet MS',sans-serif!important;
+  font-size:clamp(38px,4.5vw,62px)!important;
+  font-weight:400!important;
+  line-height:1.08!important;
+  letter-spacing:1.1px!important;
+  text-transform:uppercase!important;
+}
+.hero .hero-title-sub {
+  margin:0!important;
+  color:var(--hero-cream)!important;
+  font-family:'Adumu Regular','Trebuchet MS',sans-serif!important;
+  font-size:clamp(21px,2.25vw,31px)!important;
+  font-weight:400!important;
+  line-height:1.2!important;
+  letter-spacing:1px!important;
+  text-transform:uppercase!important;
+}
+.hero .hero-ribbon {
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  min-height:39px;
+  margin:0 0 18px 0;
+  padding:9px 28px 9px 17px;
+  background:var(--hero-teal);
+  color:#FFFFFF;
+  box-shadow:5px 6px 0 rgba(0,0,0,.15);
+  clip-path:polygon(0 0,100% 0,calc(100% - 17px) 50%,100% 100%,0 100%);
+}
+.hero .hero-ribbon span {
+  font-family:'Adumu Regular','Trebuchet MS',sans-serif!important;
+  font-size:clamp(11px,1.05vw,14px)!important;
+  font-weight:400!important;
+  letter-spacing:1.8px!important;
+  line-height:1.3;
+  text-transform:uppercase;
+  white-space:normal;
+}
+.hero .hero-description {
+  max-width:650px!important;
+  margin:0 0 23px!important;
+  color:rgba(250,249,246,.86)!important;
+  font-family:'Lora',Georgia,serif!important;
+  font-size:clamp(13px,1.1vw,16px)!important;
+  font-weight:400!important;
+  line-height:1.58!important;
+  letter-spacing:0!important;
+  text-transform:none!important;
+}
+.hero .btn-dark,.hero .btn-primary {
+  background:var(--hero-teal)!important;
+  border:1px solid var(--hero-teal)!important;
+  color:#102B35!important;
+  box-shadow:0 8px 20px rgba(0,0,0,.16)!important;
+}
+.hero .btn-dark:hover,.hero .btn-primary:hover { background:#55BCB7!important;color:#102B35!important; }
+.hero .hero-graphic,.hero .orbit,.hero .math-tile,.hero .float-chip { display:none!important; }
+@media(max-width:900px) {
+  .hero { min-height:310px!important;padding:34px!important; }
+  .hero .hero-copy { width:min(100%,680px);padding-top:42px; }
+  .hero::before { top:20px;right:22px;width:118px; }
+  .hero::after { right:-18%;width:67%;opacity:.38; }
+  .hero .hero-title-row { max-width:calc(100% - 12px); }
+}
+@media(max-width:560px) {
+  .hero { min-height:0!important;padding:27px 22px 30px!important; }
+  .hero::before { top:17px;right:17px;width:88px; }
+  .hero::after { top:20%;right:-35%;bottom:-34%;width:95%;min-width:260px;opacity:.24;background-size:142px 142px; }
+  .hero .hero-copy { width:100%;padding-top:55px; }
+  .hero .eyebrow { margin-bottom:15px;font-size:10px!important;letter-spacing:1.3px!important; }
+  .hero .hero-title-row { display:flex;align-items:flex-start;flex-direction:column;gap:5px;margin-bottom:14px; }
+  .hero .hero-title-main { font-size:clamp(32px,9vw,43px)!important; }
+  .hero .hero-title-sub { font-size:clamp(18px,5vw,23px)!important; }
+  .hero .hero-ribbon { min-height:35px;margin-bottom:14px;padding:8px 24px 8px 13px; }
+  .hero .hero-ribbon span { font-size:10px!important;letter-spacing:1.3px!important; }
+  .hero .hero-description { font-size:13px!important;line-height:1.55!important; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .hero,.hero * { scroll-behavior:auto!important;transition:none!important;animation:none!important; }
+}
+
 </style>
 </head>
 <body>
@@ -1622,7 +1788,19 @@ main { position:relative!important; min-width:0!important; }
   <header class="topbar"><div style="display:flex;align-items:center;gap:10px;min-width:0"><button class="mobile-menu" id="menuButton" aria-label="Buka menu">☰</button><label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="searchInput" placeholder="Cari materi, bab, atau topik..." aria-label="Cari materi" /></label></div><div class="profile"><div class="avatar">SN</div><div><div class="profile-name">Siswa Nalar</div><div class="profile-role">RuangNalar</div></div></div></header>
   <div class="content">
     <section id="tab-home" class="tab-panel">
-      <div class="hero"><div><div class="eyebrow"><span class="dot"></span> Ruang belajar personalmu</div><h1>Naik level,<br/>satu konsep tiap hari.</h1><p>Jelajahi berbagai mata pelajaran, pahami konsep lewat materi, lalu ukur pemahamanmu melalui latihan dan simulasi.</p><button class="btn btn-dark" data-go="materi">Lanjutkan belajar <span>↗</span></button></div><div class="hero-graphic"><div class="orbit"><div class="math-tile">ƒ(x)</div><div class="float-chip one">x → y</div><div class="float-chip two">∑ + √</div></div></div></div>
+      <div class="hero">
+        <img class="hero-logo" src="/runa-logo-slide7.svg" alt="Logo resmi RuNa">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="dot"></span> Ruang belajar personalmu</div>
+          <div class="hero-title-row">
+            <h1 class="hero-title-main">Naik level,</h1>
+            <p class="hero-title-sub">satu konsep tiap hari.</p>
+          </div>
+          <div class="hero-ribbon"><span>RUANG &amp; RUMAH NALAR</span></div>
+          <p class="hero-description">Jelajahi berbagai mata pelajaran, pahami konsep lewat materi, lalu ukur pemahamanmu melalui latihan dan simulasi.</p>
+          <button class="btn btn-dark" data-go="materi">Lanjutkan belajar <span>↗</span></button>
+        </div>
+      </div>
       <div class="stats"><div class="stat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5z"/><path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20"/></svg></div><div><div class="stat-num" id="dashboardMaterialCount">—</div><div class="stat-label">Materi terbit tersedia</div></div></div><div class="stat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></svg></div><div><div class="stat-num" id="answeredCount">0</div><div class="stat-label">Soal latihan terjawab</div></div></div><div class="stat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg></div><div><div class="stat-num" id="scoreCount">—</div><div class="stat-label">Akurasi latihan saat ini</div></div></div></div>
       <div class="section-heading"><div><h2>Jelajahi mata pelajaran</h2><p>Jumlah materi diambil langsung dari perpustakaan yang diterbitkan admin.</p></div><button class="text-link" data-go="materi">Lihat semua →</button></div>
       <div id="dashboardSubjectGrid" class="course-grid" aria-live="polite"><div class="panel"><p class="muted">Memuat ringkasan mata pelajaran…</p></div></div>
@@ -1797,8 +1975,7 @@ main { position:relative!important; min-width:0!important; }
    if (!sourceText.trim()) { notify('Tidak ada teks yang dapat dibaca. Tambahkan teks materi atau gunakan PDF berbasis teks.'); return; }
    if (sourceText.length > 50000) sourceText = sourceText.slice(0, 50000);
    const submitButton = event.submitter;
-   if (submitButton) { submitButton.disabled = true; submitButton.textContent = 'Memproses dengan AI…'; }
-   document.getElementById('draftBadge').textContent = 'MEMPROSES';
+   if (submitButton) { submitButton.disabled = true; submitButton.textContent = 'Memproses dengan AI…'; }   document.getElementById('draftBadge').textContent = 'MEMPROSES';
    document.getElementById('adminPreview').textContent = 'AI sedang menyusun draf berdasarkan sumber. Mohon tunggu…';
    try {
      const response = await fetch('/api/generate-content', {method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({title,topic,subjectId,sourceText})});
@@ -2397,8 +2574,7 @@ main { position:relative!important; min-width:0!important; }
  }
  document.addEventListener('click', event => {
    const open = event.target.closest('[data-open-presentation]');
-   if (open) { openRuangNalarPresentation(open); return; }
-   if (event.target.closest('#rnPresentationClose')) { closeRuangNalarPresentation(); return; }
+   if (open) { openRuangNalarPresentation(open); return; }   if (event.target.closest('#rnPresentationClose')) { closeRuangNalarPresentation(); return; }
    if (event.target.closest('#rnPresentationFullscreen')) {
      const overlay = document.getElementById('rnPresentation');
      if (!document.fullscreenElement && overlay && overlay.requestFullscreen) overlay.requestFullscreen().catch(()=>{});
