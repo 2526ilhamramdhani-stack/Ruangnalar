@@ -464,3 +464,64 @@
 @media(max-width:900px) and (min-width:601px){
   .rn-html-reader-main .rn-h-toc{left:clamp(245px,31vw,300px)}
 }
+
+
+/* Explorer header recovery: remove ancestor stacking/clipping constraints while keeping navigation interactive. */
+.rn-html-reader-main>.rn-handout,
+.rn-html-reader-main>.rn-handout .rn-h-layout,
+.rn-html-reader-main>.rn-handout .rn-h-content{
+  isolation:auto!important;
+  transform:none!important;
+  filter:none!important;
+  contain:none!important;
+  overflow:visible!important;
+}
+.rn-html-reader-main>.rn-handout .rn-h-content{
+  position:static!important;
+  z-index:auto!important;
+}
+.rn-html-reader-main .rn-h-toc{
+  position:fixed!important;
+  top:0!important;
+  left:clamp(300px,31vw,460px)!important;
+  right:clamp(88px,9vw,126px)!important;
+  z-index:2147483000!important;
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+  overflow:visible!important;
+}
+.rn-html-reader-main .rn-h-toc-links{
+  display:flex!important;
+  flex:1 1 auto!important;
+  min-width:0!important;
+  max-width:100%!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  white-space:nowrap!important;
+  scrollbar-width:none!important;
+  -ms-overflow-style:none!important;
+}
+.rn-html-reader-main .rn-h-toc-links::-webkit-scrollbar{display:none!important}
+.rn-html-reader-main .rn-h-toc a{
+  display:inline-flex!important;
+  flex:0 0 auto!important;
+  visibility:visible!important;
+  pointer-events:auto!important;
+}
+@media(max-width:900px) and (min-width:601px){
+  .rn-html-reader-main .rn-h-toc{
+    left:clamp(230px,29vw,280px)!important;
+    right:84px!important;
+  }
+}
+@media(max-width:600px){
+  .rn-html-reader-main .rn-h-toc{
+    top:58px!important;
+    left:7px!important;
+    right:7px!important;
+    height:44px!important;
+    min-height:44px!important;
+  }
+}
