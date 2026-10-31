@@ -2470,6 +2470,7 @@ main {
 }
 
 </style>
+  <link rel="stylesheet" href="/runa-handout.css">
 </head>
 <body>
 <div class="app-root">
@@ -2539,11 +2540,12 @@ main {
 </div>
 
 <div class="rn-presentation" id="rnPresentation" hidden aria-hidden="true">
-<header class="rn-presentation-bar"><div class="rn-presentation-brand"><span class="rn-presentation-mark" aria-hidden="true">R</span><div class="rn-presentation-brand-copy"><strong id="rnPresentationTitle">RuangNalar · Mode Belajar</strong><span>Fokus pada satu konsep dalam satu waktu</span></div></div><div class="rn-presentation-actions"><button type="button" id="rnPresentationFullscreen" aria-label="Aktifkan layar penuh">⛶ <span class="rn-fullscreen-label">Layar penuh</span></button><button type="button" id="rnPresentationClose" aria-label="Keluar dari mode presentasi">✕ <span class="rn-fullscreen-label">Keluar</span></button></div></header>
+<header class="rn-presentation-bar"><div class="rn-presentation-brand"><img class="rn-presentation-logo" src="/runa-logo-slide7.svg" alt="Logo resmi RuNa"><div class="rn-presentation-brand-copy"><strong id="rnPresentationTitle">RuangNalar · Mode Belajar</strong><span>Fokus pada satu konsep dalam satu waktu</span></div></div><div class="rn-presentation-actions"><button type="button" id="rnPresentationFullscreen" aria-label="Aktifkan layar penuh">⛶ <span class="rn-fullscreen-label">Layar penuh</span></button><button type="button" id="rnPresentationClose" aria-label="Keluar dari mode presentasi">✕ <span class="rn-fullscreen-label">Keluar</span></button></div></header>
 <main class="rn-presentation-main" id="rnPresentationMain"></main><div class="rn-presentation-hint">Gunakan tombol ← / → untuk berpindah slide · Esc untuk keluar</div></div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="/runa-handout-renderer.js"></script>
 <script>
 (() => {
  const panels = [...document.querySelectorAll('.tab-panel')];
@@ -3174,38 +3176,10 @@ main {
  });
 
  function renderHandoutSections(item) {
-   const sections = Array.isArray(item.handoutSections) ? item.handoutSections : [];
-   if (!sections.length) return '';
-   const byType = Object.fromEntries(sections.map(section => [section.section_type, section.body || {}]));
-   const esc = value => escapeHtml(String(value == null ? '' : value));
-   const list = (values, render = esc) => Array.isArray(values) && values.length ? '<ul>' + values.map(value => '<li>' + render(value) + '</li>').join('') + '</ul>' : '';
-   const blocks = [];
-   const overview = byType.overview || {};
-   if (overview.summary || overview.learningObjectives || overview.prerequisites || overview.topicMap) blocks.push('<section><h4>Overview & tujuan belajar</h4><p>'+esc(overview.summary)+'</p><h5>Tujuan pembelajaran</h5>'+list(overview.learningObjectives)+'<h5>Prasyarat</h5>'+list(overview.prerequisites)+'<h5>Peta topik</h5>'+list(overview.topicMap)+'</section>');
-   const mindmap = byType.mindmap || {};
-   if (mindmap.centralConcept || mindmap.branches) blocks.push('<section><h4>Mind map konsep</h4><p><b>Konsep utama:</b> '+esc(mindmap.centralConcept)+'</p>'+(Array.isArray(mindmap.branches)?mindmap.branches.map(branch=>'<div class="exam-item"><b>'+esc(branch.title)+'</b>'+list(branch.concepts)+'<p class="muted">'+esc((branch.connections||[]).join(' · '))+'</p></div>').join(''):'')+'<p class="muted">'+esc(mindmap.textAlternative)+'</p></section>');
-   const real = byType.real_world || {};
-   if (Array.isArray(real.examples) && real.examples.length) blocks.push('<section><h4>Contoh di kehidupan nyata</h4>'+real.examples.map(example=>'<div class="exam-item"><b>'+esc(example.title)+'</b><p>'+esc(example.context)+'</p><p>'+esc(example.explanation)+'</p><p><b>Inti:</b> '+esc(example.takeaway)+'</p></div>').join('')+'</section>');
-   const slideData = byType.slides || {};
-   if (Array.isArray(slideData.slides) && slideData.slides.length) {
-     const slideCards = slideData.slides.map((slide,index)=>'<article class="rn-learning-slide" data-slide-index="'+index+'"'+(index===0?'':' hidden')+'><div class="rn-slide-topline"><span class="rn-slide-kicker">PELAJARAN · SLIDE '+String(index+1).padStart(2,'0')+'</span><span class="rn-slide-total">'+(index+1)+' / '+slideData.slides.length+'</span></div><h5>'+esc(slide.title||('Konsep '+(index+1)))+'</h5>'+(slide.learningGoal?'<div class="rn-slide-goal"><span class="rn-mini-label">TUJUAN</span><p>'+esc(slide.learningGoal)+'</p></div>':'')+'<div class="rn-slide-explanation">'+esc(slide.explanation||'')+'</div>'+(slide.workedExample?'<div class="rn-slide-example"><span class="rn-mini-label">CONTOH LANGKAH DEMI LANGKAH</span><p>'+esc(slide.workedExample)+'</p></div>':'')+(slide.visualSuggestion?'<div class="rn-slide-visual"><span aria-hidden="true">✦</span><div><b>Bayangkan secara visual</b><p>'+esc(slide.visualSuggestion)+'</p></div></div>':'')+(slide.commonMistake?'<div class="rn-slide-mistake"><b>Hindari kesalahan ini</b><p>'+esc(slide.commonMistake)+'</p></div>':'')+(slide.checkForUnderstanding?'<div class="rn-slide-check"><b>Cek pemahaman</b><p>'+esc(slide.checkForUnderstanding)+'</p></div>':'')+'</article>').join('');
-     blocks.push('<section class="rn-slide-section"><div class="rn-section-intro"><span class="rn-section-eyebrow">BELAJAR BERTAHAP</span><h4>Slide pembelajaran</h4><p>Fokus pada satu konsep setiap slide. Gunakan navigasi untuk melanjutkan materi.</p></div><div class="rn-slide-deck" data-slide-deck data-current-slide="0"><div class="rn-slide-progress" aria-hidden="true"><span data-slide-progress style="width:'+(100/slideData.slides.length)+'%"></span></div><div class="rn-slide-stage">'+slideCards+'</div><div class="rn-slide-controls"><button type="button" class="btn btn-ghost" data-slide-prev disabled aria-label="Slide sebelumnya">← Sebelumnya</button><span class="rn-slide-counter" aria-live="polite" data-slide-counter>Slide 1 dari '+slideData.slides.length+'</span><button type="button" class="btn btn-primary" data-slide-next'+(slideData.slides.length<2?' disabled':'')+'>Berikutnya →</button></div></div></section>');
+   if (window.RuNaHandoutRenderer && typeof window.RuNaHandoutRenderer.render === 'function') {
+     return window.RuNaHandoutRenderer.render(item);
    }
-   const cheat = byType.cheatsheet || {};
-   if (cheat.keyConcepts || cheat.formulas || cheat.quickReview) blocks.push('<section><h4>Cheatsheet</h4>'+(Array.isArray(cheat.keyConcepts)?cheat.keyConcepts.map(item=>'<div class="exam-item"><b>'+esc(item.concept)+'</b><p>'+esc(item.rule)+'</p><p><b>Kapan dipakai:</b> '+esc(item.whenToUse)+'</p><p class="muted">'+esc(item.caution)+'</p></div>').join(''):'')+(Array.isArray(cheat.formulas)?cheat.formulas.map(item=>'<p><b>'+esc(item.formula)+'</b> — '+esc(item.meaning)+' <span class="muted">'+esc(item.conditions)+'</span></p>').join(''):'')+list(cheat.quickReview)+'</section>');
-   const mnemonics = byType.mnemonic || {};
-   if (Array.isArray(mnemonics.items) && mnemonics.items.length) blocks.push('<section><h4>Jembatan keledai & strategi mengingat</h4>'+mnemonics.items.map(item=>'<div class="exam-item"><b>'+esc(item.mnemonic)+'</b><p>'+esc(item.meaning)+'</p><p>'+esc(item.usage)+'</p><p class="muted">'+esc(item.limitation)+'</p></div>').join('')+'</section>');
-   const encouragement = byType.encouragement || {};
-   if (encouragement.message || encouragement.arabicPhrase) blocks.push('<section><h4>Penutup motivasi</h4><p>'+esc(encouragement.message)+'</p><p><b>'+esc(encouragement.arabicPhrase)+'</b></p><p>'+esc(encouragement.transliteration)+' — '+esc(encouragement.meaning)+'</p><p class="muted">'+esc(encouragement.attributionNote)+'</p></section>');
-   const types = byType.question_types || {};
-   if (Array.isArray(types.types) && types.types.length) blocks.push('<section><h4>Macam-macam tipe soal</h4>'+types.types.map(item=>'<div class="exam-item"><b>'+esc(item.name)+'</b><p><b>Konsep:</b> '+esc(item.conceptTested)+'</p><p><b>Petunjuk:</b> '+esc(item.recognitionClues)+'</p><p><b>Strategi:</b> '+esc(item.solvingStrategy)+'</p><p class="muted">'+esc(item.commonErrors)+'</p></div>').join('')+'</section>');
-   const ideas = byType.question_ideas || {};
-   if (Array.isArray(ideas.ideas) && ideas.ideas.length) blocks.push('<section><h4>Ide & konsep soal</h4>'+ideas.ideas.map(item=>'<div class="exam-item"><b>'+esc(item.coreConcept)+'</b><p>'+esc(item.variation)+'</p><p><b>Alur berpikir:</b> '+esc(item.reasoningPath)+'</p><p class="muted">Prasyarat: '+esc(item.prerequisiteKnowledge)+'</p></div>').join('')+'</section>');
-   const sources = byType.sources || {};
-   if (sources.primarySourceDescription || sources.references || sources.limitations) blocks.push('<section><h4>Sumber & keterbatasan</h4><p>'+esc(sources.primarySourceDescription)+'</p>'+(Array.isArray(sources.references)?sources.references.map(ref=>{const url=typeof ref.url==='string'&&/^https?:\/\//i.test(ref.url)?ref.url:'';return '<p>'+(url?'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(ref.title||url)+'</a>':esc(ref.title||'Sumber tanpa tautan'))+' — '+esc(ref.publisher)+' <span class="muted">'+esc(ref.usageNote)+'</span></p>';}).join(''):'')+list(sources.limitations)+'</section>');
-   const modules = sections.filter(section=>section.section_type==='practice_module');
-   if (modules.length) blocks.push('<section><h4>Latihan mandiri — dua modul awal</h4>'+modules.map((section,moduleIndex)=>{const module=section.body||{};const questions=Array.isArray(module.questions)?module.questions:[];return '<details class="material-details"><summary>'+esc(module.title||('Modul '+(moduleIndex+1)))+' · '+questions.length+' soal</summary><p>'+esc(module.learningFocus)+'</p><p class="muted">Tingkat: '+esc(module.difficulty)+'</p>'+questions.map((q,index)=>'<div class="exam-item"><b>'+(index+1)+'. '+esc(q.question)+'</b><ol type="A">'+(Array.isArray(q.options)?q.options:[]).map(option=>'<li>'+esc(option)+'</li>').join('')+'</ol><p><b>Jawaban:</b> '+esc((q.options||[])[q.answerIndex]||'Perlu ditinjau')+'</p><p>'+esc(q.explanation)+'</p><p class="muted">Konsep: '+esc(q.concept)+' · Kesulitan: '+esc(q.difficulty)+'</p></div>').join('')+'</details>';}).join('')+'</section>');
-   return '<div class="handout-sections"><h3>Handout Pintar</h3><p class="muted">Materi terstruktur berdasarkan sumber yang ditinjau Admin.</p>'+blocks.join('')+'</div>';
+   return '<div class="handout-sections"><p class="muted">Renderer handout belum dapat dimuat. Muat ulang halaman untuk mencoba kembali.</p></div>';
  }
  async function loadPublishedContents(subjectId = selectedSubjectId) {
    const list = document.getElementById('publishedContentList');
