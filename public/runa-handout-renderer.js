@@ -24,8 +24,10 @@
     const add = (key, label, markup) => {
       if (!markup) return;
       const id = rootId + '-' + key;
-      toc.push('<a href="#' + id + '">' + esc(label) + '</a>');
-      blocks.push('<section class="rn-h-section" id="' + id + '"><div class="rn-h-section-heading"><span>' + String(toc.length).padStart(2,'0') + '</span><h3>' + esc(label) + '</h3></div>' + markup + '</section>');
+      const entry = {id,label,children:[]};
+      toc.push(entry);
+      blocks.push('<section class="rn-h-section" id="' + id + '" data-rn-section><div class="rn-h-section-heading"><span>' + String(toc.length).padStart(2,'0') + '</span><h3>' + esc(label) + '</h3><button type="button" class="rn-h-complete" data-rn-complete aria-pressed="false">Tandai selesai</button></div>' + markup + '</section>');
+      return entry;
     };
 
     const overview = byType.overview || {};
@@ -63,7 +65,7 @@
       const slides = arr(slideData.slides);
       const slideCards = slides.map((slide,index) => {
         const query = slide.visualQuery || slide.visualSuggestion || (title + ' ' + slide.title + ' ' + subject);
-        return '<article class="rn-learning-slide rn-h-slide" data-slide-index="' + index + '">' +
+        return '<article class="rn-learning-slide rn-h-slide" id="' + rootId + '-slide-' + (index+1) + '" data-rn-subsection data-slide-index="' + index + '">' +
           '<div class="rn-slide-topline"><span class="rn-slide-kicker">SUBMATERI ' + String(index+1).padStart(2,'0') + '</span><span class="rn-slide-total">BAGIAN ' + String(index+1).padStart(2,'0') + ' / ' + slides.length + '</span></div>' +
           '<div class="rn-h-slide-grid"><div class="rn-h-slide-copy">' +
           '<h4>' + esc(slide.title || ('Konsep ' + (index+1))) + '</h4>' +
@@ -76,9 +78,10 @@
           '<div class="rn-h-visual-placeholder"><span class="rn-h-visual-icon">✦</span><b>Ilustrasi submateri</b><p>' + esc(slide.visualPurpose || slide.visualSuggestion || 'Visual pendukung konsep') + '</p><small>Menelusuri ilustrasi berlisensi terbuka…</small></div>' +
           '</figure></div></article>';
       }).join('');
-      add('slides','Materi inti',
-        '<div class="rn-h-slide-intro"><p>Materi inti ini disusun sebagai satu rangkaian pembelajaran. Baca berurutan atau pilih submateri melalui navigasi di kanan atas.</p><span>' + slides.length + ' submateri</span></div>' +
+      const slideEntry = add('slides','Materi inti',
+        '<div class="rn-h-slide-intro"><p>Materi inti ini disusun sebagai satu rangkaian pembelajaran. Gunakan navigator untuk berpindah submateri.</p><span>' + slides.length + ' submateri</span></div>' +
         '<div class="rn-h-slide-stack">' + slideCards + '</div>');
+      slides.forEach((slide,index) => slideEntry.children.push({id:rootId+'-slide-'+(index+1),label:slide.title || ('Submateri '+(index+1))}));
     }
 
     const cheat = byType.cheatsheet || {};
@@ -233,7 +236,7 @@
       const moduleMarkup = modules.map((section,moduleIndex) => {
         const module = obj(section.body);
         const questions = arr(module.questions);
-        return '<details class="rn-h-module"><summary><span><b>' + esc(module.title || ('Modul latihan ' + (moduleIndex+1))) + '</b><small>' + esc(module.learningFocus || 'Latihan pemahaman') + '</small></span><em>' + questions.length + ' soal</em></summary>' +
+        return '<details class="rn-h-module" id="' + rootId + '-module-' + (moduleIndex+1) + '" data-rn-subsection><summary><span><b>' + esc(module.title || ('Modul latihan ' + (moduleIndex+1))) + '</b><small>' + esc(module.learningFocus || 'Latihan pemahaman') + '</small></span><em>' + questions.length + ' soal</em></summary>' +
           '<div class="rn-h-module-body">' + questions.map((q,index) => {
             const options = arr(q.options);
             return '<article class="rn-h-question" data-rn-question data-answer-index="' + Number(q.answerIndex) + '">' +
@@ -244,8 +247,9 @@
               '<div class="rn-h-feedback" data-rn-feedback hidden><b data-rn-feedback-title></b><p>' + esc(q.explanation) + '</p><small>Konsep: ' + esc(q.concept) + '</small></div></article>';
           }).join('') + '</div></details>';
       }).join('');
-      add('practice','Latihan interaktif',
+      const practiceEntry = add('practice','Latihan interaktif',
         '<div class="rn-h-practice-intro"><b>Uji pemahamanmu</b><p>Pilih jawaban pada setiap soal, lalu periksa untuk melihat umpan balik dan pembahasan.</p></div>' + moduleMarkup);
+      modules.forEach((section,index) => practiceEntry.children.push({id:rootId+'-module-'+(index+1),label:section.body && section.body.title || ('Modul latihan '+(index+1))}));
     }
 
     const sources = byType.sources || {};
@@ -263,10 +267,18 @@
     const header = '<header class="rn-h-header"><a class="rn-h-brand" href="#' + rootId + '-top" aria-label="RuNa — kembali ke awal handout"><img src="/runa-logo-slide7.svg" alt="Logo resmi RuNa"></a>' +
       '<div class="rn-h-title"><span>' + esc(subject) + '</span><b>' + esc(title) + '</b></div>' +
       '<div class="rn-h-progress-wrap"><span>PROGRES MEMBACA</span><div class="rn-h-progress"><i data-rn-progress></i></div></div></header>';
-    const navigation = '<nav class="rn-h-toc" aria-label="Navigasi handout"><b>JELAJAHI HANDOUT</b><div class="rn-h-toc-links">' + toc.map((link,index) => link.replace('<a ', '<a data-rn-nav data-nav-index="' + index + '" ')).join('') + '</div></nav>';
+    const navigation = '<aside class="rn-h-navigator" aria-label="Navigasi pembelajaran">' +
+      '<div class="rn-h-nav-head"><div><span>JELAJAHI MATERI</span><b>Daftar pembelajaran</b></div><button type="button" class="rn-h-nav-close" data-rn-nav-close aria-label="Tutup navigasi">×</button></div>' +
+      '<div class="rn-h-nav-progress"><span data-rn-nav-count>0 dari ' + toc.length + ' bagian selesai</span><i><b data-rn-nav-progress></b></i></div>' +
+      '<div class="rn-h-toc-links">' + toc.map((entry,index) =>
+        '<div class="rn-h-nav-group"><a href="#' + entry.id + '" data-rn-nav data-nav-target="' + entry.id + '" aria-current="false"><span class="rn-h-nav-index">' + String(index+1).padStart(2,'0') + '</span><span class="rn-h-nav-label">' + esc(entry.label) + '</span><i class="rn-h-nav-state" aria-hidden="true"></i></a>' +
+        (entry.children.length ? '<div class="rn-h-nav-children">' + entry.children.map(child => '<a href="#' + child.id + '" data-rn-nav data-nav-target="' + child.id + '" aria-current="false"><span class="rn-h-nav-child-dot"></span><span>' + esc(child.label) + '</span></a>').join('') + '</div>' : '') +
+        '</div>'
+      ).join('') + '</div><div class="rn-h-nav-foot">The content may grow in complexity. The navigation remains simple.</div></aside>' +
+      '<button type="button" class="rn-h-mobile-nav" data-rn-nav-open aria-label="Buka navigasi pembelajaran"><span>☷</span><span data-rn-current-label>Jelajahi materi</span><b>⌄</b></button>'
     return '<div class="rn-handout" id="' + rootId + '" data-rn-handout data-subject="' + esc(subject) + '">' +
       '<div id="' + rootId + '-top"></div>' + header +
-      '<div class="rn-h-layout"><div class="rn-h-content">' + navigation +
+      '<div class="rn-h-layout">' + navigation + '<div class="rn-h-content">' +
       '<section class="rn-h-cover"><span class="rn-h-eyebrow">RUANGNALAR · INTERACTIVE LEARNING HANDOUT</span><h2>' + esc(title) + '</h2>' +
       '<p>' + esc(item.summary || overview.summary || 'Pelajari materi secara bertahap melalui konsep, contoh, visual, dan latihan interaktif.') + '</p>' +
       '<div class="rn-h-cover-meta"><span>' + esc(subject) + '</span><span>Materi terstruktur</span><span>' + toc.length + ' bagian</span></div></section>' +
@@ -332,15 +344,21 @@
   }
 
   document.addEventListener('click', event => {
+    const openNav = event.target.closest('[data-rn-nav-open]');
+    if (openNav) { const root=openNav.closest('[data-rn-handout]'); if(root) root.classList.add('rn-nav-open'); return; }
+    const closeNav = event.target.closest('[data-rn-nav-close]');
+    if (closeNav) { const root=closeNav.closest('[data-rn-handout]'); if(root) root.classList.remove('rn-nav-open'); return; }
+    const complete = event.target.closest('[data-rn-complete]');
+    if (complete) {
+      const section=complete.closest('[data-rn-section]');
+      if(section){const done=section.dataset.rnCompleted!=='1';section.dataset.rnCompleted=done?'1':'0';complete.setAttribute('aria-pressed',String(done));complete.textContent=done?'Selesai ✓':'Tandai selesai';updateNavigator(section.closest('[data-rn-handout]'));}
+      return;
+    }
     const nav = event.target.closest('[data-rn-nav]');
     if (nav) {
-      const root = nav.closest('[data-rn-handout]');
-      const target = root && root.querySelector(nav.getAttribute('href'));
-      if (target) {
-        event.preventDefault();
-        target.scrollIntoView({behavior:'smooth',block:'start'});
-        root.querySelectorAll('[data-rn-nav]').forEach(link => link.classList.toggle('is-active', link === nav));
-      }
+      const root=nav.closest('[data-rn-handout]');
+      const target=root&&root.querySelector('#'+CSS.escape(nav.dataset.navTarget||''));
+      if(target){event.preventDefault();target.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});root.classList.remove('rn-nav-open');}
       return;
     }
     const fillCheck = event.target.closest('[data-rn-fill-check]');
@@ -406,6 +424,48 @@
     check.textContent = 'Sudah diperiksa';
   });
 
+  const observerByRoot = new WeakMap();
+  function updateNavigator(root) {
+    if(!root)return;
+    const groups=Array.from(root.querySelectorAll('.rn-h-nav-group'));
+    const completed=groups.filter(group=>{const id=group.querySelector('[data-nav-target]')?.dataset.navTarget;const section=id&&root.querySelector('#'+CSS.escape(id));return section&&section.dataset.rnCompleted==='1';}).length;
+    const count=root.querySelector('[data-rn-nav-count]');if(count)count.textContent=completed+' dari '+groups.length+' bagian selesai';
+    const bar=root.querySelector('[data-rn-nav-progress]');if(bar)bar.style.width=(groups.length?completed/groups.length*100:0)+'%';
+  }
+  function bindNavigator(root) {
+    if(!root||observerByRoot.has(root))return;
+    const targets=Array.from(root.querySelectorAll('[data-rn-section], [data-rn-subsection]'));
+    if(!targets.length)return;
+    const scrollRoot=root.closest('.rn-html-reader-main')||null;
+    const observer=new IntersectionObserver(entries=>{
+      const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top);
+      if(!visible.length)return;
+      let target=visible.find(entry=>entry.boundingClientRect.top>=0)?.target||visible[0].target;
+      const parent=target.closest('[data-rn-section]')||target;
+      const targetId=target.id;
+      const parentId=parent.id;
+      const links=Array.from(root.querySelectorAll('[data-rn-nav]'));
+      links.forEach(link=>{
+        const active=link.dataset.navTarget===targetId || (targetId===parentId && link.dataset.navTarget===parentId);
+        link.classList.toggle('is-active',active);
+        link.setAttribute('aria-current',active?'location':'false');
+      });
+      const parentLink=root.querySelector('[data-nav-target="'+parentId+'"]');
+      if(parentLink&&targetId!==parentId){parentLink.classList.add('is-parent-active');}
+      const activeLink=root.querySelector('[data-nav-target="'+targetId+'"]')||parentLink;
+      if(activeLink){
+        activeLink.scrollIntoView({block:'nearest',inline:'nearest',behavior:'auto'});
+        const label=root.querySelector('[data-rn-current-label]');if(label)label.textContent=activeLink.querySelector('.rn-h-nav-label')?.textContent||activeLink.textContent.trim();
+      }
+    },{root:scrollRoot,rootMargin:'-14% 0px -68% 0px',threshold:[0,0.05,0.25]});
+    targets.forEach(target=>observer.observe(target));
+    observerByRoot.set(root,observer);
+    updateNavigator(root);
+  }
+  function bindAllNavigators(){document.querySelectorAll('[data-rn-handout]').forEach(bindNavigator);}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindAllNavigators,{once:true});else bindAllNavigators();
+  const navigatorMutationObserver=new MutationObserver(()=>bindAllNavigators());
+  navigatorMutationObserver.observe(document.documentElement,{childList:true,subtree:true});
   let progressBound = false;
   function updateProgress() {
     document.querySelectorAll('[data-rn-handout]').forEach(root => {
@@ -422,5 +482,5 @@
     progressBound = true;
   }
 
-  window.RuNaHandoutRenderer = {render,hydrate};
+  window.RuNaHandoutRenderer = {render,hydrate,bindNavigator};
 })();
