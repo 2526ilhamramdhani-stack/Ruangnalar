@@ -467,7 +467,17 @@
   function updateNavigator(root) {
     if(!root)return;
     const groups=Array.from(root.querySelectorAll('.rn-h-nav-group'));
-    const completed=groups.filter(group=>{const id=group.querySelector('[data-nav-target]')?.dataset.navTarget;const section=id&&root.querySelector('#'+CSS.escape(id));return section&&(section.dataset.rnCompleted==='1'||section.dataset.rnPracticeCompleted==='1');}).length;
+    const completed=groups.filter(group=>{const id=group.querySelector(':scope > [data-nav-target]')?.dataset.navTarget;const section=id&&root.querySelector('#'+CSS.escape(id));return section&&(section.dataset.rnCompleted==='1'||section.dataset.rnPracticeCompleted==='1');}).length;
+    groups.forEach(group=>{
+      const link=group.querySelector(':scope > [data-nav-target]');if(!link)return;
+      const section=root.querySelector('#'+CSS.escape(link.dataset.navTarget));
+      const done=section&&(section.dataset.rnCompleted==='1'||section.dataset.rnPracticeCompleted==='1');
+      link.classList.toggle('is-visited',!!(section&&section.dataset.rnVisited==='1'));
+      link.classList.toggle('is-completed',!!(section&&section.dataset.rnCompleted==='1'));
+      link.classList.toggle('is-practice-complete',!!(section&&section.dataset.rnPracticeCompleted==='1'));
+      const state=link.querySelector('.rn-h-nav-state');
+      if(state)state.title=done?(section.dataset.rnPracticeCompleted==='1'?'Latihan selesai':'Materi selesai'):(section&&section.dataset.rnVisited==='1'?'Sudah dikunjungi':'Belum dikunjungi');
+    });
     const count=root.querySelector('[data-rn-nav-count]');if(count)count.textContent=completed+' dari '+groups.length+' bagian selesai';
     const bar=root.querySelector('[data-rn-nav-progress]');if(bar)bar.style.width=(groups.length?completed/groups.length*100:0)+'%';
   }
