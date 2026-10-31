@@ -1285,14 +1285,14 @@ body { font-family:'Lora',Georgia,serif!important; }
 #dashboardSubjectGrid .course-card.subject-course {
   --subject-bg:#172B3A; --subject-ink:#FAF9F6; --subject-banner:#F8E0A4; --subject-banner-ink:#6C1A1A;
   position:relative; isolation:isolate; display:flex; flex-direction:column; min-height:252px;
-  padding:0 14px 14px; overflow:hidden; border:0!important; border-radius:5px!important;
+  padding:0 14px 14px; overflow:visible; border:0!important; border-radius:5px!important;
   background-color:var(--subject-bg)!important;
   background-image:linear-gradient(rgba(23,43,58,.06),rgba(23,43,58,.06)),url('/runa-woven-pattern.svg')!important;
   background-size:auto,170px auto!important; background-position:center,right -24px bottom -34px!important;
   background-repeat:no-repeat!important; box-shadow:0 14px 28px rgba(8,25,34,.18)!important;
   transition:transform .22s ease,box-shadow .22s ease;
 }
-#dashboardSubjectGrid .course-card.subject-course:before { content:"";position:absolute;inset:0;background:linear-gradient(145deg,transparent 34%,rgba(255,255,255,.08));pointer-events:none;z-index:-1; }
+#dashboardSubjectGrid .course-card.subject-course:before { content:"";position:absolute;inset:0;border-radius:5px;background:linear-gradient(145deg,transparent 34%,rgba(255,255,255,.08));pointer-events:none;z-index:-1; }
 #dashboardSubjectGrid .course-card.subject-course:hover { transform:translateY(-5px);box-shadow:0 20px 34px rgba(8,25,34,.25)!important; }
 #dashboardSubjectGrid .subject-course .course-top { min-height:0!important;height:auto!important;display:block!important;padding:0!important;margin:13px -4px 0 -22px!important;border:0!important;background:transparent!important;color:inherit!important; }
 #dashboardSubjectGrid .subject-course .subject-banner { position:relative;display:flex;align-items:center;min-height:48px;width:calc(100% + 8px);padding:10px 18px 10px 24px;background:var(--subject-banner);color:var(--subject-banner-ink);font-family:var(--site-font-heading)!important;font-size:clamp(13px,1.1vw,16px);font-weight:400;letter-spacing:1.7px;line-height:1.25;text-transform:uppercase;box-shadow:5px 7px 0 rgba(0,0,0,.12); }
