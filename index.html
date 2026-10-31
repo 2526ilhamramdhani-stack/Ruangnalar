@@ -2383,6 +2383,30 @@ main::before {
   }
 }
 
+
+/* RuNa sidebar divider cleanup — remove every secondary border/shadow layer */
+aside#sidebar,
+#sidebar {
+  border:0!important;
+  border-right:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  background-image:none!important;
+}
+#sidebar::after {
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  filter:none!important;
+  background-image:none!important;
+}
+#sidebar::before {
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+
 </style>
 </head>
 <body>
