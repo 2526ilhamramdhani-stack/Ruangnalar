@@ -374,6 +374,7 @@
       const normalize = value => String(value || '').normalize('NFKC').replace(/[\u064B-\u065F\u0670]/g,'').replace(/\s+/g,' ').trim().toLocaleLowerCase();
       const correct = accepted.some(value => normalize(value) === normalize(input.value));
       card.dataset.rnAnswered = '1';
+      updatePracticeCompletion(card.closest('[data-rn-section]'));
       input.disabled = true;
       fillCheck.disabled = true;
       fillCheck.textContent = 'Sudah diperiksa';
@@ -407,6 +408,7 @@
     if (selected == null) { if (status) status.textContent = 'Pilih satu jawaban terlebih dahulu.'; return; }
     const correct = Number(selected) === Number(question.dataset.answerIndex);
     question.dataset.rnAnswered = '1';
+    updatePracticeCompletion(question.closest('[data-rn-section]'));
     question.querySelectorAll('[data-rn-option]').forEach(button => {
       button.disabled = true;
       if (Number(button.dataset.rnOption) === Number(question.dataset.answerIndex)) button.classList.add('is-correct');
@@ -428,9 +430,21 @@
   function updateNavigator(root) {
     if(!root)return;
     const groups=Array.from(root.querySelectorAll('.rn-h-nav-group'));
-    const completed=groups.filter(group=>{const id=group.querySelector('[data-nav-target]')?.dataset.navTarget;const section=id&&root.querySelector('#'+CSS.escape(id));return section&&section.dataset.rnCompleted==='1';}).length;
+    const completed=groups.filter(group=>{const id=group.querySelector('[data-nav-target]')?.dataset.navTarget;const section=id&&root.querySelector('#'+CSS.escape(id));return section&&(section.dataset.rnCompleted==='1'||section.dataset.rnPracticeCompleted==='1');}).length;
     const count=root.querySelector('[data-rn-nav-count]');if(count)count.textContent=completed+' dari '+groups.length+' bagian selesai';
     const bar=root.querySelector('[data-rn-nav-progress]');if(bar)bar.style.width=(groups.length?completed/groups.length*100:0)+'%';
+  }
+  function updatePracticeCompletion(section) {
+    if(!section)return;
+    const questions=Array.from(section.querySelectorAll('[data-rn-question], .rn-h-fill-question'));
+    if(!questions.length)return;
+    const done=questions.every(question=>question.dataset.rnAnswered==='1');
+    if(done){
+      section.dataset.rnPracticeCompleted='1';
+      const link=section.closest('[data-rn-handout]')?.querySelector('[data-nav-target="'+section.id+'"]');
+      if(link){link.classList.add('is-practice-complete');const state=link.querySelector('.rn-h-nav-state');if(state)state.title='Latihan selesai';}
+      updateNavigator(section.closest('[data-rn-handout]'));
+    }
   }
   function bindNavigator(root) {
     if(!root||observerByRoot.has(root))return;
