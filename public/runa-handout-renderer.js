@@ -7,6 +7,7 @@
   const arr = value => Array.isArray(value) ? value : [];
   const obj = value => value && typeof value === 'object' && !Array.isArray(value) ? value : {};
   const textList = values => arr(values).filter(Boolean).map(value => '<li>' + esc(value) + '</li>').join('');
+  const subjectLabels = {'matematika-wajib':'Matematika Wajib','matematika-lanjut':'Matematika Lanjut','kimia':'Kimia','fisika':'Fisika','fiqih':'Fiqih'};
   const slug = value => String(value || 'section').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,48) || 'section';
 
   function render(item) {
@@ -14,7 +15,7 @@
     if (!sections.length) return '';
     const byType = {};
     sections.forEach(section => { byType[section.section_type] = obj(section.body); });
-    const subject = item.subject_id || item.subject || 'Materi belajar';
+    const subject = subjectLabels[item.subject_id] || item.subject || item.subject_id || 'Materi belajar';
     const title = item.title || 'Handout RuNa';
     const rootId = 'runa-handout-' + slug(item.id || title);
     const blocks = [];
