@@ -81,7 +81,16 @@
       const slideEntry = add('slides','Materi inti',
         '<div class="rn-h-slide-intro"><p>Materi inti ini disusun sebagai satu rangkaian pembelajaran. Gunakan navigator untuk berpindah submateri.</p><span>' + slides.length + ' submateri</span></div>' +
         '<div class="rn-h-slide-stack">' + slideCards + '</div>');
-      slides.forEach((slide,index) => slideEntry.children.push({id:rootId+'-slide-'+(index+1),label:slide.title || ('Submateri '+(index+1))}));
+      const slideGroups=[];
+      slides.forEach((slide,index)=>{
+        const child={id:rootId+'-slide-'+(index+1),label:slide.title||('Submateri '+(index+1))};
+        const chapter=String(slide.chapterTitle||slide.chapter||slide.sectionTitle||'').trim();
+        if(!chapter){slideEntry.children.push(child);return;}
+        let group=slideGroups.find(item=>item.label===chapter);
+        if(!group){group={label:chapter,children:[]};slideGroups.push(group);}
+        group.children.push(child);
+      });
+      slideEntry.children.push(...slideGroups);
     }
 
     const cheat = byType.cheatsheet || {};
@@ -200,7 +209,7 @@
               ).join('') + '</div><div class="rn-h-question-actions"><button type="button" class="rn-h-check" data-rn-check>Periksa jawaban</button><span class="rn-h-question-status" aria-live="polite"></span></div>' +
               '<div class="rn-h-feedback" data-rn-feedback hidden><b data-rn-feedback-title></b><p>' + esc(item.explanation || '') + '</p></div></article>';
           }).join('');
-          return '<section class="rn-h-activity-group">' + heading + items + '</section>';
+          return '<section class="rn-h-activity-group" id="' + rootId + '-activity-' + (activityIndex+1) + '" data-rn-subsection>' + heading + items + '</section>';
         }
         if (type === 'fill_blank') {
           const items = arr(activity.items).map((item,index) => {
@@ -216,19 +225,22 @@
           return '<section class="rn-h-activity-group">' + heading + items + '</section>';
         }
         if (type === 'flashcards') {
-          return '<section class="rn-h-activity-group">' + heading + '<div class="rn-h-flash-grid">' + arr(activity.cards).map(card =>
+          return '<section class="rn-h-activity-group" id="' + rootId + '-activity-' + (activityIndex+1) + '" data-rn-subsection>' + heading + '<div class="rn-h-flash-grid">' + arr(activity.cards).map(card =>
             '<details class="rn-h-flashcard"><summary>' + esc(card.front || 'Kartu hafalan') + '</summary><div>' + esc(card.back || '') + '</div></details>'
           ).join('') + '</div></section>';
         }
         if (type === 'short_answer') {
-          return '<section class="rn-h-activity-group">' + heading + arr(activity.items).map(item =>
+          return '<section class="rn-h-activity-group" id="' + rootId + '-activity-' + (activityIndex+1) + '" data-rn-subsection>' + heading + arr(activity.items).map(item =>
             '<details class="rn-h-short-answer"><summary>' + esc(item.prompt || 'Pertanyaan refleksi') + '</summary><div><b>Contoh jawaban</b><p>' +
             esc(item.sampleAnswer || '') + '</p>' + (item.rubric ? '<small>Kriteria: ' + esc(item.rubric) + '</small>' : '') + '</div></details>'
           ).join('') + '</section>';
         }
         return '';
       }).join('');
-      if (activityMarkup) add('learning-activities', 'Aktivitas belajar interaktif', activityMarkup);
+      if (activityMarkup) {
+        const activityEntry=add('learning-activities','Aktivitas belajar interaktif',activityMarkup);
+        arr(learningActivities.activities).forEach((activity,index)=>activityEntry.children.push({id:rootId+'-activity-'+(index+1),label:activity.title||('Aktivitas '+(index+1))}));
+      }
     }
 
     const modules = sections.filter(section => section.section_type === 'practice_module');
@@ -267,12 +279,15 @@
     const header = '<header class="rn-h-header"><a class="rn-h-brand" href="#' + rootId + '-top" aria-label="RuNa — kembali ke awal handout"><img src="/runa-logo-slide7.svg" alt="Logo resmi RuNa"></a>' +
       '<div class="rn-h-title"><span>' + esc(subject) + '</span><b>' + esc(title) + '</b></div>' +
       '<div class="rn-h-progress-wrap"><span>PROGRES MEMBACA</span><div class="rn-h-progress"><i data-rn-progress></i></div></div></header>';
+    const renderNavNode=(node,depth)=>node.children
+      ? '<div class="rn-h-nav-branch"><button type="button" data-rn-nav-expand aria-expanded="true"><span class="rn-h-nav-branch-chevron">⌄</span>'+esc(node.label)+'</button><div class="rn-h-nav-children">'+node.children.map(child=>renderNavNode(child,depth+1)).join('')+'</div></div>'
+      : '<a href="#'+node.id+'" data-rn-nav data-nav-target="'+node.id+'" aria-current="false" class="'+(depth>1?'rn-h-nav-deep':'')+'"><span class="rn-h-nav-child-dot"></span><span>'+esc(node.label)+'</span></a>';
     const navigation = '<aside class="rn-h-navigator" aria-label="Navigasi pembelajaran">' +
       '<div class="rn-h-nav-head"><div><span>JELAJAHI MATERI</span><b>Daftar pembelajaran</b></div><button type="button" class="rn-h-nav-close" data-rn-nav-close aria-label="Tutup navigasi">×</button></div>' +
       '<div class="rn-h-nav-progress"><span data-rn-nav-count>0 dari ' + toc.length + ' bagian selesai</span><i><b data-rn-nav-progress></b></i></div>' +
       '<div class="rn-h-toc-links">' + toc.map((entry,index) =>
         '<div class="rn-h-nav-group"><a href="#' + entry.id + '" data-rn-nav data-nav-target="' + entry.id + '" aria-current="false"><span class="rn-h-nav-index">' + String(index+1).padStart(2,'0') + '</span><span class="rn-h-nav-label">' + esc(entry.label) + '</span><i class="rn-h-nav-state" aria-hidden="true"></i></a>' +
-        (entry.children.length ? '<div class="rn-h-nav-children">' + entry.children.map(child => '<a href="#' + child.id + '" data-rn-nav data-nav-target="' + child.id + '" aria-current="false"><span class="rn-h-nav-child-dot"></span><span>' + esc(child.label) + '</span></a>').join('') + '</div>' : '') +
+        (entry.children.length ? '<div class="rn-h-nav-children">' + entry.children.map(child=>renderNavNode(child,1)).join('') + '</div>' : '') +
         '</div>'
       ).join('') + '</div><div class="rn-h-nav-foot">The content may grow in complexity. The navigation remains simple.</div></aside>' +
       '<button type="button" class="rn-h-mobile-nav" data-rn-nav-open aria-label="Buka navigasi pembelajaran"><span>☷</span><span data-rn-current-label>Jelajahi materi</span><b>⌄</b></button>'
@@ -344,6 +359,8 @@
   }
 
   document.addEventListener('click', event => {
+    const expandNav = event.target.closest('[data-rn-nav-expand]');
+    if(expandNav){const branch=expandNav.closest('.rn-h-nav-branch');if(branch){const expanded=expandNav.getAttribute('aria-expanded')!=='true';expandNav.setAttribute('aria-expanded',String(expanded));branch.classList.toggle('is-collapsed',!expanded);}return;}
     const openNav = event.target.closest('[data-rn-nav-open]');
     if (openNav) { const root=openNav.closest('[data-rn-handout]'); if(root) root.classList.add('rn-nav-open'); return; }
     const closeNav = event.target.closest('[data-rn-nav-close]');
