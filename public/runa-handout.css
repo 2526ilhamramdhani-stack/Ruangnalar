@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
 /* RuNa Interactive Learning Handout v1.0 */
 .rn-handout{--rnh-navy:#172B3A;--rnh-teal:#31AAA9;--rnh-maroon:#6C1A1A;--rnh-cream:#F8E0A4;--rnh-ink:#243846;--rnh-muted:#687985;--rnh-line:#DFE7E8;--rnh-paper:#F7F9F8;color:var(--rnh-ink);background:var(--rnh-paper);border:1px solid var(--rnh-line);border-radius:20px;overflow:clip;margin:20px 0 4px;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
 .rn-h-header{position:sticky;top:0;z-index:20;display:grid;grid-template-columns:auto minmax(0,1fr) minmax(150px,220px);align-items:center;gap:18px;min-height:82px;padding:12px clamp(14px,2.6vw,30px);background:rgba(255,255,255,.96);border-bottom:1px solid var(--rnh-line);backdrop-filter:blur(14px)}
@@ -116,7 +117,6 @@
 .rn-html-reader-main .rn-h-toc a:hover,.rn-html-reader-main .rn-h-toc a:focus-visible,.rn-html-reader-main .rn-h-toc a.is-active{background:#172B3A;border-color:#172B3A;color:#fff;box-shadow:inset 0 -3px 0 #31AAA9}
 @media(max-width:650px){.rn-reader-verse{padding:17px 14px}.rn-reader-arabic{font-size:23px}.rn-html-reader-main .rn-h-toc{width:100%;padding:9px}.rn-html-reader-main .rn-h-toc-links{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.rn-html-reader-main .rn-h-toc a{min-height:46px;font-size:9px}}
 
-@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
 /* RuNa Academic Reading Skin — visual only */
 .rn-handout{--rnh-navy:#172B3A;--rnh-teal:#31AAA9;--rnh-maroon:#6C1A1A;--rnh-cream:#F8E0A4;--rnh-paper:#F5F3EC;--rnh-ink:#263B47;--rnh-muted:#60717A;--rnh-line:#D9E1DE;position:relative;isolation:isolate;overflow:hidden;border:1px solid rgba(255,255,255,.18);border-radius:18px;background:#172B3A;color:#263B47;font-family:'Lora',Georgia,serif;letter-spacing:.005em;box-shadow:0 18px 54px rgba(8,23,32,.18)}
 .rn-handout::before{content:"";position:absolute;z-index:0;left:0;top:0;bottom:0;width:13px;border-right:2px solid rgba(255,255,255,.88);background:linear-gradient(to bottom,transparent 0 42px,rgba(255,255,255,.06) 42px 100%);pointer-events:none}
