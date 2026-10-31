@@ -450,3 +450,17 @@
   .rn-html-reader-main .rn-h-toc a{min-height:30px;padding:5px 9px;font-size:9px}
   .rn-html-reader-main>.rn-handout .rn-h-layout{padding-top:18px}
 }
+
+
+/* Fix explorer visibility: lift the fixed nav out of the handout's isolated stacking context. */
+.rn-html-reader-main>.rn-handout{
+  isolation:auto!important;
+  overflow:visible!important;
+}
+.rn-html-reader-main .rn-h-toc{
+  left:clamp(300px,31vw,460px);
+  z-index:10004!important;
+}
+@media(max-width:900px) and (min-width:601px){
+  .rn-html-reader-main .rn-h-toc{left:clamp(245px,31vw,300px)}
+}
