@@ -550,3 +550,54 @@
   opacity:1!important;
   pointer-events:auto!important;
 }
+
+
+/* Adaptive pedagogical modules: terminology, reading, dialogue and varied practice. */
+.rn-h-term-grid,.rn-h-reading-list,.rn-h-dialogue-list{display:grid;gap:12px}
+.rn-h-term-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.rn-h-term-card,.rn-h-reading-card,.rn-h-dialogue-card{min-width:0;border:1px solid #DCE6E2;border-radius:13px;background:#FCFDFB;overflow:hidden}
+.rn-h-term-card summary,.rn-h-reading-card details summary,.rn-h-dialogue-line details summary,.rn-h-reading-questions details summary,.rn-h-flashcard summary,.rn-h-short-answer summary{cursor:pointer;list-style:none}
+.rn-h-term-card summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 15px;background:#EDF6F3}
+.rn-h-term-card summary::-webkit-details-marker,.rn-h-flashcard summary::-webkit-details-marker{display:none}
+.rn-h-term-card summary span{display:grid;gap:3px;min-width:0}
+.rn-h-term-card summary b{color:#172B3A;font-size:13px}
+.rn-h-term-card summary small{color:#6C7E83;font-size:10px}
+.rn-h-term-card summary em{flex:0 0 auto;color:#6C1A1A;font-size:9px;font-style:normal;font-weight:800}
+.rn-h-term-body{padding:13px 15px;color:#435A63;font-size:12px;line-height:1.75}
+.rn-h-term-body p:last-child{margin-bottom:0}
+.rn-h-term-hint{padding:9px 11px;border-radius:9px;background:#FCF5E5;color:#775C2C}
+.rn-h-reading-card,.rn-h-dialogue-card{padding:17px}
+.rn-h-reading-card h4,.rn-h-dialogue-card h4,.rn-h-activity-heading h4{margin:5px 0 12px;color:#172B3A;font-size:15px}
+.rn-h-reading-original{padding:15px;border-radius:10px;background:#F4F6F2;color:#263B47;font-size:13px;line-height:1.9;white-space:pre-wrap}
+.rn-h-reading-card>details,.rn-h-reading-questions details{margin-top:9px;padding:10px 12px;border-radius:9px;background:#F8F4E8;color:#435A63;font-size:11px}
+.rn-h-reading-card>details p,.rn-h-reading-questions details p{margin:8px 0 0;line-height:1.7}
+.rn-h-reading-questions{display:grid;gap:6px;margin-top:12px}
+.rn-h-reading-questions details{margin:0;background:#EDF5F2}
+.rn-h-reading-questions small{display:block;margin-top:6px;color:#687A80;line-height:1.6}
+.rn-h-dialogue-lines{display:grid;gap:9px}
+.rn-h-dialogue-line{padding:12px;border-radius:10px;background:#F5F7F4;border-left:3px solid #31AAA9}
+.rn-h-dialogue-line:nth-child(even){border-left-color:#6C1A1A}
+.rn-h-dialogue-line>b{font-size:10px;color:#6C1A1A}
+.rn-h-dialogue-line>p{margin:5px 0;color:#263B47;font-size:13px;line-height:1.8}
+.rn-h-dialogue-line details{font-size:10px;color:#65777D}
+.rn-h-dialogue-line details p{margin:6px 0 0;font-size:11px}
+.rn-h-activity-group{margin-top:14px;padding:15px;border:1px solid #DCE6E2;border-radius:13px;background:#FCFDFB}
+.rn-h-activity-heading p{margin:0 0 12px;color:#65777D;font-size:11px;line-height:1.6}
+.rn-h-activity-question{margin:10px 0}
+.rn-h-fill-question{padding:14px;margin:10px 0;border:1px solid #DCE6E2;border-radius:11px;background:#fff}
+.rn-h-fill-question>p{font-size:13px;line-height:1.8;color:#263B47}
+.rn-h-fill-question input{width:min(100%,240px);min-height:38px;margin:4px;padding:7px 10px;border:1px solid #31AAA9;border-radius:8px;background:#F8FBF9;color:#172B3A;font:inherit}
+.rn-h-flash-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.rn-h-flashcard,.rn-h-short-answer{border:1px solid #DCE6E2;border-radius:10px;background:#F7F8F4;overflow:hidden}
+.rn-h-flashcard summary,.rn-h-short-answer summary{padding:13px;color:#172B3A;font-size:12px;font-weight:800}
+.rn-h-flashcard[open] summary,.rn-h-short-answer[open] summary{background:#EAF4F1}
+.rn-h-flashcard>div,.rn-h-short-answer>div{padding:12px 13px;border-top:1px solid #DCE6E2;color:#435A63;font-size:12px;line-height:1.7}
+.rn-h-short-answer{margin:8px 0}
+.rn-h-short-answer p{margin:6px 0}
+.rn-h-short-answer small{color:#6C1A1A}
+@media(max-width:650px){.rn-h-term-grid,.rn-h-flash-grid{grid-template-columns:1fr}.rn-h-reading-card,.rn-h-dialogue-card{padding:13px}.rn-h-term-card summary{align-items:flex-start}.rn-h-term-card summary em{white-space:nowrap}}
+/* Root cause fix: the handout skin's isolation/overflow created a stacking context above the reader chrome. */
+.rn-html-reader-main>.rn-handout{
+  isolation:auto!important;
+  overflow:visible!important;
+}
