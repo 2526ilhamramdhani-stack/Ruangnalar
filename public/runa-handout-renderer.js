@@ -77,7 +77,7 @@
           '</figure></div></article>';
       }).join('');
       add('slides','Materi inti',
-        '<div class="rn-h-slide-intro"><p>Lima bagian materi inti ini sudah menjadi satu rangkaian. Baca berurutan atau pilih submateri melalui navigasi di kanan atas.</p><span>' + slides.length + ' submateri</span></div>' +
+        '<div class="rn-h-slide-intro"><p>Materi inti ini disusun sebagai satu rangkaian pembelajaran. Baca berurutan atau pilih submateri melalui navigasi di kanan atas.</p><span>' + slides.length + ' submateri</span></div>' +
         '<div class="rn-h-slide-stack">' + slideCards + '</div>');
     }
 
@@ -155,7 +155,7 @@
         '<div class="rn-h-reading-list">' + arr(reading.passages).map((passage,index) =>
           '<article class="rn-h-reading-card"><span class="rn-h-card-label">BACAAN ' + String(index+1).padStart(2,'0') + '</span>' +
           '<h4>' + esc(passage.title || ('Teks ' + (index+1))) + '</h4>' +
-          (passage.originalText ? '<div class="rn-h-reading-original" dir="auto">' + esc(passage.originalText).replace(/\\r?\\n/g,'<br>') + '</div>' : '') +
+          (passage.originalText ? '<div class="rn-h-reading-original" dir="auto">' + esc(passage.originalText).replace(/\r?\n/g,'<br>') + '</div>' : '') +
           (passage.translation ? '<details><summary>Lihat terjemahan / makna</summary><p>' + esc(passage.translation).replace(/\\r?\\n/g,'<br>') + '</p></details>' : '') +
           (passage.notes ? '<div class="rn-h-takeaway"><b>Catatan pemahaman</b><p>' + esc(passage.notes) + '</p></div>' : '') +
           (arr(passage.comprehensionQuestions).length ? '<div class="rn-h-reading-questions">' + arr(passage.comprehensionQuestions).map(question =>
@@ -203,7 +203,7 @@
           const items = arr(activity.items).map((item,index) => {
             const accepted = [item.answer,...arr(item.acceptedAnswers)].filter(value => typeof value === 'string' && value.trim());
             const input = '<input type="text" data-rn-fill-input aria-label="Jawaban bagian kosong" autocomplete="off">';
-            const prompt = esc(item.prompt || '').replace(/\\{\\{blank\\}\\}/g,input);
+            const prompt = esc(item.prompt || '').replace(/\{\{blank\}\}/g,input);
             return '<article class="rn-h-fill-question" data-rn-fill-accepted="' + esc(JSON.stringify(accepted)) + '" data-rn-fill-explanation="' + esc(item.explanation || '') + '">' +
               '<div class="rn-h-question-meta"><span>ISI BAGIAN KOSONG ' + String(index+1).padStart(2,'0') + '</span></div>' +
               '<p>' + (prompt.includes('data-rn-fill-input') ? prompt : prompt + ' ' + input) + '</p>' +
@@ -353,7 +353,7 @@
       if (!input || !input.value.trim()) { if (status) status.textContent = 'Isi jawaban terlebih dahulu.'; return; }
       let accepted = [];
       try { accepted = JSON.parse(card.dataset.rnFillAccepted || '[]'); } catch (_) {}
-      const normalize = value => String(value || '').normalize('NFKC').replace(/[\\u064B-\\u065F\\u0670]/g,'').replace(/\\s+/g,' ').trim().toLocaleLowerCase();
+      const normalize = value => String(value || '').normalize('NFKC').replace(/[\u064B-\u065F\u0670]/g,'').replace(/\s+/g,' ').trim().toLocaleLowerCase();
       const correct = accepted.some(value => normalize(value) === normalize(input.value));
       card.dataset.rnAnswered = '1';
       input.disabled = true;
