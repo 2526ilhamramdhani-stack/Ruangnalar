@@ -135,6 +135,99 @@
         ).join('') + '</div>');
     }
 
+    const terminology = byType.terminology || {};
+    if (arr(terminology.items).length) {
+      add('terminology', terminology.title || 'Kosakata dan terminologi',
+        (terminology.description ? '<p class="rn-h-lead">' + esc(terminology.description) + '</p>' : '') +
+        '<div class="rn-h-term-grid">' + arr(terminology.items).map(item =>
+          '<details class="rn-h-term-card"><summary><span><b>' + esc(item.term || item.word || 'Istilah') + '</b><small>' +
+          esc(item.category || item.form || 'Istilah penting') + '</small></span><em>Lihat makna</em></summary><div class="rn-h-term-body">' +
+          (item.meaning || item.definition ? '<p>' + esc(item.meaning || item.definition) + '</p>' : '') +
+          (item.example ? '<p><b>Contoh:</b> ' + esc(item.example) + '</p>' : '') +
+          (arr(item.relatedTerms).length ? '<p><b>Istilah terkait:</b> ' + esc(item.relatedTerms.join(' · ')) + '</p>' : '') +
+          (item.memoryHint ? '<p class="rn-h-term-hint">' + esc(item.memoryHint) + '</p>' : '') + '</div></details>'
+        ).join('') + '</div>');
+    }
+
+    const reading = byType.reading_material || {};
+    if (arr(reading.passages).length) {
+      add('reading-material', reading.title || 'Bacaan dan pemahaman teks',
+        '<div class="rn-h-reading-list">' + arr(reading.passages).map((passage,index) =>
+          '<article class="rn-h-reading-card"><span class="rn-h-card-label">BACAAN ' + String(index+1).padStart(2,'0') + '</span>' +
+          '<h4>' + esc(passage.title || ('Teks ' + (index+1))) + '</h4>' +
+          (passage.originalText ? '<div class="rn-h-reading-original" dir="auto">' + esc(passage.originalText).replace(/\\r?\\n/g,'<br>') + '</div>' : '') +
+          (passage.translation ? '<details><summary>Lihat terjemahan / makna</summary><p>' + esc(passage.translation).replace(/\\r?\\n/g,'<br>') + '</p></details>' : '') +
+          (passage.notes ? '<div class="rn-h-takeaway"><b>Catatan pemahaman</b><p>' + esc(passage.notes) + '</p></div>' : '') +
+          (arr(passage.comprehensionQuestions).length ? '<div class="rn-h-reading-questions">' + arr(passage.comprehensionQuestions).map(question =>
+            '<details><summary>' + esc(question.question) + '</summary><p>' + esc(question.answer) + '</p>' +
+            (question.explanation ? '<small>' + esc(question.explanation) + '</small>' : '') + '</details>'
+          ).join('') + '</div>' : '') + '</article>'
+        ).join('') + '</div>');
+    }
+
+    const dialogues = byType.dialogues || {};
+    if (arr(dialogues.items).length) {
+      add('dialogues', dialogues.title || 'Dialog dan percakapan',
+        '<div class="rn-h-dialogue-list">' + arr(dialogues.items).map((dialogue,index) =>
+          '<article class="rn-h-dialogue-card"><span class="rn-h-card-label">DIALOG ' + String(index+1).padStart(2,'0') + '</span>' +
+          '<h4>' + esc(dialogue.title || ('Percakapan ' + (index+1))) + '</h4>' +
+          (dialogue.context ? '<p class="rn-h-caption">' + esc(dialogue.context) + '</p>' : '') +
+          '<div class="rn-h-dialogue-lines">' + arr(dialogue.lines).map(line =>
+            '<div class="rn-h-dialogue-line"><b>' + esc(line.speaker || 'Pembicara') + '</b><p dir="auto">' + esc(line.text || '') + '</p>' +
+            (line.translation ? '<details><summary>Lihat terjemahan</summary><p>' + esc(line.translation) + '</p></details>' : '') +
+            (line.note ? '<small>' + esc(line.note) + '</small>' : '') + '</div>'
+          ).join('') + '</div></article>'
+        ).join('') + '</div>');
+    }
+
+    const learningActivities = byType.learning_activities || {};
+    if (arr(learningActivities.activities).length) {
+      const activityMarkup = arr(learningActivities.activities).map((activity,activityIndex) => {
+        const type = String(activity.type || '').toLowerCase();
+        const heading = '<div class="rn-h-activity-heading"><h4>' + esc(activity.title || ('Aktivitas ' + (activityIndex+1))) + '</h4>' +
+          (activity.instructions ? '<p>' + esc(activity.instructions) + '</p>' : '') + '</div>';
+        if (type === 'true_false' || type === 'classification') {
+          const items = arr(activity.items).map((item,index) => {
+            const options = type === 'true_false' ? ['Benar','Salah'] : arr(item.options);
+            const answerIndex = type === 'true_false' ? (item.answer === true ? 0 : 1) : Number(item.answerIndex);
+            return '<article class="rn-h-question rn-h-activity-question" data-rn-question data-answer-index="' + answerIndex + '">' +
+              '<div class="rn-h-question-meta"><span>' + esc(type === 'true_false' ? 'PERNYATAAN ' : 'KLASIFIKASI ') + String(index+1).padStart(2,'0') + '</span></div>' +
+              '<h4>' + esc(item.statement || item.prompt || '') + '</h4><div class="rn-h-options">' + options.map((option,optionIndex) =>
+                '<button type="button" data-rn-option="' + optionIndex + '"><span>' + String.fromCharCode(65+optionIndex) + '</span>' + esc(option) + '</button>'
+              ).join('') + '</div><div class="rn-h-question-actions"><button type="button" class="rn-h-check" data-rn-check>Periksa jawaban</button><span class="rn-h-question-status" aria-live="polite"></span></div>' +
+              '<div class="rn-h-feedback" data-rn-feedback hidden><b data-rn-feedback-title></b><p>' + esc(item.explanation || '') + '</p></div></article>';
+          }).join('');
+          return '<section class="rn-h-activity-group">' + heading + items + '</section>';
+        }
+        if (type === 'fill_blank') {
+          const items = arr(activity.items).map((item,index) => {
+            const accepted = [item.answer,...arr(item.acceptedAnswers)].filter(value => typeof value === 'string' && value.trim());
+            const input = '<input type="text" data-rn-fill-input aria-label="Jawaban bagian kosong" autocomplete="off">';
+            const prompt = esc(item.prompt || '').replace(/\\{\\{blank\\}\\}/g,input);
+            return '<article class="rn-h-fill-question" data-rn-fill-accepted="' + esc(JSON.stringify(accepted)) + '" data-rn-fill-explanation="' + esc(item.explanation || '') + '">' +
+              '<div class="rn-h-question-meta"><span>ISI BAGIAN KOSONG ' + String(index+1).padStart(2,'0') + '</span></div>' +
+              '<p>' + (prompt.includes('data-rn-fill-input') ? prompt : prompt + ' ' + input) + '</p>' +
+              '<div class="rn-h-question-actions"><button type="button" class="rn-h-check" data-rn-fill-check>Periksa jawaban</button><span class="rn-h-question-status" aria-live="polite"></span></div>' +
+              '<div class="rn-h-feedback" data-rn-fill-feedback hidden><b data-rn-fill-title></b><p data-rn-fill-explanation-text></p></div></article>';
+          }).join('');
+          return '<section class="rn-h-activity-group">' + heading + items + '</section>';
+        }
+        if (type === 'flashcards') {
+          return '<section class="rn-h-activity-group">' + heading + '<div class="rn-h-flash-grid">' + arr(activity.cards).map(card =>
+            '<details class="rn-h-flashcard"><summary>' + esc(card.front || 'Kartu hafalan') + '</summary><div>' + esc(card.back || '') + '</div></details>'
+          ).join('') + '</div></section>';
+        }
+        if (type === 'short_answer') {
+          return '<section class="rn-h-activity-group">' + heading + arr(activity.items).map(item =>
+            '<details class="rn-h-short-answer"><summary>' + esc(item.prompt || 'Pertanyaan refleksi') + '</summary><div><b>Contoh jawaban</b><p>' +
+            esc(item.sampleAnswer || '') + '</p>' + (item.rubric ? '<small>Kriteria: ' + esc(item.rubric) + '</small>' : '') + '</div></details>'
+          ).join('') + '</section>';
+        }
+        return '';
+      }).join('');
+      if (activityMarkup) add('learning-activities', 'Aktivitas belajar interaktif', activityMarkup);
+    }
+
     const modules = sections.filter(section => section.section_type === 'practice_module');
     if (modules.length) {
       const moduleMarkup = modules.map((section,moduleIndex) => {
@@ -247,6 +340,34 @@
         event.preventDefault();
         target.scrollIntoView({behavior:'smooth',block:'start'});
         root.querySelectorAll('[data-rn-nav]').forEach(link => link.classList.toggle('is-active', link === nav));
+      }
+      return;
+    }
+    const fillCheck = event.target.closest('[data-rn-fill-check]');
+    if (fillCheck) {
+      const card = fillCheck.closest('.rn-h-fill-question');
+      if (!card || card.dataset.rnAnswered === '1') return;
+      const input = card.querySelector('[data-rn-fill-input]');
+      const status = card.querySelector('.rn-h-question-status');
+      const feedback = card.querySelector('[data-rn-fill-feedback]');
+      if (!input || !input.value.trim()) { if (status) status.textContent = 'Isi jawaban terlebih dahulu.'; return; }
+      let accepted = [];
+      try { accepted = JSON.parse(card.dataset.rnFillAccepted || '[]'); } catch (_) {}
+      const normalize = value => String(value || '').normalize('NFKC').replace(/[\\u064B-\\u065F\\u0670]/g,'').replace(/\\s+/g,' ').trim().toLocaleLowerCase();
+      const correct = accepted.some(value => normalize(value) === normalize(input.value));
+      card.dataset.rnAnswered = '1';
+      input.disabled = true;
+      fillCheck.disabled = true;
+      fillCheck.textContent = 'Sudah diperiksa';
+      if (status) status.textContent = correct ? 'Benar' : 'Perlu dipelajari';
+      if (feedback) {
+        feedback.hidden = false;
+        feedback.classList.toggle('is-correct', correct);
+        feedback.classList.toggle('is-incorrect', !correct);
+        const title = feedback.querySelector('[data-rn-fill-title]');
+        const explanation = feedback.querySelector('[data-rn-fill-explanation-text]');
+        if (title) title.textContent = correct ? 'Tepat! Jawabanmu benar.' : 'Belum tepat. Periksa kembali materi.';
+        if (explanation) explanation.textContent = (card.dataset.rnFillExplanation || '') + (accepted.length ? ' Jawaban yang diharapkan: ' + accepted[0] : '');
       }
       return;
     }
