@@ -55,7 +55,7 @@ for (const file of javascriptFiles) {
 
 // Also parse-check the inline application script without executing it.
 const vm = require('node:vm');
-const inlineScripts = [...html.matchAll(/<script\\b(?![^>]*\\bsrc\\s*=)[^>]*>([\\s\\S]*?)<\\/script>/gi)];
+const inlineScripts = [...html.matchAll(/<script\b(?![^>]*\bsrc\s*=)[^>]*>([\s\S]*?)<\/script>/gi)];
 for (let index = 0; index < inlineScripts.length; index++) {
   try {
     new vm.Script(inlineScripts[index][1], { filename: 'index.html:inline-script-' + (index + 1) + '.js' });
