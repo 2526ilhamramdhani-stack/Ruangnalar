@@ -98,3 +98,20 @@
 
 .rn-h-slide-stack .rn-h-explanation-lead{margin:0 0 12px;padding:13px 15px;border-left:3px solid #31AAA9;border-radius:0 10px 10px 0;background:#EDF6F3;color:#172B3A;font-weight:650;line-height:1.85}
 .rn-h-slide-stack .rn-slide-explanation p:not(.rn-h-explanation-lead){margin:10px 0;color:#405761;font-size:13px;line-height:1.9}
+
+
+/* Reader header cleanup: the reader chrome is the single primary header. */
+.rn-html-reader-main .rn-h-header{display:none!important}
+.rn-html-reader-bar{min-height:70px;padding:10px clamp(16px,3vw,34px)}
+.rn-html-reader-brand span{display:none}
+.rn-reader-verse{margin:0 auto;padding:23px clamp(18px,4vw,44px) 20px;max-width:1440px;text-align:center;background:#fff;border-bottom:1px solid #E8ECE9}
+.rn-reader-verse-label{margin-bottom:13px;color:#8B6A35;font-size:9px;font-weight:900;letter-spacing:1.6px}
+.rn-reader-arabic{margin:10px 0 5px;color:#172B3A;font-family:"Noto Naskh Arabic","Amiri",serif;font-size:clamp(23px,3vw,31px);line-height:1.9}
+.rn-reader-translation{margin:0 auto 11px;max-width:720px;color:#596B70;font-size:12px;line-height:1.7}
+.rn-reader-translation span{color:#6C1A1A;font-size:10px;font-weight:800;white-space:nowrap}
+.rn-html-reader-main .rn-h-toc{position:sticky;top:10px;z-index:15;align-self:start;justify-self:end;width:min(100%,760px);margin:0 0 4px;padding:10px 12px;background:rgba(255,255,255,.97);border:1px solid #D8E3E0;border-radius:14px;box-shadow:0 8px 24px rgba(23,43,58,.12);backdrop-filter:blur(12px)}
+.rn-html-reader-main .rn-h-toc>b{padding:0 5px;color:#6C1A1A;font-size:9px;letter-spacing:1px}
+.rn-html-reader-main .rn-h-toc-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(76px,1fr));gap:7px}
+.rn-html-reader-main .rn-h-toc a{display:flex;min-height:52px;align-items:center;justify-content:center;padding:8px;border:1px solid #E1E8E6;border-radius:10px;background:#F7F8F5;color:#263F4B;text-align:center;font-size:10px;font-weight:800;line-height:1.35}
+.rn-html-reader-main .rn-h-toc a:hover,.rn-html-reader-main .rn-h-toc a:focus-visible,.rn-html-reader-main .rn-h-toc a.is-active{background:#172B3A;border-color:#172B3A;color:#fff;box-shadow:inset 0 -3px 0 #31AAA9}
+@media(max-width:650px){.rn-reader-verse{padding:17px 14px}.rn-reader-arabic{font-size:23px}.rn-html-reader-main .rn-h-toc{width:100%;padding:9px}.rn-html-reader-main .rn-h-toc-links{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.rn-html-reader-main .rn-h-toc a{min-height:46px;font-size:9px}}
