@@ -45,3 +45,13 @@
 @media(max-width:900px){.rn-h-layout{grid-template-columns:1fr}.rn-h-toc{position:relative;top:auto;display:flex;flex-wrap:wrap;max-height:none;align-items:center}.rn-h-toc>b{width:100%;padding-bottom:2px}.rn-h-toc a{padding:7px 9px;background:#F5F8F7}}
 @media(max-width:650px){.rn-h-header{grid-template-columns:auto minmax(0,1fr);gap:10px;min-height:72px;padding:9px 12px}.rn-h-brand{width:76px;height:48px}.rn-h-title b{font-size:12px}.rn-h-progress-wrap{grid-column:1/-1;grid-row:2;gap:4px}.rn-h-progress-wrap>span{font-size:8px}.rn-h-layout{padding:11px;gap:11px}.rn-h-cover{padding:22px 18px}.rn-h-cover h2{font-size:28px}.rn-h-section{padding:15px}.rn-h-info-grid,.rn-h-key-grid,.rn-h-formula-grid,.rn-h-mindmap-branches,.rn-h-example-grid{grid-template-columns:1fr}.rn-h-slide-grid{grid-template-columns:1fr}.rn-h-slide{min-height:0}.rn-h-visual{min-height:190px}.rn-h-visual-result img{height:190px}.rn-h-slide-intro{align-items:flex-start;flex-direction:column}.rn-h-footer{flex-wrap:wrap;text-align:center}.rn-presentation-logo{width:68px;max-height:42px}}
 @media(prefers-reduced-motion:reduce){.rn-h-progress i,.rn-h-toc a{transition:none}}
+
+/* Admin draft preview uses the same student-facing HTML, with editing kept separate. */
+.rn-admin-preview-intro{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 14px;padding:12px 14px;border:1px solid #DCE8E6;border-radius:12px;background:#F3F8F7}
+.rn-admin-preview-intro .type-pill{margin:0;flex:0 0 auto;background:#E2F1EE;color:#247C77}
+.rn-admin-preview-intro p{margin:0;max-width:520px;font-size:10px}
+#adminPreview .draft-edit-panel{margin-top:16px;padding:15px;border:1px solid #DCE4E5;border-radius:13px;background:#fff}
+#adminPreview .draft-edit-panel>summary{cursor:pointer;color:#263F4B;font-size:12px;font-weight:850}
+#adminPreview .draft-edit-panel .field{margin-top:13px}
+#adminPreview .draft-edit-panel textarea{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11px}
+@media(max-width:600px){.rn-admin-preview-intro{align-items:flex-start;flex-direction:column}}
