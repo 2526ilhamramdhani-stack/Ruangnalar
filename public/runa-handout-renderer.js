@@ -62,23 +62,22 @@
       const slides = arr(slideData.slides);
       const slideCards = slides.map((slide,index) => {
         const query = slide.visualQuery || slide.visualSuggestion || (title + ' ' + slide.title + ' ' + subject);
-        return '<article class="rn-learning-slide rn-h-slide" data-slide-index="' + index + '"' + (index === 0 ? '' : ' hidden') + '>' +
-          '<div class="rn-slide-topline"><span class="rn-slide-kicker">MATERI PEMBELAJARAN</span><span class="rn-slide-total">' + String(index+1).padStart(2,'0') + ' / ' + slides.length + '</span></div>' +
+        return '<article class="rn-learning-slide rn-h-slide" data-slide-index="' + index + '">' +
+          '<div class="rn-slide-topline"><span class="rn-slide-kicker">SUBMATERI ' + String(index+1).padStart(2,'0') + '</span><span class="rn-slide-total">BAGIAN ' + String(index+1).padStart(2,'0') + ' / ' + slides.length + '</span></div>' +
           '<div class="rn-h-slide-grid"><div class="rn-h-slide-copy">' +
           '<h4>' + esc(slide.title || ('Konsep ' + (index+1))) + '</h4>' +
-          (slide.learningGoal ? '<div class="rn-slide-goal"><span class="rn-mini-label">TUJUAN</span><p>' + esc(slide.learningGoal) + '</p></div>' : '') +
+          (slide.learningGoal ? '<div class="rn-slide-goal"><span class="rn-mini-label">FOKUS PEMBELAJARAN</span><p>' + esc(slide.learningGoal) + '</p></div>' : '') +
           '<div class="rn-slide-explanation">' + esc(slide.explanation || '') + '</div>' +
           (slide.workedExample ? '<div class="rn-slide-example"><span class="rn-mini-label">CONTOH / PENERAPAN</span><p>' + esc(slide.workedExample) + '</p></div>' : '') +
-          (slide.commonMistake ? '<div class="rn-slide-mistake"><b>Perhatikan</b><p>' + esc(slide.commonMistake) + '</p></div>' : '') +
+          (slide.commonMistake ? '<div class="rn-slide-mistake"><b>⚑ Perlu diperhatikan</b><p>' + esc(slide.commonMistake) + '</p></div>' : '') +
           (slide.checkForUnderstanding ? '<div class="rn-slide-check"><b>Cek pemahaman</b><p>' + esc(slide.checkForUnderstanding) + '</p></div>' : '') +
           '</div><figure class="rn-h-visual" data-rn-visual data-query="' + esc(query) + '">' +
-          '<div class="rn-h-visual-placeholder"><span class="rn-h-visual-icon">✦</span><b>Visual pembelajaran</b><p>' + esc(slide.visualPurpose || slide.visualSuggestion || 'Visual pendukung konsep') + '</p><small>Menelusuri aset terbuka yang relevan…</small></div>' +
+          '<div class="rn-h-visual-placeholder"><span class="rn-h-visual-icon">✦</span><b>Ilustrasi submateri</b><p>' + esc(slide.visualPurpose || slide.visualSuggestion || 'Visual pendukung konsep') + '</p><small>Menelusuri ilustrasi berlisensi terbuka…</small></div>' +
           '</figure></div></article>';
       }).join('');
-      add('slides','Slide pembelajaran',
-        '<div class="rn-h-slide-intro"><p>Materi disajikan bertahap. Fokus pada satu gagasan utama di setiap slide.</p><span>' + slides.length + ' bagian pembelajaran</span></div>' +
-        '<div class="rn-slide-deck rn-h-deck" data-slide-deck data-current-slide="0"><div class="rn-slide-progress" aria-hidden="true"><span data-slide-progress style="width:' + (100/slides.length) + '%"></span></div>' +
-        '<div class="rn-slide-stage">' + slideCards + '</div><div class="rn-slide-controls"><button type="button" class="btn btn-ghost" data-slide-prev disabled>← Sebelumnya</button><span class="rn-slide-counter" aria-live="polite" data-slide-counter>Slide 1 dari ' + slides.length + '</span><button type="button" class="btn btn-primary" data-slide-next' + (slides.length < 2 ? ' disabled' : '') + '>Berikutnya →</button></div></div>');
+      add('slides','Materi inti',
+        '<div class="rn-h-slide-intro"><p>Lima bagian materi inti ini sudah menjadi satu rangkaian. Baca berurutan atau pilih submateri melalui navigasi di kanan atas.</p><span>' + slides.length + ' submateri</span></div>' +
+        '<div class="rn-h-slide-stack">' + slideCards + '</div>');
     }
 
     const cheat = byType.cheatsheet || {};
@@ -170,10 +169,10 @@
     const header = '<header class="rn-h-header"><a class="rn-h-brand" href="#' + rootId + '-top" aria-label="RuNa — kembali ke awal handout"><img src="/runa-logo-slide7.svg" alt="Logo resmi RuNa"></a>' +
       '<div class="rn-h-title"><span>' + esc(subject) + '</span><b>' + esc(title) + '</b></div>' +
       '<div class="rn-h-progress-wrap"><span>PROGRES MEMBACA</span><div class="rn-h-progress"><i data-rn-progress></i></div></div></header>';
-    const navigation = '<nav class="rn-h-toc" aria-label="Navigasi handout"><b>DAFTAR ISI</b>' + toc.map(link => link).join('') + '</nav>';
+    const navigation = '<nav class="rn-h-toc" aria-label="Navigasi handout"><b>JELAJAHI HANDOUT</b><div class="rn-h-toc-links">' + toc.map((link,index) => link.replace('<a ', '<a data-rn-nav data-nav-index="' + index + '" ')).join('') + '</div></nav>';
     return '<div class="rn-handout" id="' + rootId + '" data-rn-handout data-subject="' + esc(subject) + '">' +
       '<div id="' + rootId + '-top"></div>' + header +
-      '<div class="rn-h-layout">' + navigation + '<div class="rn-h-content">' +
+      '<div class="rn-h-layout"><div class="rn-h-content">' + navigation +
       '<section class="rn-h-cover"><span class="rn-h-eyebrow">RUANGNALAR · INTERACTIVE LEARNING HANDOUT</span><h2>' + esc(title) + '</h2>' +
       '<p>' + esc(item.summary || overview.summary || 'Pelajari materi secara bertahap melalui konsep, contoh, visual, dan latihan interaktif.') + '</p>' +
       '<div class="rn-h-cover-meta"><span>' + esc(subject) + '</span><span>Materi terstruktur</span><span>' + toc.length + ' bagian</span></div></section>' +
@@ -239,6 +238,17 @@
   }
 
   document.addEventListener('click', event => {
+    const nav = event.target.closest('[data-rn-nav]');
+    if (nav) {
+      const root = nav.closest('[data-rn-handout]');
+      const target = root && root.querySelector(nav.getAttribute('href'));
+      if (target) {
+        event.preventDefault();
+        target.scrollIntoView({behavior:'smooth',block:'start'});
+        root.querySelectorAll('[data-rn-nav]').forEach(link => link.classList.toggle('is-active', link === nav));
+      }
+      return;
+    }
     const option = event.target.closest('[data-rn-option]');
     if (option) {
       const question = option.closest('[data-rn-question]');
