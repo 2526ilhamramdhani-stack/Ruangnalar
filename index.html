@@ -597,7 +597,8 @@ aside {
 .draft-edit-panel summary { cursor:pointer; font-weight:800; color:var(--rn-navy); }
 .draft-edit-panel .field { margin-top:14px; }
 .draft-edit-panel textarea { width:100%; min-height:100px; resize:vertical; }
-.draft-edit-panel #editDraftQuestions { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:12px; line-height:1.55; }.draft-edit-panel small { color:var(--rn-muted); display:block; margin-top:5px; }
+.draft-edit-panel #editDraftQuestions { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:12px; line-height:1.55; }
+.draft-edit-panel small { color:var(--rn-muted); display:block; margin-top:5px; }
 
 
 /* Handout reader: transform generated slide text into a readable lesson deck */
@@ -1196,7 +1197,8 @@ body { font-family:'Lora',Georgia,serif!important; }
     linear-gradient(90deg,rgba(49,170,169,.055) 1px,transparent 1px),
     url('/runa-woven-pattern.svg'),
     radial-gradient(circle at 88% 15%,rgba(49,170,169,.13),transparent 30%),
-    linear-gradient(118deg,#172B3A 0%,#1B3443 74%,#203B4A 100%)!important;  background-size:34px 34px,34px 34px,clamp(145px,18vw,220px),auto,auto!important;
+    linear-gradient(118deg,#172B3A 0%,#1B3443 74%,#203B4A 100%)!important;
+  background-size:34px 34px,34px 34px,clamp(145px,18vw,220px),auto,auto!important;
   background-position:center,center,right 8% center,center,center!important;
   background-repeat:repeat,repeat,no-repeat,no-repeat,no-repeat!important;
   background-blend-mode:normal,normal,soft-light,normal,normal;
@@ -1622,15 +1624,18 @@ main { position:relative!important; min-width:0!important; }
   color:#FAF9F6!important;
   box-shadow:0 18px 44px rgba(4,17,25,.2)!important;
 }
-.hero::before {
-  content:"";
-  position:absolute;
-  z-index:2;
+.hero::before { display:none!important;content:none!important; }
+.hero .hero-logo {
+  position:absolute!important;
+  z-index:4!important;
   top:26px;
   right:clamp(24px,3.6vw,48px);
+  display:block!important;
   width:clamp(126px,14vw,184px);
-  aspect-ratio:720 / 416;
-  background:url('/runa-logo-slide7.svg') center/contain no-repeat;
+  height:auto!important;
+  max-height:112px;
+  object-fit:contain;
+  object-position:center;
   pointer-events:none;
 }
 .hero::after {
@@ -1744,13 +1749,13 @@ main { position:relative!important; min-width:0!important; }
 @media(max-width:900px) {
   .hero { min-height:310px!important;padding:34px!important; }
   .hero .hero-copy { width:min(100%,680px);padding-top:42px; }
-  .hero::before { top:20px;right:22px;width:118px; }
+  .hero .hero-logo { top:20px;right:22px;width:118px; }
   .hero::after { right:-18%;width:67%;opacity:.38; }
   .hero .hero-title-row { max-width:calc(100% - 12px); }
 }
 @media(max-width:560px) {
   .hero { min-height:0!important;padding:27px 22px 30px!important; }
-  .hero::before { top:17px;right:17px;width:88px; }
+  .hero .hero-logo { top:17px;right:17px;width:88px; }
   .hero::after { top:20%;right:-35%;bottom:-34%;width:95%;min-width:260px;opacity:.24;background-size:142px 142px; }
   .hero .hero-copy { width:100%;padding-top:55px; }
   .hero .eyebrow { margin-bottom:15px;font-size:10px!important;letter-spacing:1.3px!important; }
@@ -1975,7 +1980,8 @@ main { position:relative!important; min-width:0!important; }
    if (!sourceText.trim()) { notify('Tidak ada teks yang dapat dibaca. Tambahkan teks materi atau gunakan PDF berbasis teks.'); return; }
    if (sourceText.length > 50000) sourceText = sourceText.slice(0, 50000);
    const submitButton = event.submitter;
-   if (submitButton) { submitButton.disabled = true; submitButton.textContent = 'Memproses dengan AI…'; }   document.getElementById('draftBadge').textContent = 'MEMPROSES';
+   if (submitButton) { submitButton.disabled = true; submitButton.textContent = 'Memproses dengan AI…'; }
+   document.getElementById('draftBadge').textContent = 'MEMPROSES';
    document.getElementById('adminPreview').textContent = 'AI sedang menyusun draf berdasarkan sumber. Mohon tunggu…';
    try {
      const response = await fetch('/api/generate-content', {method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({title,topic,subjectId,sourceText})});
@@ -2574,7 +2580,8 @@ main { position:relative!important; min-width:0!important; }
  }
  document.addEventListener('click', event => {
    const open = event.target.closest('[data-open-presentation]');
-   if (open) { openRuangNalarPresentation(open); return; }   if (event.target.closest('#rnPresentationClose')) { closeRuangNalarPresentation(); return; }
+   if (open) { openRuangNalarPresentation(open); return; }
+   if (event.target.closest('#rnPresentationClose')) { closeRuangNalarPresentation(); return; }
    if (event.target.closest('#rnPresentationFullscreen')) {
      const overlay = document.getElementById('rnPresentation');
      if (!document.fullscreenElement && overlay && overlay.requestFullscreen) overlay.requestFullscreen().catch(()=>{});
