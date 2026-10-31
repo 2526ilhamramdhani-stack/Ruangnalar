@@ -1,19 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 416" role="img" aria-label="Logo RuNa dengan panah teal dan kotak unsur Sodium">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 416" role="img" aria-label="Logo RuNa dengan panah di atas huruf R dan kotak unsur Sodium">
   <rect width="720" height="416" fill="none"/>
+  <!-- Panah dibuat terpisah dari huruf R dan hanya membentang di atasnya. -->
   <g fill="none" stroke="#31AAA9" stroke-width="9" stroke-linecap="square" stroke-linejoin="miter">
-    <path d="M10 48H310"/>
-    <path d="M296 34L310 48L296 62"/>
+    <path d="M18 66H157"/>
+    <path d="M143 52L157 66L143 80"/>
   </g>
-  <g font-family="Lora, Georgia, serif" font-weight="400">
-    <text x="5" y="323" textLength="160" lengthAdjust="spacingAndGlyphs" font-size="270" fill="#31AAA9">R</text>
-    <text x="181" y="323" textLength="156" lengthAdjust="spacingAndGlyphs" font-size="270" fill="#31AAA9">u</text>
+  <!-- Kotak unsur diletakkan lebih dahulu agar ujung huruf u dapat overlap secara natural. -->
+  <rect x="323" y="8" width="390" height="376" rx="18" fill="#31AAA9"/>
+  <g font-family="Lora, Georgia, serif" font-weight="400" fill="#31AAA9">
+    <text x="5" y="323" textLength="160" lengthAdjust="spacingAndGlyphs" font-size="270">R</text>
+    <text x="158" y="323" textLength="181" lengthAdjust="spacingAndGlyphs" font-size="270">u</text>
   </g>
-  <rect x="337" y="8" width="376" height="376" rx="18" fill="#31AAA9"/>
   <g font-family="Lora, Georgia, serif" font-weight="400" fill="#FAF9F6">
-    <text x="382" y="65" font-size="35">11</text>
-    <text x="686" y="65" font-size="35" text-anchor="end">22.99</text>
-    <text x="378" y="315" textLength="151" lengthAdjust="spacingAndGlyphs" font-size="240">N</text>
-    <text x="552" y="315" textLength="126" lengthAdjust="spacingAndGlyphs" font-size="240">a</text>
-    <text x="525" y="359" font-size="31" text-anchor="middle">Sodium</text>
+    <text x="348" y="54" font-size="34">11</text>
+    <text x="690" y="54" font-size="34" text-anchor="end">22.99</text>
+    <text x="365" y="298" textLength="174" lengthAdjust="spacingAndGlyphs" font-size="260">N</text>
+    <text x="545" y="298" textLength="132" lengthAdjust="spacingAndGlyphs" font-size="260">a</text>
+    <text x="518" y="357" font-family="Lora, Georgia, serif" font-size="29" text-anchor="middle">Sodium</text>
   </g>
 </svg>
