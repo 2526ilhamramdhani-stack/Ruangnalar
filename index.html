@@ -1884,6 +1884,9 @@ main { position:relative!important; min-width:0!important; }
 
 /* Hero woven field expansion — extend into the upper field and beside the intro copy */
 .hero::after {
+  display:block!important;
+  content:""!important;
+  z-index:0!important;
   top:-46%!important;
   right:-10%!important;
   bottom:-42%!important;
@@ -1898,12 +1901,12 @@ main { position:relative!important; min-width:0!important; }
   background-repeat:no-repeat,repeat!important;
   background-position:center,right top!important;
   background-size:100% 100%,clamp(136px,14vw,168px) clamp(136px,14vw,168px)!important;
-  opacity:.94!important;
+  opacity:1!important;
   -webkit-mask-image:linear-gradient(90deg,
     transparent 0%,
-    rgba(0,0,0,.035) 15%,
-    rgba(0,0,0,.16) 34%,
-    rgba(0,0,0,.48) 57%,
+    rgba(0,0,0,.12) 15%,
+    rgba(0,0,0,.34) 34%,
+    rgba(0,0,0,.68) 57%,
     #000 84%)!important;
   mask-image:linear-gradient(90deg,
     transparent 0%,
@@ -1919,9 +1922,9 @@ main { position:relative!important; min-width:0!important; }
     right:-16%!important;
     bottom:-30%!important;
     left:5%!important;
-    opacity:.82!important;
+    opacity:.96!important;
     background-size:100% 100%,148px 148px!important;
-    -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.07) 20%,rgba(0,0,0,.42) 54%,#000 88%)!important;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.16) 20%,rgba(0,0,0,.62) 54%,#000 88%)!important;
     mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.07) 20%,rgba(0,0,0,.42) 54%,#000 88%)!important;
   }
 }
@@ -1931,9 +1934,9 @@ main { position:relative!important; min-width:0!important; }
     right:-26%!important;
     bottom:-20%!important;
     left:0!important;
-    opacity:.66!important;
+    opacity:.88!important;
     background-size:100% 100%,136px 136px!important;
-    -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.045) 24%,rgba(0,0,0,.36) 60%,#000 92%)!important;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.12) 24%,rgba(0,0,0,.58) 60%,#000 92%)!important;
     mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.045) 24%,rgba(0,0,0,.36) 60%,#000 92%)!important;
   }
 }
