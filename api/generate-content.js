@@ -105,7 +105,7 @@ sections wajib memiliki:
 1. overview: {summary, learningObjectives: string[], prerequisites: string[], topicMap: string[]}
 2. mindmap: {centralConcept, branches: [{title, concepts: string[], connections: string[]}], textAlternative}
 3. real_world: {examples: [{title, context, explanation, takeaway}]}
-4. slides: {slides: [{title, learningGoal, explanation, workedExample, visualSuggestion, commonMistake, checkForUnderstanding}]}. Minimal 5 slide bermakna, penjelasan mendalam dan bukan sekadar bullet pendek. Jangan mengarang rumus/angka yang tidak didukung atau tidak dapat diverifikasi.
+4. slides: {slides: [{title, learningGoal, explanation, workedExample, visualSuggestion, visualQuery, visualPurpose, commonMistake, checkForUnderstanding}]}. Minimal 5 slide bermakna, penjelasan mendalam dan bukan sekadar bullet pendek. visualQuery berisi kata kunci pencarian aset foto/ilustrasi nyata yang relevan, visualPurpose menjelaskan fungsi edukatif visual. Keduanya opsional jika visual tidak diperlukan. Jangan pernah mengarang URL, nama fotografer, lisensi, atau mengklaim visual sudah ditemukan. Jangan mengarang rumus/angka yang tidak didukung atau tidak dapat diverifikasi.
 5. cheatsheet: {keyConcepts: [{concept, rule, whenToUse, caution}], formulas: [{formula, meaning, conditions}], quickReview: string[]}. Untuk bidang non-kuantitatif, gunakan aturan/konsep yang relevan dan jangan memaksakan rumus.
 6. mnemonic: {items: [{mnemonic, meaning, usage, limitation}]}. Jika tidak cocok, berikan strategi mengingat yang alami.
 7. encouragement: {message, arabicPhrase, transliteration, meaning, attributionNote}. Ungkapan Arab opsional; jangan mengatribusikan kutipan agama tanpa sumber yang pasti.
