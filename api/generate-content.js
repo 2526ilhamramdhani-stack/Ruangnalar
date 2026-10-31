@@ -45,6 +45,33 @@ function validQuestion(question) {
 function isObject(value) {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }
+function parseModelJson(raw) {
+  if (typeof raw !== 'string' || !raw.trim()) return null;
+  let text = raw.replace(/^\\uFEFF/, '').trim();
+  // Gemini JSON mode normally returns bare JSON, but tolerate accidental fences.
+  text = text.replace(/^\\s*```(?:json)?\\s*/i, '').replace(/\\s*```\\s*$/i, '').trim();
+  try { return JSON.parse(text); } catch (_) {}
+  // If the model added a short preamble, isolate the first complete JSON object.
+  const start = text.indexOf('{');
+  if (start < 0) return null;
+  let depth = 0, inString = false, escaped = false;
+  for (let i = start; i < text.length; i++) {
+    const ch = text[i];
+    if (inString) {
+      if (escaped) escaped = false;
+      else if (ch === '\\\\') escaped = true;
+      else if (ch === '"') inString = false;
+      continue;
+    }
+    if (ch === '"') inString = true;
+    else if (ch === '{') depth++;
+    else if (ch === '}' && --depth === 0) {
+      const candidate = text.slice(start, i + 1);
+      try { return JSON.parse(candidate); } catch (_) { return null; }
+    }
+  }
+  return null;
+}
 function validateHandout(draft) {
   const requiredSections = ['overview','mindmap','real_world','slides','cheatsheet','mnemonic','encouragement','question_types','question_ideas','sources'];
   if (!isObject(draft.sections)) return 'Bagian Handout terstruktur belum tersedia.';
@@ -172,7 +199,7 @@ ${sourceText}`;
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: systemInstruction }] },
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: { responseMimeType: 'application/json', temperature: 0.25, maxOutputTokens: 20000 }
+        generationConfig: { responseMimeType: 'application/json', temperature: 0.25, maxOutputTokens: 30000 }
       })
     });
     const data = await upstream.json();
@@ -188,9 +215,13 @@ ${sourceText}`;
       const reason = candidate?.finishReason ? ' Alasan: ' + candidate.finishReason + '.' : '';
       return send(res, 502, { error: 'Gemini tidak mengembalikan teks yang dapat digunakan.' + reason });
     }
-    let draft;
-    try { draft = JSON.parse(outputText); } catch {
-      return send(res, 502, { error: 'Respons AI belum berupa JSON valid. Draf belum disimpan. Coba lagi atau kurangi panjang sumber.' });
+    let draft = parseModelJson(outputText);
+    if (!draft) {
+      const finishReason = candidate?.finishReason || '';
+      if (finishReason === 'MAX_TOKENS') {
+        return send(res, 502, { error: 'Jawaban AI terpotong karena mencapai batas keluaran. Sumber tidak selalu terlalu panjang; coba ulangi. Jika terulang, pecah dokumen menjadi beberapa bab atau bagian.' });
+      }
+      return send(res, 502, { error: 'AI mengirim struktur yang belum dapat dibaca sebagai JSON. Draf belum disimpan. Coba ulangi; jika terulang, pecah sumber menjadi beberapa bagian.' });
     }
     // Backward compatibility: some model responses prioritize the structured handout
     // and omit legacy top-level fields still used by the editor and older clients.
