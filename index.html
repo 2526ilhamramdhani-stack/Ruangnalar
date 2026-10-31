@@ -1881,6 +1881,60 @@ main { position:relative!important; min-width:0!important; }
   .hero { padding-left:20px!important; }
 }
 
+
+/* Hero woven field expansion — broad upper/right coverage with a soft text-safe fade */
+.hero::after {
+  top:-34%!important;
+  right:-8%!important;
+  bottom:-34%!important;
+  width:72%!important;
+  min-width:0!important;
+  transform:rotate(-17deg)!important;
+  background-image:
+    linear-gradient(90deg,rgba(23,43,58,.02) 0%,rgba(23,43,58,.08) 58%,rgba(23,43,58,.12) 100%),
+    url('/runa-woven-pattern.svg')!important;
+  background-repeat:no-repeat,repeat!important;
+  background-position:center,right center!important;
+  background-size:100% 100%,168px 168px!important;
+  opacity:.88!important;
+  -webkit-mask-image:linear-gradient(90deg,
+    transparent 0%,
+    rgba(0,0,0,.04) 23%,
+    rgba(0,0,0,.24) 43%,
+    rgba(0,0,0,.72) 66%,
+    #000 88%)!important;
+  mask-image:linear-gradient(90deg,
+    transparent 0%,
+    rgba(0,0,0,.04) 23%,
+    rgba(0,0,0,.24) 43%,
+    rgba(0,0,0,.72) 66%,
+    #000 88%)!important;
+}
+@media(max-width:980px) {
+  .hero::after {
+    top:-22%!important;
+    right:-16%!important;
+    bottom:-24%!important;
+    width:78%!important;
+    opacity:.78!important;
+    background-size:100% 100%,154px 154px!important;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.08) 26%,rgba(0,0,0,.5) 58%,#000 88%)!important;
+    mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.08) 26%,rgba(0,0,0,.5) 58%,#000 88%)!important;
+  }
+}
+@media(max-width:720px) {
+  .hero::after {
+    top:-12%!important;
+    right:-25%!important;
+    bottom:-16%!important;
+    width:92%!important;
+    opacity:.68!important;
+    background-size:100% 100%,140px 140px!important;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.06) 28%,rgba(0,0,0,.42) 62%,#000 92%)!important;
+    mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.06) 28%,rgba(0,0,0,.42) 62%,#000 92%)!important;
+  }
+}
+
 </style>
 </head>
 <body>
