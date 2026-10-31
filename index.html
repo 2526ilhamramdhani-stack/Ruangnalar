@@ -1143,13 +1143,160 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
    .hero { background-size:130px,auto,auto!important;background-position:right -22px bottom,center,center!important; }
  }
 
+
+/* =========================================================
+   RuNa Official Brand Alignment — visual-only refinement
+   ========================================================= */
+:root {
+  --runa-navy:#172B3A;
+  --runa-teal:#31AAA9;
+  --runa-cream:#F8E0A4;
+  --runa-maroon:#6C1A1A;
+  --runa-paper:#FAF9F6;
+  --site-primary:var(--runa-teal);
+  --site-background:var(--runa-paper);
+  --site-font-body:'Lora',Georgia,serif;
+  --site-font-heading:'Adumu Regular','Trebuchet MS',Georgia,serif;
+}
+/* Official RuNa symbol: vector arrow, Ru wordmark, and Sodium element tile. */
+.brand { gap:0!important; min-height:54px; padding:0 7px!important; }
+.brand .runa-logo {
+  width:126px!important; height:62px!important; display:flex!important;
+  align-items:center!important; justify-content:flex-start!important;
+  padding:0!important; margin:0!important; background:transparent!important;
+  border-radius:0!important; box-shadow:none!important; color:inherit!important;
+}
+.brand .runa-logo svg { display:block; width:126px!important; height:62px!important; overflow:visible; }
+/* Adumu is a display face: give its geometric forms room to breathe. */
+h1,h2,h3,h4,h5,h6,
+.section-heading h2,.page-title h1,
+.course-body h3,.panel h3,.handout-sections h4,
+.brand,.stat-num,.btn,.pill,.float-chip,.text-link {
+  font-family:var(--site-font-heading)!important;
+  font-weight:400!important;
+  letter-spacing:.10em!important;
+  text-transform:uppercase;
+  font-kerning:normal;
+}
+h1 { line-height:1.22!important; }
+.hero h1 { letter-spacing:.075em!important; line-height:1.24!important; }
+.section-heading h2,.page-title h1 { letter-spacing:.085em!important; }
+.btn { letter-spacing:.10em!important; }
+p,li,.muted,.course-body p,.section-heading p,.page-title p,
+.hero p,.material-summary,.material-article-content,
+.topic-info span,.stat-label,.profile-role {
+  font-family:'Lora',Georgia,serif!important;
+  line-height:1.58;
+  letter-spacing:normal!important;
+  text-transform:none!important;
+}
+body { font-family:'Lora',Georgia,serif!important; }
+.hero {
+  background-image:
+    linear-gradient(rgba(49,170,169,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(49,170,169,.055) 1px,transparent 1px),
+    url('/runa-woven-pattern.svg'),
+    radial-gradient(circle at 88% 15%,rgba(49,170,169,.13),transparent 30%),
+    linear-gradient(118deg,#172B3A 0%,#1B3443 74%,#203B4A 100%)!important;
+  background-size:34px 34px,34px 34px,clamp(145px,18vw,220px),auto,auto!important;
+  background-position:center,center,right 8% center,center,center!important;
+  background-repeat:repeat,repeat,no-repeat,no-repeat,no-repeat!important;
+  background-blend-mode:normal,normal,soft-light,normal,normal;
+}
+.content {
+  background-image:
+    url('/runa-woven-pattern.svg'),
+    radial-gradient(ellipse at 8% 0%,rgba(49,170,169,.075),transparent 34%),
+    linear-gradient(145deg,#172B3A 0%,#1B3443 100%)!important;
+  background-blend-mode:soft-light,normal,normal;
+}
+#dashboardSubjectGrid .course-card {
+  border-radius:15px!important;
+  border:1px solid rgba(23,43,58,.12)!important;
+  box-shadow:0 10px 25px rgba(8,25,34,.10)!important;
+}
+#dashboardSubjectGrid .course-top {
+  min-height:118px!important;
+  border-top:7px solid currentColor;
+  display:flex!important;
+  align-items:center!important;
+  padding:18px 20px!important;
+}
+#dashboardSubjectGrid .course-top .pill {
+  background:rgba(255,255,255,.78)!important;
+  border:1px solid rgba(23,43,58,.10);
+  font-size:10px!important;
+}
+#dashboardSubjectGrid .course-emoji {
+  display:grid;place-items:center;width:54px;height:54px;
+  border-radius:14px;background:rgba(255,255,255,.24);
+  font-size:32px;line-height:1;
+}
+#dashboardSubjectGrid .subject-matematika-wajib .course-top {
+  background:#6C1A1A!important;color:#FAF9F6!important;border-top-color:#F8E0A4!important;
+}
+#dashboardSubjectGrid .subject-matematika-lanjut .course-top {
+  background:#F8E0A4!important;color:#493714!important;border-top-color:#6C1A1A!important;
+}
+#dashboardSubjectGrid .subject-kimia .course-top {
+  background:#F8E0A4!important;color:#493714!important;border-top-color:#31AAA9!important;
+}
+#dashboardSubjectGrid .subject-fisika .course-top {
+  background:#31AAA9!important;color:#102B35!important;border-top-color:#F8E0A4!important;
+}
+#dashboardSubjectGrid .subject-biologi .course-top {
+  background:#31AAA9!important;color:#102B35!important;border-top-color:#6C1A1A!important;
+}
+#dashboardSubjectGrid .subject-fiqih .course-top {
+  background:#172B3A!important;color:#FAF9F6!important;border-top-color:#31AAA9!important;
+}
+#dashboardSubjectGrid .course-body { padding:20px!important; }
+#dashboardSubjectGrid .course-body h3 { font-size:17px!important;line-height:1.35!important; }
+#dashboardSubjectGrid .course-body p { font-size:13px!important;line-height:1.6!important; }
+#dashboardSubjectGrid .course-body .btn { margin-top:14px!important; }
+#subjectGrid .subject-card {
+  position:relative;overflow:hidden;align-items:flex-start;
+  min-height:112px;padding:18px!important;border-radius:13px!important;
+  background:#203B4A!important;border-color:#42606A!important;
+}
+#subjectGrid .subject-card:before {
+  content:"";position:absolute;left:0;right:0;top:0;height:6px;background:var(--runa-teal);
+}
+#subjectGrid .subject-card[data-subject="matematika-wajib"]:before { background:var(--runa-maroon); }
+#subjectGrid .subject-card[data-subject="matematika-lanjut"]:before,
+#subjectGrid .subject-card[data-subject="kimia"]:before { background:var(--runa-cream); }
+#subjectGrid .subject-card[data-subject="fisika"]:before { background:var(--runa-teal); }
+#subjectGrid .subject-card[data-subject="fiqih"]:before { background:var(--runa-maroon); }
+#subjectGrid .subject-icon { width:48px;height:48px;flex-basis:48px;border-radius:12px; }
+#subjectGrid .subject-card-copy strong { font-family:var(--site-font-heading)!important;letter-spacing:.07em;text-transform:uppercase;font-size:14px;line-height:1.4; }
+#subjectGrid .subject-card-copy small { font-family:'Lora',Georgia,serif!important;line-height:1.55; }
+#subjectGrid .subject-card.active { background:#E5F1ED!important;color:#172B3A!important;border-color:#31AAA9!important; }
+.stat,.panel,.course-card,.topic-card,.idea-card,.material-card { border-radius:14px!important; }
+@media(max-width:720px) {
+  .brand .runa-logo,.brand .runa-logo svg { width:112px!important;height:56px!important; }
+  .hero { background-size:28px 28px,28px 28px,130px,auto,auto!important; }
+  h1 { letter-spacing:.065em!important; }
+  .hero h1 { letter-spacing:.055em!important; }
+}
+
 </style>
 </head>
 <body>
 <div class="app-root">
 <div class="layout">
 <aside id="sidebar">
-  <div class="brand"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5z"/><path d="M4 6h13M8 10h7M8 14h5"/></svg></span>ruang<span style="color:var(--site-primary);margin-left:-10px">nalar</span></div>
+  <div class="brand" aria-label="RuangNalar">
+    <span class="logo runa-logo" aria-hidden="true">
+      <svg viewBox="0 0 126 62" role="img" aria-label="RuNa">
+        <path d="M8 13H65M55 4l10 9-10 9" fill="none" stroke="#31AAA9" stroke-width="3.2" stroke-linecap="square" stroke-linejoin="miter"/>
+        <text x="4" y="57" fill="#FAF9F6" font-family="Georgia,serif" font-size="43" font-style="italic" font-weight="700">Ru</text>
+        <rect x="79" y="19" width="43" height="39" rx="2" fill="#31AAA9"/>
+        <text x="84" y="28" fill="#172B3A" font-family="Arial,sans-serif" font-size="7" font-weight="700">11</text>
+        <text x="84" y="47" fill="#172B3A" font-family="Arial,sans-serif" font-size="20" font-weight="800">Na</text>
+        <text x="84" y="55" fill="#172B3A" font-family="Arial,sans-serif" font-size="5.5" font-weight="700">22.99</text>
+      </svg>
+    </span>
+  </div>
   <div><div class="side-label">Menu belajar</div><nav class="nav-list" aria-label="Navigasi utama">
     <button class="nav-item active" data-tab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"/></svg>Beranda</button>
     <button class="nav-item" data-tab="materi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v18H6.5A2.5 2.5 0 0 1 4 17.5z"/><path d="M4 5h13M8 9h7M8 13h7"/></svg>Materi Belajar</button>
@@ -1727,7 +1874,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
    grid.innerHTML=results.map((item,index)=>{
      const count=item.error?'Belum dapat dimuat':item.items.length+' materi tersedia';
      const description=item.error?'Periksa koneksi atau konfigurasi database.':item.items.length?'Pilih materi yang ingin kamu pelajari.':'Materi akan tampil setelah admin menerbitkannya.';
-     return '<article class="course-card"><div class="course-top '+colors[index%colors.length]+'"><span class="pill">'+(item.error?'STATUS MATERI':'PERPUSTAKAAN BELAJAR')+'</span><span class="course-emoji" aria-hidden="true">'+icons[item.id]+'</span></div><div class="course-body"><h3>'+escapeHtml(item.name)+'</h3><p>'+escapeHtml(description)+'</p><div class="progress-row"><span>'+escapeHtml(item.name)+'</span><b>'+escapeHtml(count)+'</b></div><button class="btn btn-ghost" type="button" data-dashboard-subject="'+escapeHtml(item.id)+'">Jelajahi materi →</button></div></article>';
+     return '<article class="course-card subject-course subject-'+escapeHtml(item.id)+'"><div class="course-top '+colors[index%colors.length]+'"><span class="pill">'+(item.error?'STATUS MATERI':'PERPUSTAKAAN BELAJAR')+'</span><span class="course-emoji" aria-hidden="true">'+icons[item.id]+'</span></div><div class="course-body"><h3>'+escapeHtml(item.name)+'</h3><p>'+escapeHtml(description)+'</p><div class="progress-row"><span>'+escapeHtml(item.name)+'</span><b>'+escapeHtml(count)+'</b></div><button class="btn btn-ghost" type="button" data-dashboard-subject="'+escapeHtml(item.id)+'">Jelajahi materi →</button></div></article>';
    }).join('');
  }
  document.getElementById('dashboardSubjectGrid').addEventListener('click',event=>{
