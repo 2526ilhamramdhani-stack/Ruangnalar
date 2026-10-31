@@ -740,3 +740,7 @@
 .rn-h-nav-branch.is-collapsed>.rn-h-nav-children{display:none}
 .rn-h-nav-branch.is-collapsed>button .rn-h-nav-branch-chevron{transform:rotate(-90deg)}
 .rn-h-navigator .rn-h-nav-children .rn-h-nav-deep{font-size:8px!important;padding-left:13px!important}
+
+.rn-h-navigator .rn-h-toc-links a.is-visited .rn-h-nav-state{background:#A6B8B1}
+.rn-h-navigator .rn-h-toc-links a.is-completed .rn-h-nav-state{background:#4B9A74;box-shadow:0 0 0 3px #4B9A7422}
+.rn-h-navigator .rn-h-toc-links a.is-completed .rn-h-nav-label:after{content:" · selesai";color:#43835F;font-size:8px;font-weight:800}
