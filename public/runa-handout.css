@@ -525,3 +525,28 @@
     min-height:44px!important;
   }
 }
+
+
+/* Final stacking-context correction: the layout wrapper itself was still trapping the fixed Explorer nav. */
+.rn-html-reader-main>.rn-handout>.rn-h-layout{
+  position:static!important;
+  z-index:auto!important;
+  isolation:auto!important;
+  transform:none!important;
+  filter:none!important;
+  contain:none!important;
+  overflow:visible!important;
+}
+.rn-html-reader-main>.rn-handout>.rn-h-layout>.rn-h-content{
+  position:static!important;
+  z-index:auto!important;
+  isolation:auto!important;
+}
+.rn-html-reader-main .rn-h-toc{
+  position:fixed!important;
+  top:0!important;
+  z-index:2147483000!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+}
