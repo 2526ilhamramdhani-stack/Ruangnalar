@@ -1387,6 +1387,64 @@ body { font-family:'Lora',Georgia,serif!important; }
 #dashboardSubjectGrid .subject-fisika .subject-symbol,
 #dashboardSubjectGrid .subject-biologi .subject-structure { color:#FFFFFF!important;stroke:#FFFFFF!important; }
 
+
+/* Final brand refinements: compact official mark and restrained woven hero treatment. */
+.brand .runa-logo {
+  width:188px!important;
+  max-width:100%!important;
+  height:auto!important;
+  aspect-ratio:720 / 416!important;
+  object-fit:contain!important;
+}
+@media(max-width:720px) {
+  .brand .runa-logo { width:164px!important; }
+}
+.hero {
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  background:linear-gradient(112deg,#172B3A 0%,#172B3A 58%,#1B3444 100%)!important;
+  color:#FAF9F6!important;
+}
+.hero::after {
+  content:"";
+  position:absolute;
+  z-index:0;
+  top:0;right:0;bottom:0;
+  width:54%;
+  background-image:
+    linear-gradient(90deg,rgba(23,43,58,0) 0%,rgba(23,43,58,.22) 100%),
+    url('/runa-woven-pattern.svg');
+  background-repeat:no-repeat,repeat;
+  background-position:center,right center;
+  background-size:100% 100%,176px 176px;
+  opacity:.19;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.5) 30%,#000 100%);
+  mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.5) 30%,#000 100%);
+  pointer-events:none;
+}
+.hero > * { position:relative;z-index:1; }
+.hero h1 { color:#F8E0A4!important; }
+.hero .eyebrow { color:#31AAA9!important; }
+.hero p { color:rgba(250,249,246,.82)!important; }
+.hero .btn-dark,.hero .btn-primary {
+  background:#31AAA9!important;
+  color:#172B3A!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.16)!important;
+}
+.hero .btn-ghost,.hero .btn-soft {
+  background:rgba(248,224,164,.12)!important;
+  color:#F8E0A4!important;
+  border:1px solid rgba(248,224,164,.35)!important;
+}
+.hero .orbit { border-color:rgba(49,170,169,.48)!important; }
+.hero .orbit:before,.hero .orbit:after { border-color:rgba(248,224,164,.24)!important; }
+.hero .math-tile { background:#F8E0A4!important;color:#172B3A!important; }
+.hero .float-chip { background:#FAF9F6!important;color:#172B3A!important; }
+@media(max-width:720px) {
+  .hero::after { width:100%;opacity:.11;background-size:100% 100%,150px 150px; }
+}
+
 </style>
 </head>
 <body>
