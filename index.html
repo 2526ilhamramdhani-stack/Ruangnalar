@@ -2774,3 +2774,53 @@ main { position:relative!important; min-width:0!important; }
 </script>
 </body>
 </html>
+
+
+/* HERO PATTERN VISIBILITY FIX — neutralize legacy pseudo-element lock */
+.hero {
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+}
+.hero::after {
+  display:block!important;
+  content:""!important;
+  visibility:visible!important;
+  position:absolute!important;
+  z-index:1!important;
+  inset:-24% -8% -24% 4%!important;
+  width:auto!important;
+  height:auto!important;
+  transform:rotate(-12deg)!important;
+  transform-origin:center!important;
+  background-image:
+    linear-gradient(90deg,rgba(23,43,58,.02) 0%,rgba(23,43,58,.02) 100%),
+    url('/runa-woven-pattern-hero.svg')!important;
+  background-repeat:no-repeat,repeat!important;
+  background-position:center, right top!important;
+  background-size:100% 100%,144px 144px!important;
+  opacity:.88!important;
+  -webkit-mask-image:linear-gradient(90deg,rgba(0,0,0,.16) 0%,rgba(0,0,0,.42) 28%,#000 68%)!important;
+  mask-image:linear-gradient(90deg,rgba(0,0,0,.16) 0%,rgba(0,0,0,.42) 28%,#000 68%)!important;
+  pointer-events:none!important;
+}
+.hero > * {
+  position:relative!important;
+  z-index:2!important;
+}
+@media(max-width:980px) {
+  .hero::after {
+    inset:-18% -14% -18% 0!important;
+    background-size:100% 100%,132px 132px!important;
+    opacity:.82!important;
+  }
+}
+@media(max-width:720px) {
+  .hero::after {
+    inset:-12% -24% -12% -4%!important;
+    background-size:100% 100%,116px 116px!important;
+    opacity:.74!important;
+    -webkit-mask-image:linear-gradient(90deg,rgba(0,0,0,.10) 0%,rgba(0,0,0,.38) 38%,#000 78%)!important;
+    mask-image:linear-gradient(90deg,rgba(0,0,0,.10) 0%,rgba(0,0,0,.38) 38%,#000 78%)!important;
+  }
+}
