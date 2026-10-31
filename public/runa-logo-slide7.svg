@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 416" role="img" aria-label="Logo RuNa dengan panah di atas huruf R dan kotak unsur Sodium">
   <rect width="720" height="416" fill="none"/>
   <!-- Panah dibuat terpisah dari huruf R dan hanya membentang di atasnya. -->
-  <g fill="none" stroke="#31AAA9" stroke-width="9" stroke-linecap="square" stroke-linejoin="miter">
+  <g transform="translate(0 -25)" fill="none" stroke="#31AAA9" stroke-width="9" stroke-linecap="square" stroke-linejoin="miter">
     <path d="M18 66H157"/>
     <path d="M143 52L157 66L143 80"/>
   </g>
   <!-- Kotak unsur diletakkan lebih dahulu agar ujung huruf u dapat overlap secara natural. -->
   <rect x="323" y="8" width="390" height="376" rx="18" fill="#31AAA9"/>
-  <g font-family="Lora, Georgia, serif" font-weight="400" fill="#31AAA9">
+  <g transform="translate(0 -25)" font-family="Lora, Georgia, serif" font-weight="400" fill="#31AAA9">
     <text x="5" y="323" textLength="160" lengthAdjust="spacingAndGlyphs" font-size="270">R</text>
     <text x="158" y="323" textLength="181" lengthAdjust="spacingAndGlyphs" font-size="270">u</text>
   </g>
