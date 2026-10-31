@@ -49,8 +49,20 @@ function validateHandout(draft) {
   const requiredSections = ['overview','mindmap','real_world','slides','cheatsheet','mnemonic','encouragement','question_types','question_ideas','sources'];
   if (!isObject(draft.sections)) return 'Bagian Handout terstruktur belum tersedia.';
   for (const key of requiredSections) if (!isObject(draft.sections[key])) return 'Bagian Handout wajib belum lengkap: ' + key + '.';
-  if (!Array.isArray(draft.sections.slides.slides) || draft.sections.slides.slides.length < 5) return 'Handout harus memiliki minimal 3 slide materi.';
+  if (!Array.isArray(draft.sections.slides.slides) || draft.sections.slides.slides.length < 5) return 'Handout harus memiliki minimal 5 bagian materi inti.';
   if (!Array.isArray(draft.sections.sources.references)) return 'Daftar sumber harus berupa array.';
+  const optionalSections = {
+    terminology: 'items',
+    reading_material: 'passages',
+    dialogues: 'items',
+    learning_activities: 'activities'
+  };
+  for (const [sectionName, collectionName] of Object.entries(optionalSections)) {
+    if (draft.sections[sectionName] !== undefined &&
+        (!isObject(draft.sections[sectionName]) || !Array.isArray(draft.sections[sectionName][collectionName]))) {
+      return 'Struktur bagian tambahan ' + sectionName + ' belum valid.';
+    }
+  }
   if (!Array.isArray(draft.practiceModules) || draft.practiceModules.length !== 2) return 'AI harus menghasilkan tepat dua modul latihan awal.';
   for (let i = 0; i < draft.practiceModules.length; i++) {
     const module = draft.practiceModules[i];
@@ -112,6 +124,28 @@ sections wajib memiliki:
 8. question_types: {types: [{name, conceptTested, recognitionClues, solvingStrategy, commonErrors}]}
 9. question_ideas: {ideas: [{coreConcept, variation, reasoningPath, prerequisiteKnowledge}]}
 10. sources: {primarySourceDescription, references: [{title, publisher, url, accessedAt, usageNote, sourceType}], limitations: string[]}. Dokumen Admin adalah sumber utama. Referensi eksternal hanya dicantumkan jika benar-benar tersedia; jangan mengarang URL atau mengklaim browsing yang tidak dilakukan.
+
+BAGIAN TAMBAHAN ADAPTIF (OPSIONAL, TETAP DI DALAM sections)
+11. terminology: {title, description, items: [{term, meaning, category, form, relatedTerms: string[], example, memoryHint}]}. Buat glosarium istilah/kosakata penting bila materi memuat terminologi yang perlu diingat. Untuk bahasa, sertakan bentuk kata, arti, kategori, dan contoh; untuk sains, matematika, atau bidang lain, gunakan istilah, simbol, definisi, satuan, atau notasi yang relevan. Jangan memaksakan jika tidak diperlukan.
+12. reading_material: {title, passages: [{title, originalText, translation, notes, comprehensionQuestions: [{question, answer, explanation}]}]}. Gunakan jika sumber memuat teks bacaan, wacana, kutipan, prosedur, atau uraian yang perlu dibaca dekat. Pertahankan teks sumber dan makna terjemahan; jangan membuat teks sumber palsu.
+13. dialogues: {title, items: [{title, context, lines: [{speaker, text, translation, note}]}]}. Hanya buat jika dialog/percakapan memang relevan, terutama pembelajaran bahasa atau simulasi komunikasi. Jangan membuat percakapan artifisial untuk topik yang tidak membutuhkannya.
+14. learning_activities: {activities: [{type, title, instructions, items, cards}]}. Tambahkan aktivitas bervariasi yang relevan dengan mata pelajaran. Tipe yang didukung:
+   - true_false: items [{statement, answer (boolean), explanation}]
+   - fill_blank: items [{prompt (gunakan token {{blank}} untuk tempat kosong), answer, acceptedAnswers: string[], explanation}]
+   - classification: items [{prompt, options: string[], answerIndex, explanation}]
+   - flashcards: cards [{front, back}]
+   - short_answer: items [{prompt, sampleAnswer, rubric}]
+   Pilih 2–4 tipe yang paling sesuai; tidak perlu memaksakan semua tipe. Buat instruksi jelas dan umpan balik berbasis sumber. Untuk istilah/angka Arab atau notasi, pertahankan karakter aslinya.
+
+KEDALAMAN DAN KELENGKAPAN MATERI
+- Petakan dulu struktur sumber: bab, subbab, urutan konsep, istilah, rumus, contoh, tabel, dan soal yang sudah ada.
+- Pertahankan semua subtopik penting. Jangan merangkum bagian yang memuat penjelasan atau pengecualian penting menjadi satu kalimat.
+- Uraikan konsep dari prasyarat dan definisi, cara kerja/prinsip, hubungan antarkonsep, contoh bertahap, aplikasi, batasan, dan miskonsepsi jika relevan.
+- Setiap slide materi inti harus memuat penjelasan yang substantif dalam beberapa paragraf jika kompleks; hindari paragraf generik atau pengulangan untuk memenuhi panjang.
+- Untuk rumus: definisikan setiap simbol, satuan, kondisi penggunaan, substitusi, langkah hitung, dan interpretasi hasil. Untuk bahasa: teks, terjemahan per kalimat, mufradat, pola tata bahasa, contoh, dan latihan identifikasi jika sumber mendukung. Untuk mata pelajaran lain, adaptasikan struktur secara pedagogis.
+- Beri label yang jelas pada informasi yang berasal langsung dari sumber dan penjelasan tambahan hasil sintesis AI. Jangan mengarang data, kutipan, dalil, sumber, atau atribusi.
+- Jika sumber terlalu singkat untuk mendukung pengembangan, nyatakan keterbatasan di sections.sources.limitations; jangan mengisi kekosongan dengan klaim yang tidak terverifikasi.
+- Aktivitas tambahan tidak menggantikan dua modul pilihan ganda yang diwajibkan di bawah.
 
 SOAL WAJIB
 practiceModules berisi tepat 2 modul. Tiap modul {title, learningFocus, difficulty, questions:[10 soal]}.
