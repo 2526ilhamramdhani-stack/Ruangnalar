@@ -171,3 +171,56 @@
 @media(max-width:900px){.rn-handout::before{width:9px}.rn-handout::after{width:25px;height:111px;background-size:21px 30px;background-position:0 0,0 38px,0 76px}.rn-h-layout{padding-left:24px}}
 @media(max-width:650px){.rn-h-header{padding-left:23px}.rn-h-layout{padding:15px 12px 22px 22px}.rn-h-cover h2{font-size:28px;line-height:1.25}.rn-h-slide-stack .rn-h-slide{padding:17px}.rn-h-slide-stack .rn-slide-explanation,.rn-h-slide-stack .rn-slide-explanation p:not(.rn-h-explanation-lead){font-size:13px;line-height:1.78}}
 @media(prefers-reduced-motion:reduce){.rn-h-toc a,.rn-h-progress i{transition:none}}
+
+
+/* Al-Insyirah reminder: keep both verses and translations on one row. */
+.rn-reader-verse{
+  display:grid;
+  grid-template-columns:minmax(0,.82fr) minmax(0,1.65fr) minmax(0,.82fr) minmax(0,1.65fr);
+  align-items:center;
+  column-gap:clamp(8px,1.2vw,18px);
+  row-gap:8px;
+  padding:15px clamp(16px,2.6vw,38px);
+  text-align:center;
+}
+.rn-reader-verse-label{grid-column:1/-1;margin:0 0 2px}
+.rn-reader-arabic{
+  min-width:0;
+  margin:0;
+  font-size:clamp(15px,1.55vw,23px);
+  line-height:1.55;
+  white-space:nowrap;
+}
+.rn-reader-translation{
+  min-width:0;
+  max-width:none;
+  margin:0;
+  padding:7px 10px;
+  border-radius:8px;
+  background:rgba(248,224,164,.58);
+  color:#40545E;
+  font-size:clamp(9px,.88vw,12px);
+  line-height:1.45;
+  letter-spacing:.005em;
+  white-space:nowrap;
+}
+.rn-reader-translation span{
+  color:#6C1A1A;
+  font-size:clamp(8px,.75vw,10px);
+}
+@media(max-width:760px){
+  .rn-reader-verse{
+    grid-template-columns:minmax(0,.72fr) minmax(0,1.55fr) minmax(0,.72fr) minmax(0,1.55fr);
+    column-gap:5px;
+    padding:12px 9px;
+  }
+  .rn-reader-arabic{font-size:clamp(12px,2.5vw,17px)}
+  .rn-reader-translation{padding:6px 5px;font-size:clamp(7px,1.35vw,10px)}
+  .rn-reader-translation span{font-size:7px}
+}
+@media(max-width:420px){
+  .rn-reader-verse{column-gap:3px;padding:10px 5px}
+  .rn-reader-arabic{font-size:12px}
+  .rn-reader-translation{font-size:7px;padding:5px 3px}
+  .rn-reader-translation span{font-size:6px}
+}
