@@ -20,4 +20,11 @@ if (!html.includes('<html') || !html.includes('</html>')) {
 fs.rmSync(outputDir, { recursive: true, force: true });
 fs.mkdirSync(outputDir, { recursive: true });
 fs.copyFileSync(source, output);
-console.log('RuangNalar static prototype built successfully into dist/.');
+
+// Publish static assets from /public at the site root (e.g. /fonts/adumu.ttf).
+const publicDir = path.join(root, 'public');
+if (fs.existsSync(publicDir)) {
+  fs.cpSync(publicDir, outputDir, { recursive: true });
+}
+
+console.log('RuangNalar static prototype and public assets built successfully into dist/.');
