@@ -2446,6 +2446,29 @@ main {
   background-image:none!important;
 }
 
+
+/* RuNa hero cleanup — remove the duplicate translucent pillar beside the welcome copy */
+.hero .hero-pillar {
+  display:none!important;
+  visibility:hidden!important;
+  content:none!important;
+  background:none!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+.hero {
+  padding-left:clamp(30px,4.5vw,58px)!important;
+}
+@media(max-width:980px) {
+  .hero { padding-left:clamp(28px,4vw,46px)!important; }
+}
+@media(max-width:720px) {
+  .hero { padding-left:23px!important; }
+}
+@media(max-width:390px) {
+  .hero { padding-left:20px!important; }
+}
+
 </style>
 </head>
 <body>
@@ -2469,10 +2492,7 @@ main {
   <header class="topbar"><div style="display:flex;align-items:center;gap:10px;min-width:0"><button class="mobile-menu" id="menuButton" aria-label="Buka menu">☰</button><label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="searchInput" placeholder="Cari materi, bab, atau topik..." aria-label="Cari materi" /></label></div><div class="profile"><div class="avatar">SN</div><div><div class="profile-name">Siswa Nalar</div><div class="profile-role">RuangNalar</div></div></div></header>
   <div class="content">
     <section id="tab-home" class="tab-panel">
-      <div class="hero">
-        <div class="hero-pillar" aria-hidden="true"><i class="maroon"></i><i class="teal"></i><i class="cream"></i></div>
-        
-        <div class="hero-copy">
+      <div class="hero"><div class="hero-copy">
           <div class="eyebrow"><span class="dot"></span> Ruang belajar personalmu</div>
           <div class="hero-title-row">
             <h1 class="hero-title-main">Naik level,</h1>
