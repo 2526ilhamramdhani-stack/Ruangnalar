@@ -681,7 +681,7 @@ aside {
 @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap');
 @font-face {
   font-family: 'Adumu Regular';
-  src: url('/fonts/adumu.ttf') format('truetype');
+  src: url('/fonts/adumu.ttf?v=2') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -1035,6 +1035,114 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
    *,*::before,*::after { scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important; }
  }
  
+
+ 
+ /* =========================================================
+    RuNa PPTX Visual Layer — dark editorial canvas + woven motif
+    ========================================================= */
+ :root {
+   --runa-display:'Adumu Regular','Trebuchet MS',Georgia,serif;
+ }
+ /* Adumu is intentionally reserved for display typography. */
+ h1,h2,h3,h4,h5,h6,
+ .brand,.profile-name,.stat-num,.btn,.pill,.float-chip,
+ .course-top .course-title,.page-title h1 {
+   font-family:var(--runa-display)!important;
+   font-weight:400!important;
+ }
+ /* The PPTX uses deep navy as its signature canvas, with the
+    woven geometric pattern as a restrained background detail. */
+ .content {
+   background-color:#172B3A!important;
+   background-image:
+     url('/runa-woven-pattern.svg'),
+     radial-gradient(ellipse at 8% 0%,rgba(49,170,169,.10),transparent 34%),
+     linear-gradient(145deg,#172B3A 0%,#1B3443 100%)!important;
+   background-repeat:no-repeat,no-repeat,no-repeat!important;
+   background-position:right 5% top 360px,left top,center!important;
+   background-size:clamp(180px,22vw,310px),auto,auto!important;
+   color:#FAF9F6!important;
+ }
+ .content .section-heading h2,
+ .content .page-title h1,
+ .content h2.page-heading {
+   color:#FAF9F6!important;
+ }
+ .content .section-heading p,
+ .content .page-title p,
+ .content .muted {
+   color:#C3D0D0!important;
+ }
+ .content .eyebrow { color:#F8E0A4!important; }
+ .content .text-link { color:#F8E0A4!important; }
+ .content .stat,
+ .content .panel,
+ .content .course-card,
+ .content .topic-card,
+ .content .idea-card,
+ .content .material-card {
+   background:#FAF9F6!important;
+   color:#172B3A!important;
+   border-color:#D9E1DC!important;
+ }
+ .content .stat-num,
+ .content .panel h1,.content .panel h2,.content .panel h3,
+ .content .course-card h1,.content .course-card h2,.content .course-card h3,
+ .content .topic-card h1,.content .topic-card h2,.content .topic-card h3,
+ .content .material-card h1,.content .material-card h2,.content .material-card h3 {
+   color:#172B3A!important;
+ }
+ .content .stat-label,
+ .content .course-body p,
+ .content .panel .muted,
+ .content .material-card p {
+   color:#596970!important;
+ }
+ .content .subject-hub { background:transparent!important; }
+ .content .subject-card {
+   background:#203B4A!important;
+   color:#FAF9F6!important;
+   border:1px solid #42606A!important;
+ }
+ .content .subject-card:hover,
+ .content .subject-card:focus-visible {
+   background:#294B58!important;
+   border-color:#31AAA9!important;
+ }
+ .content .subject-card.active {
+   background:#31AAA9!important;
+   color:#172B3A!important;
+   border-color:#F8E0A4!important;
+ }
+ .content .course-top.blue { background:#31AAA9!important;color:#172B3A!important; }
+ .content .course-top.green { background:#F8E0A4!important;color:#172B3A!important; }
+ .content .course-top.orange { background:#6C1A1A!important;color:#FAF9F6!important; }
+ .content .course-top.purple { background:#294B58!important;color:#FAF9F6!important; }
+ .content .progress { background:#DCE5E0!important; }
+ .content .empty-subject,.content .course-empty {
+   background:#203B4A!important;color:#FAF9F6!important;border-color:#42606A!important;
+ }
+ .content .empty-subject p,.content .course-empty p { color:#D3DFDB!important; }
+ .hero {
+   background-image:
+     url('/runa-woven-pattern.svg'),
+     radial-gradient(circle at 88% 15%,rgba(49,170,169,.17),transparent 29%),
+     linear-gradient(118deg,#172B3A 0%,#203B4A 74%,#294B58 100%)!important;
+   background-repeat:no-repeat,no-repeat,no-repeat!important;
+   background-position:right 8% center,center,center!important;
+   background-size:clamp(150px,20vw,245px),auto,auto!important;
+ }
+ .hero:before { z-index:0; }
+ .hero:after { z-index:0; }
+ .hero > div { position:relative;z-index:1; }
+ @media(max-width:720px) {
+   .content {
+     background-position:right -35px top 230px,left top,center!important;
+     background-size:170px,auto,auto!important;
+   }
+   .hero { background-size:130px,auto,auto!important;background-position:right -22px bottom,center,center!important; }
+ }
+
 </style>
 </head>
 <body>
