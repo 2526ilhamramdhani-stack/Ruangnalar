@@ -732,3 +732,11 @@
 
 .rn-h-navigator .rn-h-toc-links a.is-practice-complete .rn-h-nav-state{background:#4B9A74;box-shadow:0 0 0 3px #4B9A7422}
 .rn-h-navigator .rn-h-toc-links a.is-practice-complete .rn-h-nav-label:after{content:" · latihan selesai";color:#43835F;font-size:8px;font-weight:800}
+
+.rn-h-nav-branch{display:grid;gap:1px}
+.rn-h-nav-branch>button{display:flex;align-items:center;gap:6px;width:100%;min-height:28px;padding:5px 8px;border:0;border-radius:7px;background:#F5F8F6;color:#667B7D;text-align:left;font-size:9px;font-weight:850}
+.rn-h-nav-branch>button:hover,.rn-h-nav-branch>button:focus-visible{background:#EAF5F2;color:#176F6E;outline:2px solid #8BCBC1;outline-offset:1px}
+.rn-h-nav-branch-chevron{display:inline-block;transition:transform .15s ease}
+.rn-h-nav-branch.is-collapsed>.rn-h-nav-children{display:none}
+.rn-h-nav-branch.is-collapsed>button .rn-h-nav-branch-chevron{transform:rotate(-90deg)}
+.rn-h-navigator .rn-h-nav-children .rn-h-nav-deep{font-size:8px!important;padding-left:13px!important}
