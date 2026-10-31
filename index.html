@@ -1318,6 +1318,75 @@ body { font-family:'Lora',Georgia,serif!important; }
 @media(max-width:980px) { #dashboardSubjectGrid.course-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:560px) { #dashboardSubjectGrid.course-grid { grid-template-columns:1fr; } #dashboardSubjectGrid .course-card.subject-course { min-height:230px; } #dashboardSubjectGrid .subject-course .subject-art { min-height:150px; } }
 
+
+/* FINAL BRAND-GUIDELINE CORRECTIONS — explicit full-card color + official slide-7 logo */
+.brand { gap:0!important; min-height:0!important; padding:0!important; align-items:flex-start!important; }
+.brand .runa-logo {
+  display:block!important; width:216px!important; height:auto!important; max-width:100%!important;
+  aspect-ratio:720 / 416; object-fit:contain!important; object-position:left center!important;
+  margin:0!important; padding:0!important; background:transparent!important;
+  border:0!important; border-radius:0!important; box-shadow:none!important;
+}
+@media(max-width:720px) {
+  .brand .runa-logo { width:188px!important; max-width:100%!important; }
+}
+/* Use the discipline color on the entire card surface. The woven motif is a transparent overlay,
+   never a navy fill or a replacement surface. */
+#dashboardSubjectGrid .course-card.subject-course,
+.content #dashboardSubjectGrid .course-card.subject-course {
+  background-color:var(--subject-bg)!important;
+  background-image:url('/runa-woven-pattern.svg')!important;
+  background-repeat:repeat!important;
+  background-position:right bottom!important;
+  background-size:132px 132px!important;
+  background-blend-mode:soft-light!important;
+  border:0!important;
+  box-shadow:0 14px 28px rgba(8,25,34,.20)!important;
+}
+#dashboardSubjectGrid .subject-matematika-wajib,
+#dashboardSubjectGrid .subject-matematika-lanjut {
+  --subject-bg:#6C1A1A!important;
+  --subject-ink:#F8E0A4!important;
+  --subject-banner:#F8E0A4!important;
+  --subject-banner-ink:#6C1A1A!important;
+  background-color:#6C1A1A!important;
+}
+#dashboardSubjectGrid .subject-fisika,
+#dashboardSubjectGrid .subject-biologi {
+  --subject-bg:#31AAA9!important;
+  --subject-ink:#FFFFFF!important;
+  --subject-banner:#FFFFFF!important;
+  --subject-banner-ink:#146F6D!important;
+  background-color:#31AAA9!important;
+}
+#dashboardSubjectGrid .subject-kimia {
+  --subject-bg:#F8E0A4!important;
+  --subject-ink:#6C1A1A!important;
+  --subject-banner:#6C1A1A!important;
+  --subject-banner-ink:#F8E0A4!important;
+  background-color:#F8E0A4!important;
+}
+#dashboardSubjectGrid .subject-fiqih {
+  --subject-bg:#172B3A!important;
+  --subject-ink:#F8E0A4!important;
+  --subject-banner:#F8E0A4!important;
+  --subject-banner-ink:#172B3A!important;
+  background-color:#172B3A!important;
+}
+#dashboardSubjectGrid .subject-course .course-top,
+.content #dashboardSubjectGrid .subject-course .course-top {
+  background:transparent!important;
+  border:0!important;
+}
+#dashboardSubjectGrid .subject-course .subject-banner {
+  background:var(--subject-banner)!important;
+  color:var(--subject-banner-ink)!important;
+}
+#dashboardSubjectGrid .subject-course .subject-symbol { color:var(--subject-ink)!important; }
+#dashboardSubjectGrid .subject-kimia .subject-structure { stroke:#6C1A1A!important; }
+#dashboardSubjectGrid .subject-fisika .subject-symbol,
+#dashboardSubjectGrid .subject-biologi .subject-structure { color:#FFFFFF!important;stroke:#FFFFFF!important; }
+
 </style>
 </head>
 <body>
@@ -1325,16 +1394,7 @@ body { font-family:'Lora',Georgia,serif!important; }
 <div class="layout">
 <aside id="sidebar">
   <div class="brand" aria-label="RuangNalar">
-    <span class="logo runa-logo" aria-hidden="true">
-      <svg viewBox="0 0 126 62" role="img" aria-label="RuNa">
-        <path d="M8 13H65M55 4l10 9-10 9" fill="none" stroke="#31AAA9" stroke-width="3.2" stroke-linecap="square" stroke-linejoin="miter"/>
-        <text x="4" y="57" fill="#FAF9F6" font-family="Georgia,serif" font-size="43" font-style="italic" font-weight="700">Ru</text>
-        <rect x="79" y="19" width="43" height="39" rx="2" fill="#31AAA9"/>
-        <text x="84" y="28" fill="#172B3A" font-family="Arial,sans-serif" font-size="7" font-weight="700">11</text>
-        <text x="84" y="47" fill="#172B3A" font-family="Arial,sans-serif" font-size="20" font-weight="800">Na</text>
-        <text x="84" y="55" fill="#172B3A" font-family="Arial,sans-serif" font-size="5.5" font-weight="700">22.99</text>
-      </svg>
-    </span>
+    <img class="logo runa-logo" src="/runa-logo-slide7.svg" alt="RuNa — logo resmi dari panduan merek slide 7">
   </div>
   <div><div class="side-label">Menu belajar</div><nav class="nav-list" aria-label="Navigasi utama">
     <button class="nav-item active" data-tab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"/></svg>Beranda</button>
