@@ -351,7 +351,7 @@
     const complete = event.target.closest('[data-rn-complete]');
     if (complete) {
       const section=complete.closest('[data-rn-section]');
-      if(section){const done=section.dataset.rnCompleted!=='1';section.dataset.rnCompleted=done?'1':'0';complete.setAttribute('aria-pressed',String(done));complete.textContent=done?'Selesai ✓':'Tandai selesai';updateNavigator(section.closest('[data-rn-handout]'));}
+      if(section){const done=section.dataset.rnCompleted!=='1';section.dataset.rnCompleted=done?'1':'0';complete.setAttribute('aria-pressed',String(done));complete.textContent=done?'Selesai ✓':'Tandai selesai';const root=section.closest('[data-rn-handout]');saveNavigatorState(root);updateNavigator(root);}
       return;
     }
     const nav = event.target.closest('[data-rn-nav]');
@@ -427,6 +427,26 @@
   });
 
   const observerByRoot = new WeakMap();
+  function readNavigatorState(root) {
+    try { return JSON.parse(localStorage.getItem('runa:learning-progress:'+root.id)||'{}')||{}; } catch (_) { return {}; }
+  }
+  function saveNavigatorState(root) {
+    if(!root)return;
+    const state={};
+    root.querySelectorAll('[data-rn-section]').forEach(section=>{
+      state[section.id]={visited:section.dataset.rnVisited==='1',completed:section.dataset.rnCompleted==='1',practiceCompleted:section.dataset.rnPracticeCompleted==='1'};
+    });
+    try { localStorage.setItem('runa:learning-progress:'+root.id,JSON.stringify(state)); } catch (_) {}
+  }
+  function restoreNavigatorState(root) {
+    const state=readNavigatorState(root);
+    Object.entries(state).forEach(([id,value])=>{
+      const section=root.querySelector('#'+CSS.escape(id));if(!section)return;
+      if(value.visited)section.dataset.rnVisited='1';
+      if(value.completed){section.dataset.rnCompleted='1';const button=section.querySelector('[data-rn-complete]');if(button){button.setAttribute('aria-pressed','true');button.textContent='Selesai ✓';}}
+      if(value.practiceCompleted)section.dataset.rnPracticeCompleted='1';
+    });
+  }
   function updateNavigator(root) {
     if(!root)return;
     const groups=Array.from(root.querySelectorAll('.rn-h-nav-group'));
@@ -441,6 +461,7 @@
     const done=questions.every(question=>question.dataset.rnAnswered==='1');
     if(done){
       section.dataset.rnPracticeCompleted='1';
+      saveNavigatorState(section.closest('[data-rn-handout]'));
       const link=section.closest('[data-rn-handout]')?.querySelector('[data-nav-target="'+section.id+'"]');
       if(link){link.classList.add('is-practice-complete');const state=link.querySelector('.rn-h-nav-state');if(state)state.title='Latihan selesai';}
       updateNavigator(section.closest('[data-rn-handout]'));
@@ -450,6 +471,7 @@
     if(!root||observerByRoot.has(root))return;
     const targets=Array.from(root.querySelectorAll('[data-rn-section], [data-rn-subsection]'));
     if(!targets.length)return;
+    restoreNavigatorState(root);
     const scrollRoot=root.closest('.rn-html-reader-main')||null;
     const observer=new IntersectionObserver(entries=>{
       const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top);
@@ -457,11 +479,14 @@
       let target=visible.find(entry=>entry.boundingClientRect.top>=0)?.target||visible[0].target;
       const parent=target.closest('[data-rn-section]')||target;
       const targetId=target.id;
+      parent.dataset.rnVisited='1';
+      saveNavigatorState(root);
       const parentId=parent.id;
       const links=Array.from(root.querySelectorAll('[data-rn-nav]'));
       links.forEach(link=>{
         const active=link.dataset.navTarget===targetId || (targetId===parentId && link.dataset.navTarget===parentId);
         link.classList.toggle('is-active',active);
+        link.classList.remove('is-parent-active');
         link.setAttribute('aria-current',active?'location':'false');
       });
       const parentLink=root.querySelector('[data-nav-target="'+parentId+'"]');
