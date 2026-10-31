@@ -729,3 +729,6 @@
 @media(prefers-reduced-motion:reduce){
   .rn-h-navigator,.rn-h-nav-progress>i>b{transition:none!important}
 }
+
+.rn-h-navigator .rn-h-toc-links a.is-practice-complete .rn-h-nav-state{background:#4B9A74;box-shadow:0 0 0 3px #4B9A7422}
+.rn-h-navigator .rn-h-toc-links a.is-practice-complete .rn-h-nav-label:after{content:" · latihan selesai";color:#43835F;font-size:8px;font-weight:800}
