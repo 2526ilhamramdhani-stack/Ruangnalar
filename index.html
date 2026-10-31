@@ -2422,6 +2422,30 @@ aside#sidebar,
   }
 }
 
+
+/* RuNa final cleanup — remove any residual translucent seam beside the main divider */
+aside#sidebar,
+#sidebar {
+  border:0!important;
+  border-right:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+}
+.layout > main,
+main {
+  border-left:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+}
+#sidebar::after {
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  filter:none!important;
+  background:#F3F5F5!important;
+  background-image:none!important;
+}
+
 </style>
 </head>
 <body>
