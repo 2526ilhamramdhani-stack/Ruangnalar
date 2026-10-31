@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <title>RuangNalar — Platform Pembelajaran</title>
 <style>
 :root {
@@ -823,6 +826,215 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
  *,*::before,*::after { scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important; }
 }
 
+
+ 
+ /* =========================================================
+    RuNa Final Visual Override v2 — authoritative design layer
+    ========================================================= */
+ :root {
+   color-scheme: light;
+   --runa-navy:#172B3A;
+   --runa-teal:#31AAA9;
+   --runa-cream:#F8E0A4;
+   --runa-maroon:#6C1A1A;
+   --runa-paper:#FAF9F6;
+   --runa-white:#FFFFFF;
+   --site-primary:var(--runa-teal);
+   --site-secondary:#E5F1ED;
+   --site-background:var(--runa-paper);
+   --site-on-primary:#102B35;
+   --site-on-secondary:var(--runa-navy);
+   --site-on-background:var(--runa-navy);
+   --site-font-body:'Lora',Georgia,serif;
+   --site-font-heading:'Adumu Regular','Trebuchet MS',Georgia,serif;
+   --ink:var(--runa-navy);
+   --muted:#596970;
+   --panel:#FFFEFB;
+   --panel-soft:#F0F3EF;
+   --line:#D9E1DC;
+   --shadow:0 14px 34px rgba(23,43,58,.09);
+ }
+ html,body,.app-root,main,.layout {
+   background-color:var(--runa-paper)!important;
+   color:var(--runa-navy)!important;
+ }
+ body,button,input,textarea,select {
+   font-family:var(--site-font-body)!important;
+   font-synthesis:weight style;
+ }
+ body {
+   background:
+     radial-gradient(ellipse at 88% 8%,rgba(49,170,169,.055),transparent 34%),
+     var(--runa-paper)!important;
+   color:var(--runa-navy)!important;
+ }
+ h1,h2,h3,h4,h5,h6,.brand,.profile-name,.stat-num,.btn,.pill,.float-chip {
+   font-family:var(--site-font-heading)!important;
+   font-weight:400!important;
+   font-synthesis:weight;
+   color:var(--runa-navy);
+ }
+ p,li,.muted,.course-body p,.section-heading p,.hero p {
+   font-family:var(--site-font-body)!important;
+ }
+ .layout { grid-template-columns:260px minmax(0,1fr)!important; }
+ aside {
+   background:linear-gradient(180deg,#172B3A 0%,#203B4A 100%)!important;
+   color:#F8F7F1!important;
+   border:0!important;
+   padding:30px 17px 22px!important;
+   box-shadow:5px 0 24px rgba(23,43,58,.07);
+ }
+ .brand { color:#FAF9F6!important;font-size:23px!important;letter-spacing:-.5px!important; }
+ .brand > span:last-child { color:var(--runa-teal)!important; }
+ .logo { background:var(--runa-maroon)!important;color:#FFF8ED!important;box-shadow:0 7px 18px #07192355!important; }
+ .side-label { color:#AFC2C6!important;letter-spacing:1.7px!important; }
+ .nav-list { gap:7px!important; }
+ .nav-item {
+   color:#D6E0DE!important;
+   border-radius:9px!important;
+   padding:12px 13px!important;
+   font-family:var(--site-font-body)!important;
+   font-weight:600!important;
+ }
+ .nav-item:hover { background:#294653!important;color:#FFFFFF!important; }
+ .nav-item.active {
+   background:var(--runa-teal)!important;
+   color:#102B35!important;
+   box-shadow:inset 3px 0 0 var(--runa-cream)!important;
+ }
+ .streak-card {
+   background:linear-gradient(145deg,#2B4854,#203744)!important;
+   color:#FFF8E9!important;
+   border:1px solid #49636B!important;
+ }
+ .streak-card p { color:#D3DFDB!important; }
+ .topbar {
+   background:rgba(250,249,246,.97)!important;
+   border-bottom:1px solid #D9E1DC!important;
+   box-shadow:0 3px 14px rgba(23,43,58,.035);
+   backdrop-filter:blur(12px);
+ }
+ .search {
+   background:#FFFEFB!important;
+   border:1px solid #D4DFD9!important;
+   border-radius:9px!important;
+ }
+ .search input { color:var(--runa-navy)!important;font-family:var(--site-font-body)!important; }
+ .search:focus-within { border-color:var(--runa-teal)!important;box-shadow:0 0 0 3px #31AAA91C!important; }
+ .avatar { background:var(--runa-cream)!important;color:var(--runa-navy)!important;font-family:var(--site-font-heading)!important; }
+ .profile-name { color:var(--runa-navy)!important; }
+ .profile-role { color:#65747A!important; }
+ .content { max-width:1580px!important;padding:38px clamp(22px,4vw,58px) 64px!important; }
+ .eyebrow { color:var(--runa-maroon)!important;letter-spacing:1.5px!important; }
+ .dot { background:var(--runa-teal)!important;box-shadow:0 0 0 4px #31AAA91C!important; }
+ .hero {
+   min-height:282px!important;
+   background:
+     radial-gradient(circle at 88% 15%,rgba(49,170,169,.17),transparent 29%),
+     linear-gradient(118deg,#172B3A 0%,#203B4A 74%,#294B58 100%)!important;
+   color:#FAF9F6!important;
+   border:1px solid #294957!important;
+   border-radius:15px!important;
+   padding:clamp(30px,4vw,49px)!important;
+   box-shadow:0 16px 38px rgba(23,43,58,.13);
+ }
+ .hero:before { border-color:#31AAA966!important;box-shadow:0 0 0 25px #31AAA912,0 0 0 52px #31AAA90A!important; }
+ .hero:after { border-color:#F8E0A455!important; }
+ .hero h1 { color:#FAF9F6!important;font-size:clamp(36px,3.7vw,52px)!important;line-height:1.12!important; }
+ .hero .eyebrow { color:var(--runa-cream)!important; }
+ .hero p { color:#D6E0DE!important;line-height:1.85!important; }
+ .orbit { border-color:#31AAA977!important; }
+ .orbit:before,.orbit:after { border-color:#F8E0A455!important; }
+ .math-tile { background:var(--runa-cream)!important;color:var(--runa-navy)!important; }
+ .float-chip { background:var(--runa-paper)!important;color:var(--runa-navy)!important; }
+ .btn { border-radius:8px!important;padding:13px 18px!important;letter-spacing:.1px; }
+ .btn-primary,.btn-dark {
+   background:var(--runa-teal)!important;color:#102B35!important;
+   border:1px solid var(--runa-teal)!important;box-shadow:none!important;
+ }
+ .btn-primary:hover,.btn-dark:hover { background:#55BCB7!important; }
+ .btn-ghost { background:#FFFEFB!important;border:1px solid var(--line)!important;color:var(--runa-navy)!important; }
+ .btn-soft { background:#E5F1ED!important;color:var(--runa-navy)!important; }
+ .section-heading { margin:37px 0 17px!important; }
+ .section-heading h2 { font-size:24px!important;color:var(--runa-navy)!important; }
+ .section-heading p { color:#65747A!important; }
+ .text-link { color:var(--runa-maroon)!important; }
+ .stats { gap:15px!important; }
+ .stat,.panel,.course-card,.topic-card,.idea-card {
+   background:#FFFEFB!important;
+   border:1px solid var(--line)!important;
+   border-radius:13px!important;
+   box-shadow:0 6px 20px rgba(23,43,58,.045)!important;
+ }
+ .stat { padding:18px!important; }
+ .stat-icon { background:#E5F1ED!important;color:#1C7777!important; }
+ .stat-num { color:var(--runa-navy)!important;font-size:25px!important; }
+ .stat-label { color:#65747A!important; }
+ .course-grid { gap:16px!important; }
+ .course-card { overflow:hidden!important; }
+ .course-card:hover,.topic-card:hover { border-color:var(--runa-teal)!important;box-shadow:0 14px 30px rgba(23,43,58,.09)!important; }
+ .course-top { min-height:112px!important;padding:19px!important; }
+ .course-top.blue { background:#E6EEF0!important;color:var(--runa-navy)!important; }
+ .course-top.green { background:#DDEFE9!important;color:#205D55!important; }
+ .course-top.orange { background:#F8EBD0!important;color:#79551D!important; }
+ .course-top.purple { background:#EEE8E1!important;color:var(--runa-maroon)!important; }
+ .pill { background:#FFFFFFE8!important;color:var(--runa-navy)!important; }
+ .course-body { background:#FFFEFB!important;padding:19px!important; }
+ .course-body h3 { color:var(--runa-navy)!important;font-size:18px!important; }
+ .course-body p { color:#596970!important; }
+ .progress { background:#E8EEEB!important; }
+ .progress span { background:var(--runa-teal)!important; }
+ .page-title h1 { color:var(--runa-navy)!important; }
+ .page-title p,.muted { color:#596970!important; }
+ .panel { background:#FFFEFB!important; }
+ .panel h1,.panel h2,.panel h3,.panel h4,.panel h5,
+ .course-card h1,.course-card h2,.course-card h3,
+ .topic-card strong,.field label { color:var(--runa-navy)!important; }
+ .topic-card { background:#FFFEFB!important;color:var(--runa-navy)!important; }
+ .topic-number { background:#E5F1ED!important;color:#1C7777!important; }
+ .question-label,.type-pill { color:var(--runa-maroon)!important; }
+ .type-pill { background:#F5EDE8!important; }
+ .option { background:#FFFEFB!important;color:var(--runa-navy)!important;border-color:#D5DFDA!important; }
+ .option.selected { border-color:var(--runa-teal)!important;background:#EAF5F2!important; }
+ .callout { border-left-color:var(--runa-teal)!important;background:#EFF5F1!important;color:var(--runa-navy)!important; }
+ .equation { background:#F2F4EF!important;border:1px solid var(--line)!important;color:var(--runa-navy)!important; }
+ .field input,.field textarea,.field select {
+   background:#FFFEFB!important;color:var(--runa-navy)!important;border-color:#C9D5CF!important;
+   font-family:var(--site-font-body)!important;
+ }
+ .field input:focus,.field textarea:focus,.field select:focus { border-color:var(--runa-teal)!important;box-shadow:0 0 0 3px #31AAA91C!important; }
+ .upload-dropzone { background:#F5F6F1!important;border-color:#AFC4BD!important; }
+ .upload-dropzone:hover,.upload-dropzone.dragging { background:#EAF5F2!important;border-color:var(--runa-teal)!important; }
+ .upload-symbol { background:var(--runa-cream)!important;color:var(--runa-navy)!important; }
+ .material-card,.material-card-body { background:#FFFEFB!important; }
+ .material-card { border:1px solid var(--line)!important;box-shadow:0 7px 22px rgba(23,43,58,.055)!important; }
+ .material-card-accent { background:linear-gradient(90deg,var(--runa-teal),var(--runa-cream))!important; }
+ .material-card h3,.material-card-body h3 { color:var(--runa-navy)!important; }
+ .subject-hub { background:transparent!important; }
+ .subject-card { border-radius:11px!important; }
+ .subject-card:hover,.subject-card:focus-visible { border-color:var(--runa-teal)!important; }
+ .empty-subject,.course-empty { background:#F1F4F0!important;border-color:#BFCFC7!important;color:var(--runa-navy)!important; }
+ .toast { background:var(--runa-navy)!important;color:#FFFFFF!important; }
+ .mobile-menu { background:#FFFEFB!important;color:var(--runa-navy)!important;border-color:var(--line)!important; }
+ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible {
+   outline:3px solid #31AAA9!important;outline-offset:3px;
+ }
+ @media(min-width:1100px) {
+   .layout { grid-template-columns:260px minmax(0,1fr)!important; }
+   .content { max-width:1580px!important; }
+ }
+ @media(max-width:720px) {
+   aside { background:linear-gradient(180deg,#172B3A,#203B4A)!important; }
+   .topbar { background:var(--runa-paper)!important; }
+   .content { padding:24px 16px 40px!important; }
+   .hero { min-height:0!important;padding:27px 23px!important; }
+   .hero h1 { font-size:34px!important; }
+ }
+ @media(prefers-reduced-motion:reduce) {
+   *,*::before,*::after { scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important; }
+ }
+ 
 </style>
 </head>
 <body>
