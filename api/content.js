@@ -78,14 +78,26 @@ function buildSections(draft) {
       });
     });
   }
+  // Optional pedagogical sections are appended after the established rows so
+  // existing section positions and previously published handouts stay compatible.
+  const optionalSections = [
+    ['terminology', 'Kosakata dan Terminologi'],
+    ['reading_material', 'Bacaan dan Pemahaman Teks'],
+    ['dialogues', 'Dialog dan Percakapan'],
+    ['learning_activities', 'Aktivitas Belajar Interaktif']
+  ];
+  for (const [type, title] of optionalSections) {
+    const body = draft.sections[type];
+    if (isObject(body)) rows.push({ section_type: type, title, body, position: rows.length });
+  }
   return rows;
 }
 async function saveSections(config, contentId, rows) {
   const existingResult = await dbRequest(config, 'handout_sections?select=id,section_type,position&content_id=eq.' + encodeURIComponent(contentId));
   if (!existingResult.response.ok || !Array.isArray(existingResult.data)) return false;
   const existing = existingResult.data;
-  const wantedKeys = new Set(rows.map(row => row.section_type + ':' + row.position));
-  // Upsert first; never delete the current handout before its replacement rows are saved.
+  // Additive-first persistence: upsert incoming rows but never delete previously
+  // saved section rows implicitly. This preserves legacy/extra content on revision.
   for (const row of rows) {
     const match = existing.find(item => item.section_type === row.section_type && item.position === row.position);
     const payload = { title: row.title, body: row.body };
@@ -101,14 +113,6 @@ async function saveSections(config, contentId, rows) {
           body: JSON.stringify({ ...row, content_id: contentId })
         });
     if (!saved.response.ok) return false;
-  }
-  const staleIds = existing.filter(item => !wantedKeys.has(item.section_type + ':' + item.position)).map(item => item.id);
-  for (const staleId of staleIds) {
-    const removed = await dbRequest(config, 'handout_sections?id=eq.' + encodeURIComponent(staleId), {
-      method: 'DELETE',
-      headers: { Prefer: 'return=minimal' }
-    });
-    if (!removed.response.ok) return false;
   }
   return true;
 }
