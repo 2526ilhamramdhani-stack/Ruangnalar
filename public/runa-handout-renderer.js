@@ -156,7 +156,7 @@
           '<article class="rn-h-reading-card"><span class="rn-h-card-label">BACAAN ' + String(index+1).padStart(2,'0') + '</span>' +
           '<h4>' + esc(passage.title || ('Teks ' + (index+1))) + '</h4>' +
           (passage.originalText ? '<div class="rn-h-reading-original" dir="auto">' + esc(passage.originalText).replace(/\r?\n/g,'<br>') + '</div>' : '') +
-          (passage.translation ? '<details><summary>Lihat terjemahan / makna</summary><p>' + esc(passage.translation).replace(/\\r?\\n/g,'<br>') + '</p></details>' : '') +
+          (passage.translation ? '<details><summary>Lihat terjemahan / makna</summary><p>' + esc(passage.translation).replace(/\r?\n/g,'<br>') + '</p></details>' : '') +
           (passage.notes ? '<div class="rn-h-takeaway"><b>Catatan pemahaman</b><p>' + esc(passage.notes) + '</p></div>' : '') +
           (arr(passage.comprehensionQuestions).length ? '<div class="rn-h-reading-questions">' + arr(passage.comprehensionQuestions).map(question =>
             '<details><summary>' + esc(question.question) + '</summary><p>' + esc(question.answer) + '</p>' +
