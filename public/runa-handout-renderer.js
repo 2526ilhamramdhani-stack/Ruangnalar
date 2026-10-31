@@ -7,6 +7,7 @@
   const arr = value => Array.isArray(value) ? value : [];
   const obj = value => value && typeof value === 'object' && !Array.isArray(value) ? value : {};
   const textList = values => arr(values).filter(Boolean).map(value => '<li>' + esc(value) + '</li>').join('');
+  const formatExplanation = value => String(value || '').split(/\n\s*\n/).map((paragraph,index) => paragraph.trim()).filter(Boolean).map((paragraph,index) => '<p' + (index === 0 ? ' class="rn-h-explanation-lead"' : '') + '>' + esc(paragraph).replace(/\n/g,'<br>') + '</p>').join('');
   const subjectLabels = {'matematika-wajib':'Matematika Wajib','matematika-lanjut':'Matematika Lanjut','kimia':'Kimia','fisika':'Fisika','fiqih':'Fiqih'};
   const slug = value => String(value || 'section').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,48) || 'section';
 
@@ -67,7 +68,7 @@
           '<div class="rn-h-slide-grid"><div class="rn-h-slide-copy">' +
           '<h4>' + esc(slide.title || ('Konsep ' + (index+1))) + '</h4>' +
           (slide.learningGoal ? '<div class="rn-slide-goal"><span class="rn-mini-label">FOKUS PEMBELAJARAN</span><p>' + esc(slide.learningGoal) + '</p></div>' : '') +
-          '<div class="rn-slide-explanation">' + esc(slide.explanation || '') + '</div>' +
+          '<div class="rn-slide-explanation">' + formatExplanation(slide.explanation) + '</div>' +
           (slide.workedExample ? '<div class="rn-slide-example"><span class="rn-mini-label">CONTOH / PENERAPAN</span><p>' + esc(slide.workedExample) + '</p></div>' : '') +
           (slide.commonMistake ? '<div class="rn-slide-mistake"><b>⚑ Perlu diperhatikan</b><p>' + esc(slide.commonMistake) + '</p></div>' : '') +
           (slide.checkForUnderstanding ? '<div class="rn-slide-check"><b>Cek pemahaman</b><p>' + esc(slide.checkForUnderstanding) + '</p></div>' : '') +
