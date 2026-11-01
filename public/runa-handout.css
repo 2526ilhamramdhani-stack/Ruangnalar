@@ -744,3 +744,66 @@
 .rn-h-navigator .rn-h-toc-links a.is-visited .rn-h-nav-state{background:#A6B8B1}
 .rn-h-navigator .rn-h-toc-links a.is-completed .rn-h-nav-state{background:#4B9A74;box-shadow:0 0 0 3px #4B9A7422}
 .rn-h-navigator .rn-h-toc-links a.is-completed .rn-h-nav-label:after{content:" · selesai";color:#43835F;font-size:8px;font-weight:800}
+
+
+/* RuNa TOC — compact single-view navigation */
+@media (min-width: 861px) {
+  .rn-handout .rn-h-layout {
+    grid-template-columns: minmax(260px, 292px) minmax(0, 1fr) !important;
+    gap: 20px !important;
+  }
+  .rn-handout .rn-h-navigator {
+    top: 88px !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    gap: 9px !important;
+    padding: 13px 11px 10px !important;
+  }
+  .rn-handout .rn-h-toc-links {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    align-content: start !important;
+    gap: 5px !important;
+    overflow: visible !important;
+    padding: 1px 0 2px !important;
+  }
+  .rn-handout .rn-h-nav-group { min-width: 0 !important; }
+  .rn-handout .rn-h-navigator .rn-h-toc-links a {
+    min-height: 36px !important;
+    height: 100% !important;
+    gap: 6px !important;
+    padding: 6px 7px !important;
+    border: 1px solid #E5ECE8 !important;
+    border-radius: 8px !important;
+    background: #F8FAF8 !important;
+    color: #172B3A !important;
+    font-size: 12px !important;
+    line-height: 1.25 !important;
+    font-weight: 750 !important;
+  }
+  .rn-handout .rn-h-nav-index {
+    flex-basis: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 9px !important;
+  }
+  .rn-handout .rn-h-nav-label {
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 2 !important;
+    overflow: hidden !important;
+    overflow-wrap: anywhere !important;
+  }
+  .rn-handout .rn-h-nav-foot { display: none !important; }
+}
+@media (max-width: 860px) {
+  .rn-handout .rn-h-navigator .rn-h-toc-links a {
+    min-height: 42px !important;
+    padding: 9px 10px !important;
+    color: #172B3A !important;
+    font-size: 14px !important;
+  }
+  .rn-handout .rn-h-nav-progress > span { color: #415965 !important; font-size: 11px !important; }
+}
