@@ -1109,3 +1109,21 @@
   .rn-handout .rn-h-sidebar-toggle,
   .rn-handout .rn-h-navigator { transition: none !important; }
 }
+
+
+/* RuNa navigator compact height — avoid a blank panel between TOC items. */
+@media (min-width: 651px) {
+  .rn-handout .rn-h-navigator,
+  .rn-html-reader-main > .rn-handout .rn-h-navigator {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: calc(100vh - 104px) !important;
+  }
+  .rn-handout .rn-h-navigator .rn-h-toc-links,
+  .rn-html-reader-main > .rn-handout .rn-h-navigator .rn-h-toc-links {
+    flex: 0 1 auto !important;
+    height: auto !important;
+    max-height: calc(100vh - 250px) !important;
+    min-height: 0 !important;
+  }
+}
