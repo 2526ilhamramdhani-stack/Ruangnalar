@@ -24,7 +24,7 @@
     const add = (key, label, markup) => {
       if (!markup) return;
       const id = rootId + '-' + key;
-      const entry = {id,label,children:[]};
+      const entry = {id,key,label,children:[]};
       toc.push(entry);
       blocks.push('<section class="rn-h-section" id="' + id + '" data-rn-section><div class="rn-h-section-heading"><span>' + String(toc.length).padStart(2,'0') + '</span><h3>' + esc(label) + '</h3><button type="button" class="rn-h-complete" data-rn-complete aria-pressed="false">Tandai selesai</button></div>' + markup + '</section>');
       return entry;
