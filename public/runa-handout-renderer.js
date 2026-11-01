@@ -32,7 +32,7 @@
 
     const overview = byType.overview || {};
     if (overview.summary || arr(overview.learningObjectives).length || arr(overview.prerequisites).length || arr(overview.topicMap).length) {
-      add('overview','Gambaran pembelajaran',
+      add('overview','Gambaran Umum',
         (overview.summary ? '<p class="rn-h-lead">' + esc(overview.summary) + '</p>' : '') +
         (arr(overview.learningObjectives).length ? '<div class="rn-h-info-grid"><article class="rn-h-info-card rn-h-card-teal"><span class="rn-h-card-label">TUJUAN BELAJAR</span><ul>' + textList(overview.learningObjectives) + '</ul></article>' : '') +
         (arr(overview.prerequisites).length ? '<article class="rn-h-info-card rn-h-card-cream"><span class="rn-h-card-label">PRASYARAT</span><ul>' + textList(overview.prerequisites) + '</ul></article>' : '') +
@@ -51,7 +51,7 @@
 
     const real = byType.real_world || {};
     if (arr(real.examples).length) {
-      add('real-world','Koneksi dengan dunia nyata',
+      add('real-world','Koneksi Materi',
         '<div class="rn-h-example-grid">' + arr(real.examples).map((example,index) =>
           '<article class="rn-h-example-card"><span class="rn-h-index">' + String(index+1).padStart(2,'0') + '</span><h4>' + esc(example.title) + '</h4>' +
           (example.context ? '<p class="rn-h-context">' + esc(example.context) + '</p>' : '') +
@@ -83,7 +83,7 @@
         '<div class="rn-h-slide-stack">' + slideCards + '</div>');
       const slideGroups=[];
       slides.forEach((slide,index)=>{
-        const child={id:rootId+'-slide-'+(index+1),label:slide.title||('Submateri '+(index+1))};
+        const child={id:rootId+'-slide-'+(index+1),label:(['Pengantar','Pasangan Terurut','Rumus Komponen'][index] || slide.title || ('Submateri '+(index+1)))};
         const chapter=String(slide.chapterTitle||slide.chapter||slide.sectionTitle||'').trim();
         if(!chapter){slideEntry.children.push(child);return;}
         let group=slideGroups.find(item=>item.label===chapter);
@@ -95,7 +95,7 @@
 
     const cheat = byType.cheatsheet || {};
     if (arr(cheat.keyConcepts).length || arr(cheat.formulas).length || arr(cheat.quickReview).length) {
-      add('cheatsheet','Konsep dan rumus penting',
+      add('cheatsheet','Konsep & Rumus',
         (arr(cheat.keyConcepts).length ? '<div class="rn-h-key-grid">' + arr(cheat.keyConcepts).map(item =>
           '<article class="rn-h-key-card"><span class="rn-h-card-label">KONSEP</span><h4>' + esc(item.concept) + '</h4><p>' + esc(item.rule) + '</p>' +
           (item.whenToUse ? '<p class="rn-h-caption"><b>Kapan digunakan:</b> ' + esc(item.whenToUse) + '</p>' : '') +
@@ -120,7 +120,7 @@
 
     const encouragement = byType.encouragement || {};
     if (encouragement.message || encouragement.arabicPhrase) {
-      add('encouragement','Penutup dan refleksi',
+      add('encouragement','Penutup',
         '<div class="rn-h-closing">' + (encouragement.message ? '<p>' + esc(encouragement.message) + '</p>' : '') +
         (encouragement.arabicPhrase ? '<strong>' + esc(encouragement.arabicPhrase) + '</strong>' : '') +
         (encouragement.transliteration ? '<p>' + esc(encouragement.transliteration) + '</p>' : '') +
@@ -130,7 +130,7 @@
 
     const types = byType.question_types || {};
     if (arr(types.types).length) {
-      add('question-types','Mengenali tipe soal',
+      add('question-types','Tipe Soal',
         '<div class="rn-h-key-grid">' + arr(types.types).map(item =>
           '<article class="rn-h-key-card"><h4>' + esc(item.name) + '</h4><p><b>Konsep yang diuji:</b> ' + esc(item.conceptTested) + '</p>' +
           '<p><b>Petunjuk:</b> ' + esc(item.recognitionClues) + '</p><p><b>Strategi:</b> ' + esc(item.solvingStrategy) + '</p>' +
@@ -140,7 +140,7 @@
 
     const ideas = byType.question_ideas || {};
     if (arr(ideas.ideas).length) {
-      add('question-ideas','Ide pengembangan soal',
+      add('question-ideas','Ide Soal',
         '<div class="rn-h-example-grid">' + arr(ideas.ideas).map(item =>
           '<article class="rn-h-example-card"><span class="rn-h-card-label">IDE SOAL</span><h4>' + esc(item.coreConcept) + '</h4><p>' + esc(item.variation) + '</p>' +
           '<p><b>Alur penalaran:</b> ' + esc(item.reasoningPath) + '</p><p class="rn-h-caption">Prasyarat: ' + esc(item.prerequisiteKnowledge) + '</p></article>'
@@ -238,7 +238,7 @@
         return '';
       }).join('');
       if (activityMarkup) {
-        const activityEntry=add('learning-activities','Aktivitas belajar interaktif',activityMarkup);
+        const activityEntry=add('learning-activities','Aktivitas',activityMarkup);
         arr(learningActivities.activities).forEach((activity,index)=>activityEntry.children.push({id:rootId+'-activity-'+(index+1),label:activity.title||('Aktivitas '+(index+1))}));
       }
     }
@@ -266,7 +266,7 @@
 
     const sources = byType.sources || {};
     if (sources.primarySourceDescription || arr(sources.references).length || arr(sources.limitations).length) {
-      add('sources','Sumber dan catatan',
+      add('sources','Sumber',
         (sources.primarySourceDescription ? '<p class="rn-h-lead">' + esc(sources.primarySourceDescription) + '</p>' : '') +
         (arr(sources.references).length ? '<div class="rn-h-source-list">' + arr(sources.references).map(ref => {
           const url = typeof ref.url === 'string' && /^https?:\/\//i.test(ref.url) ? ref.url : '';
@@ -282,14 +282,14 @@
     const renderNavNode=(node,depth)=>node.children
       ? '<div class="rn-h-nav-branch"><button type="button" data-rn-nav-expand aria-expanded="true"><span class="rn-h-nav-branch-chevron">⌄</span>'+esc(node.label)+'</button><div class="rn-h-nav-children">'+node.children.map(child=>renderNavNode(child,depth+1)).join('')+'</div></div>'
       : '<a href="#'+node.id+'" data-rn-nav data-nav-target="'+node.id+'" aria-current="false" class="'+(depth>1?'rn-h-nav-deep':'')+'"><span class="rn-h-nav-child-dot"></span><span>'+esc(node.label)+'</span></a>';
+    const flattenNavChildren = nodes => arr(nodes).flatMap(node => node.children ? flattenNavChildren(node.children) : [node]);
     const navigation = '<aside class="rn-h-navigator" aria-label="Navigasi pembelajaran">' +
       '<div class="rn-h-nav-head"><div><span>JELAJAHI MATERI</span><b>Daftar pembelajaran</b></div><button type="button" class="rn-h-nav-close" data-rn-nav-close aria-label="Tutup navigasi">×</button></div>' +
       '<div class="rn-h-nav-progress"><span data-rn-nav-count>0 dari ' + toc.length + ' bagian selesai</span><i><b data-rn-nav-progress></b></i></div>' +
       '<div class="rn-h-toc-links">' + toc.map((entry,index) =>
-        '<div class="rn-h-nav-group"><a href="#' + entry.id + '" data-rn-nav data-nav-target="' + entry.id + '" aria-current="false"><span class="rn-h-nav-index">' + String(index+1).padStart(2,'0') + '</span><span class="rn-h-nav-label">' + esc(entry.label) + '</span><i class="rn-h-nav-state" aria-hidden="true"></i></a>' +
-        (entry.children.length ? '<div class="rn-h-nav-children">' + entry.children.map(child=>renderNavNode(child,1)).join('') + '</div>' : '') +
-        '</div>'
-      ).join('') + '</div><div class="rn-h-nav-foot">The content may grow in complexity. The navigation remains simple.</div></aside>' +
+        entry.key === 'slides' ? '<div class="rn-h-nav-group rn-h-nav-core"><button type="button" class="rn-h-nav-core-toggle" data-rn-nav-expand aria-expanded="true"><span class="rn-h-nav-index">' + String(index+1).padStart(2,'0') + '</span><span class="rn-h-nav-label">Materi Inti</span><span class="rn-h-nav-chevron">⌄</span></button><div class="rn-h-nav-children">' + flattenNavChildren(entry.children).map(child=>'<a href="#' + child.id + '" data-rn-nav data-nav-target="' + child.id + '" aria-current="false"><span class="rn-h-nav-child-dot"></span><span class="rn-h-nav-label">' + esc(child.label) + '</span></a>').join('') + '</div></div>' :
+        '<div class="rn-h-nav-group"><a href="#' + entry.id + '" data-rn-nav data-nav-target="' + entry.id + '" aria-current="false"><span class="rn-h-nav-index">' + String(index+1).padStart(2,'0') + '</span><span class="rn-h-nav-label">' + esc(entry.label) + '</span><i class="rn-h-nav-state" aria-hidden="true"></i></a></div>'
+      ).join('') + '</div></aside>' +
       '<button type="button" class="rn-h-mobile-nav" data-rn-nav-open aria-label="Buka navigasi pembelajaran"><span>☷</span><span data-rn-current-label>Jelajahi materi</span><b>⌄</b></button>'
     return '<div class="rn-handout" id="' + rootId + '" data-rn-handout data-subject="' + esc(subject) + '">' +
       '<div id="' + rootId + '-top"></div>' + header +
