@@ -807,3 +807,72 @@
   }
   .rn-handout .rn-h-nav-progress > span { color: #415965 !important; font-size: 11px !important; }
 }
+
+
+/* RuNa TOC refinement — full-width single-column list */
+@media (min-width: 861px) {
+  .rn-handout .rn-h-layout { grid-template-columns: minmax(260px, 292px) minmax(0,1fr) !important; }
+  .rn-handout .rn-h-toc-links {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 4px !important;
+    overflow: visible !important;
+  }
+  .rn-handout .rn-h-nav-group { width: 100% !important; }
+  .rn-handout .rn-h-navigator .rn-h-toc-links a {
+    width: 100% !important;
+    min-height: 36px !important;
+    padding: 7px 9px !important;
+    border: 1px solid #E5ECE8 !important;
+    border-radius: 8px !important;
+    background: #F8FAF8 !important;
+    color: #172B3A !important;
+    font-size: 13px !important;
+    line-height: 1.25 !important;
+    white-space: nowrap !important;
+  }
+  .rn-handout .rn-h-nav-label {
+    min-width: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+  .rn-handout .rn-h-nav-core-toggle {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-height: 38px !important;
+    padding: 7px 9px !important;
+    border: 1px solid #D7E7E1 !important;
+    border-radius: 8px !important;
+    background: #EAF5F2 !important;
+    color: #172B3A !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    font: inherit !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+  }
+  .rn-handout .rn-h-nav-core-toggle .rn-h-nav-label { flex: 1 !important; }
+  .rn-handout .rn-h-nav-chevron { color: #176F6E; transition: transform .16s ease; }
+  .rn-handout .rn-h-nav-core-toggle[aria-expanded="false"] .rn-h-nav-chevron { transform: rotate(-90deg); }
+  .rn-handout .rn-h-nav-core .rn-h-nav-children {
+    display: grid !important;
+    gap: 1px !important;
+    margin: 4px 0 3px 11px !important;
+    padding: 0 0 0 13px !important;
+    border-left: 1px solid #C8DDD5 !important;
+  }
+  .rn-handout .rn-h-nav-core .rn-h-nav-children a {
+    min-height: 32px !important;
+    padding: 6px 8px !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: #172B3A !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+  }
+  .rn-handout .rn-h-nav-core .rn-h-nav-child-dot { background: #31AAA9 !important; }
+}
