@@ -876,3 +876,86 @@
   }
   .rn-handout .rn-h-nav-core .rn-h-nav-child-dot { background: #31AAA9 !important; }
 }
+
+
+/* RuNa navigator containment hotfix — strict single column with its own scroll area. */
+.rn-handout .rn-h-navigator,
+.rn-html-reader-main > .rn-handout .rn-h-navigator {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 292px !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-height: calc(100vh - 116px) !important;
+  overflow: hidden !important;
+}
+.rn-handout .rn-h-navigator .rn-h-toc-links,
+.rn-html-reader-main > .rn-handout .rn-h-navigator .rn-h-toc-links {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-height: calc(100vh - 270px) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  gap: 8px !important;
+  padding: 2px 3px 10px !important;
+  scrollbar-width: thin;
+}
+.rn-handout .rn-h-navigator .rn-h-nav-group,
+.rn-handout .rn-h-navigator .rn-h-nav-core,
+.rn-handout .rn-h-navigator .rn-h-nav-children {
+  display: flex !important;
+  flex: 0 0 auto !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin-left: 0 !important;
+}
+.rn-handout .rn-h-navigator .rn-h-toc-links > *,
+.rn-handout .rn-h-navigator .rn-h-nav-children > *,
+.rn-handout .rn-h-navigator .rn-h-toc-links a,
+.rn-handout .rn-h-navigator .rn-h-nav-core-toggle {
+  position: relative !important;
+  box-sizing: border-box !important;
+  flex: 0 0 auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin-left: 0 !important;
+}
+.rn-handout .rn-h-navigator .rn-h-toc-links a {
+  overflow: hidden !important;
+}
+.rn-handout .rn-h-navigator .rn-h-nav-label {
+  display: block !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+@media (max-width: 650px) {
+  .rn-handout .rn-h-navigator,
+  .rn-html-reader-main > .rn-handout .rn-h-navigator {
+    width: min(310px, calc(100vw - 20px)) !important;
+    max-width: calc(100vw - 20px) !important;
+    max-height: none !important;
+  }
+  .rn-handout .rn-h-navigator .rn-h-toc-links,
+  .rn-html-reader-main > .rn-handout .rn-h-navigator .rn-h-toc-links {
+    max-height: none !important;
+    flex: 1 1 auto !important;
+  }
+}
