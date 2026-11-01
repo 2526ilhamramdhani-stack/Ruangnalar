@@ -280,7 +280,8 @@
 
     const header = '<header class="rn-h-header"><a class="rn-h-brand" href="#' + rootId + '-top" aria-label="RuNa — kembali ke awal handout"><img src="/runa-logo-slide7.svg" alt="Logo resmi RuNa"></a>' +
       '<div class="rn-h-title"><span>' + esc(subject) + '</span><b>' + esc(title) + '</b></div>' +
-      '<div class="rn-h-progress-wrap"><span>PROGRES MEMBACA</span><div class="rn-h-progress"><i data-rn-progress></i></div></div></header>';
+      '<div class="rn-h-progress-wrap"><span>PROGRES MEMBACA</span><div class="rn-h-progress"><i data-rn-progress></i></div></div>' +
+      '<button type="button" class="rn-h-sidebar-toggle" data-rn-sidebar-toggle aria-expanded="true" aria-label="Sembunyikan sidebar" title="Mode fokus membaca"><span aria-hidden="true">◧</span></button></header>';
     const renderNavNode=(node,depth)=>node.children
       ? '<div class="rn-h-nav-branch"><button type="button" data-rn-nav-expand aria-expanded="true"><span class="rn-h-nav-branch-chevron">⌄</span>'+esc(node.label)+'</button><div class="rn-h-nav-children">'+node.children.map(child=>renderNavNode(child,depth+1)).join('')+'</div></div>'
       : '<a href="#'+node.id+'" data-rn-nav data-nav-target="'+node.id+'" aria-current="false" class="'+(depth>1?'rn-h-nav-deep':'')+'"><span class="rn-h-nav-child-dot"></span><span>'+esc(node.label)+'</span></a>';
@@ -363,6 +364,18 @@
   document.addEventListener('click', event => {
     const expandNav = event.target.closest('[data-rn-nav-expand]');
     if(expandNav){const branch=expandNav.closest('.rn-h-nav-branch');if(branch){const expanded=expandNav.getAttribute('aria-expanded')!=='true';expandNav.setAttribute('aria-expanded',String(expanded));branch.classList.toggle('is-collapsed',!expanded);}return;}
+    const sidebarToggle = event.target.closest('[data-rn-sidebar-toggle]');
+    if (sidebarToggle) {
+      const root=sidebarToggle.closest('[data-rn-handout]');
+      if(root){
+        const collapsed=root.classList.toggle('rn-nav-collapsed');
+        sidebarToggle.setAttribute('aria-expanded',String(!collapsed));
+        sidebarToggle.setAttribute('aria-label',collapsed?'Tampilkan sidebar':'Sembunyikan sidebar');
+        sidebarToggle.title=collapsed?'Tampilkan daftar pembelajaran':'Mode fokus membaca';
+        sidebarToggle.querySelector('span').textContent=collapsed?'☷':'◧';
+      }
+      return;
+    }
     const openNav = event.target.closest('[data-rn-nav-open]');
     if (openNav) { const root=openNav.closest('[data-rn-handout]'); if(root) root.classList.add('rn-nav-open'); return; }
     const closeNav = event.target.closest('[data-rn-nav-close]');
