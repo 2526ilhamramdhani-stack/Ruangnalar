@@ -83,7 +83,9 @@
         '<div class="rn-h-slide-stack">' + slideCards + '</div>');
       const slideGroups=[];
       slides.forEach((slide,index)=>{
-        const child={id:rootId+'-slide-'+(index+1),label:(['Pengantar','Pasangan Terurut','Rumus Komponen'][index] || slide.title || ('Submateri '+(index+1)))};
+        const slideTitle=String(slide.title||'').trim();
+        const shortLabel=/^1?\.?\s*Pengantar Komposisi Fungsi/i.test(slideTitle)?'Pengantar':/^2?\.?\s*Komposisi dari Himpunan Pasangan Terurut|Himpunan Pasangan Terurut/i.test(slideTitle)?'Pasangan Terurut':/^3?\.?\s*Menentukan Rumus Fungsi Komponen|Rumus Fungsi Komponen/i.test(slideTitle)?'Rumus Komponen':slideTitle;
+        const child={id:rootId+'-slide-'+(index+1),label:shortLabel||('Submateri '+(index+1))};
         const chapter=String(slide.chapterTitle||slide.chapter||slide.sectionTitle||'').trim();
         if(!chapter){slideEntry.children.push(child);return;}
         let group=slideGroups.find(item=>item.label===chapter);
