@@ -2706,8 +2706,10 @@ main {
    event.stopImmediatePropagation();
    const title = document.getElementById('contentTitle').value.trim();
    const authorName = document.getElementById('contentAuthor').value.trim();
-   const topic = document.getElementById('contentTopic').value;
-   const subjectId = document.getElementById('contentSubject').value;
+   const topic = document.getElementById('contentTopic').value.trim();
+   const subjectId = subjectIdFromLabel(document.getElementById('contentSubject').value);
+   const comment = document.getElementById('contentComment').value.trim();
+   if (!subjectId) { notify('Pilih salah satu mata pelajaran dari daftar standar RuNa.'); return; }
    let sourceText = document.getElementById('rawContent').value.trim();
    const status = document.getElementById('pdfUploadStatus');
    if (!title || !authorName) { notify('Judul materi dan nama admin penerbit wajib diisi.'); return; }
