@@ -207,7 +207,7 @@ module.exports = async function handler(req, res) {
   }
   const questions = normalizeQuestions(draft);
   const row = {
-    title, topic, subject_id: subjectId,
+    title, topic, comment, subject_id: subjectId,
     author_name: authorName,
     summary: draft.summary.slice(0, 12000),
     key_points: Array.isArray(draft.keyPoints) ? draft.keyPoints.slice(0, 30).map(v => String(v).slice(0, 1000)) : [],
