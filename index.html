@@ -221,7 +221,8 @@ p { line-height:1.7; }
   .nav-item:not(.active) { color:#334155; }
 }
 
-.html-module-card-metadata{margin:8px 0 12px;color:var(--rn-muted,#52616B);font-size:11px;line-height:1.55;font-weight:650}.html-module-card-note{margin:6px 0 12px;padding:9px 11px;border-left:3px solid var(--rn-teal,#31AAA9);background:#F3F7F7;border-radius:0 8px 8px 0;color:#52616B;font-size:12px;line-height:1.5}\n/* Admin Workspace: paired Handout and HTML input lanes */
+.html-module-card-metadata{margin:8px 0 12px;color:var(--rn-muted,#52616B);font-size:11px;line-height:1.55;font-weight:650}.html-module-card-note{margin:6px 0 12px;padding:9px 11px;border-left:3px solid var(--rn-teal,#31AAA9);background:#F3F7F7;border-radius:0 8px 8px 0;color:#52616B;font-size:12px;line-height:1.5}
+/* Admin Workspace: paired Handout and HTML input lanes */
 .admin-input-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:30px;position:relative;align-items:start;margin:18px 0 26px}
 .admin-input-column{min-width:0}
 .admin-input-heading{display:flex;align-items:flex-start;gap:13px;margin:0 0 16px;padding:2px 0 12px;border-bottom:1px solid var(--rn-border,#D8E1E5)}
@@ -235,7 +236,8 @@ p { line-height:1.7; }
 .admin-html-column #htmlModuleSource{min-height:230px!important}
 .admin-html-column .section-heading{margin-top:22px}
 @media(max-width:900px){.admin-input-grid{grid-template-columns:minmax(0,1fr);gap:24px}.admin-input-divider{left:0;right:0;top:50%;bottom:auto;width:auto;height:1px;transform:none;background:linear-gradient(90deg,transparent,#C7D4D9 5%,#C7D4D9 95%,transparent)}}
-\n/* Admin form contrast: readable labels and entered text on light surfaces */
+
+/* Admin form contrast: readable labels and entered text on light surfaces */
 #adminLoginPanel,#adminWorkspace .panel { color:#17233D; }
 #adminLoginPanel h3,#adminWorkspace h3,#adminWorkspace h4 { color:#17233D; }
 #adminLoginPanel .muted,#adminWorkspace .muted { color:#374151; }
@@ -3211,7 +3213,8 @@ main {
          practiceModules:previousDraft.practiceModules.map((module,index)=>({...module,questions:normalizedQuestions.slice(index*10,index*10+10)}))
        };
        currentAIDraft.title = document.getElementById('contentTitle').value.trim();
-       currentAIDraft.authorName = document.getElementById('contentAuthor').value.trim();\n        currentAIDraft.comment = document.getElementById('contentComment').value.trim();
+       currentAIDraft.authorName = document.getElementById('contentAuthor').value.trim();
+        currentAIDraft.comment = document.getElementById('contentComment').value.trim();
        if (!currentAIDraft.title) throw new Error('Judul materi wajib diisi.');
        if (!currentAIDraft.authorName) throw new Error('Nama admin penerbit wajib diisi.');
        if (currentAIDraft.topic !== document.getElementById('contentTopic').value.trim() || currentAIDraft.subjectId !== subjectIdFromLabel(document.getElementById('contentSubject').value)) {
