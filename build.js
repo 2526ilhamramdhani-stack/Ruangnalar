@@ -41,7 +41,8 @@ const { spawnSync } = require('node:child_process');
 const javascriptFiles = [
   'public/runa-handout-renderer.js',
   'api/generate-content.js',
-  'api/content.js'
+  'api/content.js',
+  'api/custom-modules.js'
 ];
 for (const file of javascriptFiles) {
   if (!fs.existsSync(path.join(root, file))) continue;
