@@ -57,7 +57,7 @@ module.exports = async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       const params = new URLSearchParams({
-        select: adminView ? 'id,title,description,html,status,created_at,updated_at' : 'id,title,description,html,created_at,updated_at',
+        select: adminView ? 'id,title,description,html,status,render_mode,created_at,updated_at' : 'id,title,description,html,render_mode,created_at,updated_at',
         order: 'updated_at.desc',
         limit: '100'
       });
@@ -92,18 +92,19 @@ module.exports = async function handler(req, res) {
   const description = typeof body.description === 'string' ? body.description.trim().slice(0, 500) : '';
   const html = typeof body.html === 'string' ? body.html : '';
   const status = body.status === 'published' ? 'published' : 'draft';
+  const render_mode = body.renderMode === 'raw' ? 'raw' : 'module';
   const bytes = Buffer.byteLength(html, 'utf8');
   if (!title) return send(res, 400, { error: 'Judul modul wajib diisi.' });
   if (!html.trim()) return send(res, 400, { error: 'Konten HTML wajib diisi.' });
   if (bytes > MAX_HTML_BYTES) return send(res, 413, { error: 'Ukuran HTML melebihi batas 300 KB untuk versi awal.' });
   if (!/<html[\s>]|<!doctype\s+html|<body[\s>]/i.test(html)) return send(res, 400, { error: 'Masukkan dokumen HTML lengkap.' });
 
-  const payload = { title, description, html, status, updated_at: new Date().toISOString() };
+  const payload = { title, description, html, status, render_mode, updated_at: new Date().toISOString() };
   try {
     if (req.method === 'PATCH') {
       const id = typeof body.id === 'string' ? body.id : '';
       if (!/^[0-9a-f-]{36}$/i.test(id)) return send(res, 400, { error: 'ID modul tidak valid.' });
-      const result = await dbRequest(config, 'custom_html_modules?id=eq.' + encodeURIComponent(id) + '&select=id,title,description,html,status,created_at,updated_at', {
+      const result = await dbRequest(config, 'custom_html_modules?id=eq.' + encodeURIComponent(id) + '&select=id,title,description,html,status,render_mode,created_at,updated_at', {
         method: 'PATCH', headers: { 'Content-Type': 'application/json', Prefer: 'return=representation' }, body: JSON.stringify(payload)
       });
       if (!result.response.ok) return send(res, 502, { error: 'Perubahan modul gagal disimpan.' });
