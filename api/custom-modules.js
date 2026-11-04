@@ -57,7 +57,7 @@ module.exports = async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       const params = new URLSearchParams({
-        select: adminView ? 'id,title,description,html,status,render_mode,created_at,updated_at' : 'id,title,description,html,render_mode,created_at,updated_at',
+        select: adminView ? 'id,title,description,html,status,render_mode,subject_id,topic,author_name,comment,created_at,updated_at' : 'id,title,description,html,render_mode,subject_id,topic,author_name,comment,created_at,updated_at',
         order: 'updated_at.desc',
         limit: '100'
       });
@@ -93,25 +93,32 @@ module.exports = async function handler(req, res) {
   const html = typeof body.html === 'string' ? body.html : '';
   const status = body.status === 'published' ? 'published' : 'draft';
   const render_mode = body.renderMode === 'raw' ? 'raw' : 'module';
+  const subject_id = typeof body.subjectId === 'string' ? body.subjectId : '';
+  const topic = typeof body.topic === 'string' ? body.topic.trim().slice(0, 100) : '';
+  const author_name = typeof body.authorName === 'string' ? body.authorName.trim().slice(0, 100) : '';
+  const comment = typeof body.comment === 'string' ? body.comment.trim().slice(0, 1000) : '';
+  const allowedSubjects = ["pendidikan-agama-islam","fiqih","sejarah-kebudayaan-islam","al-quran-hadits","akidah-akhlak","pendidikan-pancasila","seni","kimia","biologi","fisika","bahasa-arab","bahasa-inggris","sejarah","sosiologi","pendidikan-jasmani-dan-kesehatan","geografi","bahasa-indonesia","matematika","ekonomi"];
   const bytes = Buffer.byteLength(html, 'utf8');
   if (!title) return send(res, 400, { error: 'Judul modul wajib diisi.' });
+  if (!author_name) return send(res, 400, { error: 'Nama penerbit wajib diisi.' });
+  if (!allowedSubjects.includes(subject_id)) return send(res, 400, { error: 'Pilih mata pelajaran dari daftar standar RuNa.' });
   if (!html.trim()) return send(res, 400, { error: 'Konten HTML wajib diisi.' });
   if (bytes > MAX_HTML_BYTES) return send(res, 413, { error: 'Ukuran HTML melebihi batas 300 KB untuk versi awal.' });
   if (!/<html[\s>]|<!doctype\s+html|<body[\s>]/i.test(html)) return send(res, 400, { error: 'Masukkan dokumen HTML lengkap.' });
 
-  const payload = { title, description, html, status, render_mode, updated_at: new Date().toISOString() };
+  const payload = { title, description, html, status, render_mode, subject_id, topic, author_name, comment, updated_at: new Date().toISOString() };
   try {
     if (req.method === 'PATCH') {
       const id = typeof body.id === 'string' ? body.id : '';
       if (!/^[0-9a-f-]{36}$/i.test(id)) return send(res, 400, { error: 'ID modul tidak valid.' });
-      const result = await dbRequest(config, 'custom_html_modules?id=eq.' + encodeURIComponent(id) + '&select=id,title,description,html,status,render_mode,created_at,updated_at', {
+      const result = await dbRequest(config, 'custom_html_modules?id=eq.' + encodeURIComponent(id) + '&select=id,title,description,html,status,render_mode,subject_id,topic,author_name,comment,created_at,updated_at', {
         method: 'PATCH', headers: { 'Content-Type': 'application/json', Prefer: 'return=representation' }, body: JSON.stringify(payload)
       });
       if (!result.response.ok) return send(res, 502, { error: 'Perubahan modul gagal disimpan.' });
       if (!Array.isArray(result.data) || !result.data.length) return send(res, 404, { error: 'Modul tidak ditemukan.' });
       return send(res, 200, { module: result.data[0] });
     }
-    const result = await dbRequest(config, 'custom_html_modules?select=id,title,description,html,status,render_mode,created_at,updated_at', {
+    const result = await dbRequest(config, 'custom_html_modules?select=id,title,description,html,status,render_mode,subject_id,topic,author_name,comment,created_at,updated_at', {
       method: 'POST', headers: { 'Content-Type': 'application/json', Prefer: 'return=representation' },
       body: JSON.stringify(payload)
     });

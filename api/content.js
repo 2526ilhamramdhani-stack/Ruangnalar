@@ -1,6 +1,6 @@
 const crypto = require('node:crypto');
 const COOKIE_NAME = 'ruangnalar_admin';
-const SUBJECTS = ['matematika-wajib','matematika-lanjut','kimia','fisika','fiqih'];
+const SUBJECTS = ["pendidikan-agama-islam","fiqih","sejarah-kebudayaan-islam","al-quran-hadits","akidah-akhlak","pendidikan-pancasila","seni","kimia","biologi","fisika","bahasa-arab","bahasa-inggris","sejarah","sosiologi","pendidikan-jasmani-dan-kesehatan","geografi","bahasa-indonesia","matematika","ekonomi","matematika-wajib","matematika-lanjut"];
 const SECTION_TITLES = {
   overview: 'Overview & Tujuan Belajar', mindmap: 'Mind Map', real_world: 'Penerapan Nyata',
   slides: 'Slide Materi Mendalam', cheatsheet: 'Cheatsheet', mnemonic: 'Jembatan Keledai',
@@ -128,7 +128,7 @@ module.exports = async function handler(req, res) {
     if (subjectId && !SUBJECTS.includes(subjectId)) return send(res, 400, { error: 'Mata pelajaran tidak valid.' });
     try {
       const params = new URLSearchParams({
-        select: 'id,subject_id,status,title,topic,summary,key_points,example,questions,author_name,created_at,published',
+        select: 'id,subject_id,status,title,topic,comment,summary,key_points,example,questions,author_name,created_at,published',
         order: 'created_at.desc',
         limit: '100'
       });
@@ -192,6 +192,7 @@ module.exports = async function handler(req, res) {
   if (typeof body === 'string') { try { body = JSON.parse(body); } catch { body = {}; } }
   const title = typeof body?.title === 'string' ? body.title.trim().slice(0, 160) : '';
   const topic = typeof body?.topic === 'string' ? body.topic.trim().slice(0, 100) : '';
+  const comment = typeof body?.comment === 'string' ? body.comment.trim().slice(0, 1000) : '';
   const authorName = typeof body?.authorName === 'string' ? body.authorName.trim().slice(0, 100) : '';
   const subjectId = typeof body?.subjectId === 'string' ? body.subjectId : 'matematika-wajib';
   const requestedStatus = body?.status === 'published' ? 'published' : 'draft';
@@ -207,7 +208,7 @@ module.exports = async function handler(req, res) {
   }
   const questions = normalizeQuestions(draft);
   const row = {
-    title, topic, subject_id: subjectId,
+    title, topic, comment, subject_id: subjectId,
     author_name: authorName,
     summary: draft.summary.slice(0, 12000),
     key_points: Array.isArray(draft.keyPoints) ? draft.keyPoints.slice(0, 30).map(v => String(v).slice(0, 1000)) : [],

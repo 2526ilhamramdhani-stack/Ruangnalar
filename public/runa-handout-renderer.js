@@ -8,7 +8,7 @@
   const obj = value => value && typeof value === 'object' && !Array.isArray(value) ? value : {};
   const textList = values => arr(values).filter(Boolean).map(value => '<li>' + esc(value) + '</li>').join('');
   const formatExplanation = value => String(value || '').split(/\n\s*\n/).map((paragraph,index) => paragraph.trim()).filter(Boolean).map((paragraph,index) => '<p' + (index === 0 ? ' class="rn-h-explanation-lead"' : '') + '>' + esc(paragraph).replace(/\n/g,'<br>') + '</p>').join('');
-  const subjectLabels = {'matematika-wajib':'Matematika Wajib','matematika-lanjut':'Matematika Lanjut','kimia':'Kimia','fisika':'Fisika','fiqih':'Fiqih'};
+  const subjectLabels = {"pendidikan-agama-islam":"Pendidikan Agama Islam","fiqih":"Fiqih","sejarah-kebudayaan-islam":"Sejarah Kebudayaan Islam","al-quran-hadits":"Al-Qur'an Hadits","akidah-akhlak":"Akidah Akhlak","pendidikan-pancasila":"Pendidikan Pancasila","seni":"Seni","kimia":"Kimia","biologi":"Biologi","fisika":"Fisika","bahasa-arab":"Bahasa Arab","bahasa-inggris":"Bahasa Inggris","sejarah":"Sejarah","sosiologi":"Sosiologi","pendidikan-jasmani-dan-kesehatan":"Pendidikan Jasmani dan Kesehatan","geografi":"Geografi","bahasa-indonesia":"Bahasa Indonesia","matematika":"Matematika","ekonomi":"Ekonomi","matematika-wajib":"Matematika Wajib","matematika-lanjut":"Matematika Lanjut"};
   const slug = value => String(value || 'section').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,48) || 'section';
 
   function render(item) {
