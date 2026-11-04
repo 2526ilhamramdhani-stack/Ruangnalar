@@ -116,7 +116,7 @@ module.exports = async function handler(req, res) {
       if (!Array.isArray(result.data) || !result.data.length) return send(res, 404, { error: 'Modul tidak ditemukan.' });
       return send(res, 200, { module: result.data[0] });
     }
-    const result = await dbRequest(config, 'custom_html_modules?select=id,title,description,html,status,render_mode,created_at,updated_at', {
+    const result = await dbRequest(config, 'custom_html_modules?select=id,title,description,html,status,render_mode,subject_id,topic,author_name,comment,created_at,updated_at', {
       method: 'POST', headers: { 'Content-Type': 'application/json', Prefer: 'return=representation' },
       body: JSON.stringify(payload)
     });
