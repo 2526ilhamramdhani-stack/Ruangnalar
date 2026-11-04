@@ -99,7 +99,9 @@ module.exports = async function handler(req, res) {
   const comment = typeof body.comment === 'string' ? body.comment.trim().slice(0, 1000) : '';
   const allowedSubjects = ["pendidikan-agama-islam","fiqih","sejarah-kebudayaan-islam","al-quran-hadits","akidah-akhlak","pendidikan-pancasila","seni","kimia","biologi","fisika","bahasa-arab","bahasa-inggris","sejarah","sosiologi","pendidikan-jasmani-dan-kesehatan","geografi","bahasa-indonesia","matematika","ekonomi"];
   const bytes = Buffer.byteLength(html, 'utf8');
-  if (!title) return send(res, 400, { error: 'Judul modul wajib diisi.' });\n  if (!author_name) return send(res, 400, { error: 'Nama penerbit wajib diisi.' });\n  if (!allowedSubjects.includes(subject_id)) return send(res, 400, { error: 'Pilih mata pelajaran dari daftar standar RuNa.' });
+  if (!title) return send(res, 400, { error: 'Judul modul wajib diisi.' });
+  if (!author_name) return send(res, 400, { error: 'Nama penerbit wajib diisi.' });
+  if (!allowedSubjects.includes(subject_id)) return send(res, 400, { error: 'Pilih mata pelajaran dari daftar standar RuNa.' });
   if (!html.trim()) return send(res, 400, { error: 'Konten HTML wajib diisi.' });
   if (bytes > MAX_HTML_BYTES) return send(res, 413, { error: 'Ukuran HTML melebihi batas 300 KB untuk versi awal.' });
   if (!/<html[\s>]|<!doctype\s+html|<body[\s>]/i.test(html)) return send(res, 400, { error: 'Masukkan dokumen HTML lengkap.' });
