@@ -221,7 +221,7 @@ p { line-height:1.7; }
   .nav-item:not(.active) { color:#334155; }
 }
 
-/* Admin Workspace: paired Handout and HTML input lanes */
+.html-module-card-metadata{margin:8px 0 12px;color:var(--rn-muted,#52616B);font-size:11px;line-height:1.55;font-weight:650}.html-module-card-note{margin:6px 0 12px;padding:9px 11px;border-left:3px solid var(--rn-teal,#31AAA9);background:#F3F7F7;border-radius:0 8px 8px 0;color:#52616B;font-size:12px;line-height:1.5}\n/* Admin Workspace: paired Handout and HTML input lanes */
 .admin-input-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:30px;position:relative;align-items:start;margin:18px 0 26px}
 .admin-input-column{min-width:0}
 .admin-input-heading{display:flex;align-items:flex-start;gap:13px;margin:0 0 16px;padding:2px 0 12px;border-bottom:1px solid var(--rn-border,#D8E1E5)}
@@ -3094,8 +3094,10 @@ main {
   function moduleCard(module,admin){
     const isRaw=module.render_mode==='raw';
     const status=admin?'<span class="content-status '+(module.status==='published'?'published':'draft')+'">'+(module.status==='published'?'● Terbit':'● Draf')+'</span>':'<span class="html-module-card-meta">'+(isRaw?'HTML ORIGINAL':'MODUL RUANGNALAR')+'</span>';
+    const metadata=[subjectLabels[module.subject_id]||'',module.topic||'',module.author_name?'Penerbit: '+module.author_name:''].filter(Boolean).map(escapeHtml).join(' · ');
+    const note=admin&&module.comment?'<p class="html-module-card-note">'+escapeHtml(module.comment)+'</p>':'';
     const actions=admin?'<div class="admin-content-actions"><button class="btn btn-ghost" type="button" data-edit-html-module="'+escapeHtml(module.id)+'">Edit</button><button class="btn btn-primary" type="button" data-publish-html-module="'+escapeHtml(module.id)+'">'+(module.status==='published'?'Simpan perubahan':'Terbitkan')+'</button><button class="btn btn-ghost" type="button" data-delete-html-module="'+escapeHtml(module.id)+'" style="color:#9B2525">Hapus</button></div>':'<button class="btn btn-primary" type="button" data-open-html-module="'+escapeHtml(module.id)+'">Buka modul →</button>';
-    return '<article class="html-module-card"><div class="html-module-card-top"><span class="html-module-card-icon" aria-hidden="true">'+(isRaw?'&lt;/&gt;':'✦')+'</span>'+status+'</div><h3>'+escapeHtml(module.title||'Tanpa judul')+'</h3><p>'+escapeHtml(module.description||'Materi interaktif yang diterbitkan di perpustakaan RuNa.')+'</p><div class="html-module-card-footer"><span class="html-module-card-meta">▣ DOKUMEN PEMBELAJARAN</span>'+actions+'</div></article>';
+    return '<article class="html-module-card"><div class="html-module-card-top"><span class="html-module-card-icon" aria-hidden="true">'+(isRaw?'&lt;/&gt;':'✦')+'</span>'+status+'</div><h3>'+escapeHtml(module.title||'Tanpa judul')+'</h3><p>'+escapeHtml(module.description||'Materi interaktif yang diterbitkan di perpustakaan RuNa.')+'</p>'+(metadata?'<div class="html-module-card-metadata">'+metadata+'</div>':'')+note+'<div class="html-module-card-footer"><span class="html-module-card-meta">▣ DOKUMEN PEMBELAJARAN</span>'+actions+'</div></article>';
   }
   async function loadHtmlModules(admin=false){
     const target=document.getElementById(admin?'adminHtmlModuleList':'publicHtmlModuleList');if(!target)return;
