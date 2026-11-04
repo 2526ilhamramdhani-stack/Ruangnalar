@@ -2493,6 +2493,84 @@ main {
   .hero { padding-left:20px!important; }
 }
 
+/* RuNa glassmorphism learning folders */
+#publicHtmlModuleList.html-module-grid{
+  position:relative;isolation:isolate;overflow:hidden;
+  padding:clamp(16px,2.2vw,28px);border:1px solid rgba(49,170,169,.18);
+  border-radius:22px;
+  background-color:#F7F9F8;
+  background-image:radial-gradient(rgba(23,43,58,.16) .8px,transparent .8px);
+  background-size:18px 18px;
+}
+.runa-folder-card{
+  --tilt-x:0deg;--tilt-y:0deg;position:relative;min-width:0;
+  padding:16px;border:1px solid rgba(255,255,255,.34);border-radius:19px;
+  background:linear-gradient(145deg,rgba(35,63,78,.91),rgba(23,43,58,.82));
+  color:#F8FAFC;box-shadow:0 12px 28px rgba(23,43,58,.14),inset 0 1px 0 rgba(255,255,255,.22);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  transform:perspective(900px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;
+}
+.runa-folder-card:hover,.runa-folder-card.is-open{
+  border-color:rgba(248,224,164,.72);
+  box-shadow:0 20px 38px rgba(23,43,58,.2),inset 0 1px 0 rgba(255,255,255,.3)
+}
+.runa-folder-trigger{
+  width:100%;display:grid;grid-template-columns:48px minmax(0,1fr) auto;
+  align-items:center;gap:12px;padding:2px;border:0;background:transparent;
+  color:#F8FAFC;text-align:left
+}
+.runa-folder-glyph{
+  width:48px;height:42px;display:grid;place-items:center;border-radius:12px;
+  background:linear-gradient(145deg,rgba(248,224,164,.96),rgba(230,190,112,.86));
+  color:#172B3A;font-size:22px;box-shadow:0 5px 14px rgba(0,0,0,.14)
+}
+.runa-folder-copy{min-width:0;display:flex;flex-direction:column;gap:4px}
+.runa-folder-copy strong{color:#F8E0A4;font-size:14px;font-weight:850;line-height:1.35;letter-spacing:.01em;overflow-wrap:anywhere}
+.runa-folder-copy small{color:#E5EEF1;font-size:11px;line-height:1.4}
+.runa-folder-count{
+  padding:6px 9px;border:1px solid rgba(248,224,164,.45);border-radius:999px;
+  background:rgba(248,224,164,.12);color:#F8E0A4;font-size:11px;font-weight:800;white-space:nowrap
+}
+.runa-folder-chevron{display:inline-block;margin-left:6px;transition:transform .25s ease}
+.runa-folder-card.is-open .runa-folder-chevron{transform:rotate(180deg)}
+.runa-folder-reveal{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .34s cubic-bezier(.2,.75,.25,1),opacity .25s ease}
+.runa-folder-card.is-open .runa-folder-reveal{grid-template-rows:1fr;opacity:1}
+.runa-folder-reveal-inner{min-height:0;overflow:hidden}
+.runa-folder-files{display:grid;gap:8px;padding:0 1px}
+.runa-folder-card.is-open .runa-folder-files{padding-top:15px}
+.runa-folder-file{
+  width:100%;display:grid;grid-template-columns:34px minmax(0,1fr) auto;align-items:center;
+  gap:10px;padding:10px 11px;border:1px solid rgba(255,255,255,.58);
+  border-radius:12px;background:rgba(255,255,255,.88);color:#172B3A;text-align:left;
+  box-shadow:0 5px 12px rgba(4,22,31,.08);
+  opacity:0;transform:translateY(-9px) scale(.985);
+  transition:opacity .25s ease,transform .3s cubic-bezier(.2,.75,.25,1),background .2s ease,border-color .2s ease
+}
+.runa-folder-card.is-open .runa-folder-file{opacity:1;transform:translateY(0) scale(1)}
+.runa-folder-card.is-open .runa-folder-file:nth-child(2){transition-delay:.045s}
+.runa-folder-card.is-open .runa-folder-file:nth-child(3){transition-delay:.09s}
+.runa-folder-card.is-open .runa-folder-file:nth-child(4){transition-delay:.135s}
+.runa-folder-card.is-open .runa-folder-file:nth-child(5){transition-delay:.18s}
+.runa-folder-file:hover,.runa-folder-file:focus-visible{background:#F8E0A4;border-color:#D7B96E;outline:none}
+.runa-folder-file-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:9px;background:#DDF4F0;color:#145B59;font-size:15px}
+.runa-folder-file-copy{min-width:0;display:flex;flex-direction:column;gap:3px}
+.runa-folder-file-copy strong{font-size:12px;line-height:1.4;overflow-wrap:anywhere}
+.runa-folder-file-copy small{font-size:10px;color:#52616B;line-height:1.4}
+.runa-folder-file-arrow{color:#52616B;font-size:17px}
+@media(max-width:680px){
+ #publicHtmlModuleList.html-module-grid{grid-template-columns:1fr;padding:12px;gap:12px;border-radius:17px}
+ .runa-folder-card{padding:14px}
+ .runa-folder-trigger{grid-template-columns:43px minmax(0,1fr) auto;gap:9px}
+ .runa-folder-glyph{width:43px;height:39px}
+ .runa-folder-count{font-size:10px;padding:5px 7px}
+}
+@media(prefers-reduced-motion:reduce){
+ .runa-folder-card,.runa-folder-reveal,.runa-folder-file,.runa-folder-chevron{transition:none!important}
+ .runa-folder-card{transform:none!important}
+ .runa-folder-file{opacity:1;transform:none}
+}
+
 /* Custom HTML modules: RuNa shell remains visible; module document is sandboxed. */
 .html-module-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:stretch}
 .html-module-card{position:relative;min-width:0;min-height:208px;display:flex;flex-direction:column;align-items:stretch;gap:13px;padding:17px;border:1px solid #466071;border-radius:15px;background:var(--rn-dark-surface);color:#F8FAFC;box-shadow:0 8px 22px rgba(7,21,29,.08);transition:transform .22s ease,background-color .22s ease,border-color .22s ease,box-shadow .22s ease}
@@ -3101,6 +3179,23 @@ main {
     const actions=admin?'<div class="admin-content-actions"><button class="btn btn-ghost" type="button" data-edit-html-module="'+escapeHtml(module.id)+'">Edit</button><button class="btn btn-primary" type="button" data-publish-html-module="'+escapeHtml(module.id)+'">'+(module.status==='published'?'Simpan perubahan':'Terbitkan')+'</button><button class="btn btn-ghost" type="button" data-delete-html-module="'+escapeHtml(module.id)+'" style="color:#9B2525">Hapus</button></div>':'<button class="btn btn-primary" type="button" data-open-html-module="'+escapeHtml(module.id)+'">Buka modul →</button>';
     return '<article class="html-module-card"><div class="html-module-card-top"><span class="html-module-card-icon" aria-hidden="true">'+(isRaw?'&lt;/&gt;':'✦')+'</span>'+status+'</div><h3>'+escapeHtml(module.title||'Tanpa judul')+'</h3><p>'+escapeHtml(module.description||'Materi interaktif yang diterbitkan di perpustakaan RuNa.')+'</p>'+(metadata?'<div class="html-module-card-metadata">'+metadata+'</div>':'')+note+'<div class="html-module-card-footer"><span class="html-module-card-meta">▣ DOKUMEN PEMBELAJARAN</span>'+actions+'</div></article>';
   }
+  function renderPublicModuleFolders(modules){
+    const groups=new Map();
+    modules.forEach(module=>{
+      const key=module.subject_id||'lainnya';
+      if(!groups.has(key))groups.set(key,[]);
+      groups.get(key).push(module);
+    });
+    return [...groups.entries()].map(([subjectId,items],index)=>{
+      const subject=subjectLabels[subjectId]||(subjectId==='lainnya'?'Materi Lainnya':subjectId);
+      const folderTitle=items.every(item=>item.render_mode==='raw')?'Arsip HTML '+subject:'Modul '+subject;
+      const fileItems=items.map((module,fileIndex)=>{
+        const detail=[module.topic||'',module.author_name?'Penerbit '+module.author_name:''].filter(Boolean).join(' · ');
+        return '<button type="button" class="runa-folder-file" data-open-html-module="'+escapeHtml(module.id)+'" style="transition-delay:'+(Math.min(fileIndex,8)*35)+'ms"><span class="runa-folder-file-icon" aria-hidden="true">'+(module.render_mode==='raw'?'&lt;/&gt;':'✦')+'</span><span class="runa-folder-file-copy"><strong>'+escapeHtml(module.title||'Tanpa judul')+'</strong><small>'+escapeHtml(detail||module.description||'Buka materi pembelajaran')+'</small></span><span class="runa-folder-file-arrow" aria-hidden="true">↗</span></button>';
+      }).join('');
+      return '<article class="runa-folder-card" data-folder-card="'+escapeHtml(subjectId)+'"><button type="button" class="runa-folder-trigger" data-folder-toggle="'+escapeHtml(subjectId)+'" aria-expanded="false"><span class="runa-folder-glyph" aria-hidden="true">▰</span><span class="runa-folder-copy"><strong>'+escapeHtml(folderTitle)+'</strong><small>'+escapeHtml(subject)+' · koleksi pembelajaran</small></span><span class="runa-folder-count">'+items.length+' file <span class="runa-folder-chevron" aria-hidden="true">⌄</span></span></button><div class="runa-folder-reveal"><div class="runa-folder-reveal-inner"><div class="runa-folder-files">'+fileItems+'</div></div></div></article>';
+    }).join('');
+  }
   async function loadHtmlModules(admin=false){
     const target=document.getElementById(admin?'adminHtmlModuleList':'publicHtmlModuleList');if(!target)return;
     target.innerHTML='<p class="muted">Memuat modul…</p>';
@@ -3111,7 +3206,7 @@ main {
       if(admin){target.innerHTML=modules.length?modules.map(m=>moduleCard(m,true)).join(''):'<div class="empty-subject"><strong>Belum ada modul HTML.</strong><p class="muted">Unggah file HTML atau tempel kode pada editor di atas.</p></div>';return;}
       publicHtmlModules=modules;
       document.getElementById('publicHtmlModuleCount').textContent=modules.length+' modul';
-      target.innerHTML=modules.length?modules.map(m=>moduleCard(m,false)).join(''):'<div class="empty-subject"><strong>Belum ada modul yang diterbitkan.</strong><p class="muted">Modul yang diterbitkan Admin akan muncul di sini.</p></div>';
+      target.innerHTML=modules.length?renderPublicModuleFolders(modules):'<div class="empty-subject"><strong>Belum ada modul yang diterbitkan.</strong><p class="muted">Modul yang diterbitkan Admin akan muncul di sini.</p></div>';
     }catch(error){target.innerHTML='<p class="muted">'+escapeHtml(error.message||'Gagal memuat modul.')+'</p>';if(!admin)document.getElementById('publicHtmlModuleCount').textContent='Tidak tersedia';}
   }
   htmlModuleSource.addEventListener('input',updateHtmlModuleByteCount);
@@ -3158,8 +3253,31 @@ main {
     }catch(error){notify(error.message||'Gagal memproses modul.');}
   });
   document.getElementById('publicHtmlModuleList').addEventListener('click',event=>{
+    const folderToggle=event.target.closest('[data-folder-toggle]');
+    if(folderToggle){
+      const card=folderToggle.closest('[data-folder-card]');
+      const open=card?.classList.toggle('is-open')||false;
+      folderToggle.setAttribute('aria-expanded',String(open));
+      return;
+    }
     const button=event.target.closest('[data-open-html-module]');if(!button)return;
     const module=publicHtmlModules.find(item=>item.id===button.dataset.openHtmlModule);if(module)openHtmlModuleViewer(module);
+  });
+  const publicFolderGrid=document.getElementById('publicHtmlModuleList');
+  publicFolderGrid.addEventListener('pointermove',event=>{
+    if(event.pointerType==='touch')return;
+    const card=event.target.closest('.runa-folder-card');
+    if(!card)return;
+    const rect=card.getBoundingClientRect();
+    const x=(event.clientX-rect.left)/rect.width-.5;
+    const y=(event.clientY-rect.top)/rect.height-.5;
+    card.style.setProperty('--tilt-x',(-y*4.5).toFixed(2)+'deg');
+    card.style.setProperty('--tilt-y',(x*5).toFixed(2)+'deg');
+  });
+  publicFolderGrid.addEventListener('pointerleave',event=>{
+    const card=event.target.closest?.('.runa-folder-card');
+    if(card){card.style.setProperty('--tilt-x','0deg');card.style.setProperty('--tilt-y','0deg');}
+    publicFolderGrid.querySelectorAll('.runa-folder-card').forEach(item=>{item.style.setProperty('--tilt-x','0deg');item.style.setProperty('--tilt-y','0deg');});
   });
   document.getElementById('rnModuleViewerClose').addEventListener('click',closeHtmlModuleViewer);
   document.getElementById('rnModuleViewerFullscreen').addEventListener('click',toggleHtmlModuleFullscreen);
