@@ -2,11 +2,27 @@ const crypto = require('node:crypto');
 
 const COOKIE_NAME = 'ruangnalar_admin';
 const SUBJECT_LABELS = {
-  'matematika-wajib': 'Matematika Wajib',
-  'matematika-lanjut': 'Matematika Lanjut',
-  kimia: 'Kimia',
-  fisika: 'Fisika',
-  fiqih: 'Fiqih'
+  "pendidikan-agama-islam": "Pendidikan Agama Islam",
+  "fiqih": "Fiqih",
+  "sejarah-kebudayaan-islam": "Sejarah Kebudayaan Islam",
+  "al-quran-hadits": "Al-Qur'an Hadits",
+  "akidah-akhlak": "Akidah Akhlak",
+  "pendidikan-pancasila": "Pendidikan Pancasila",
+  "seni": "Seni",
+  "kimia": "Kimia",
+  "biologi": "Biologi",
+  "fisika": "Fisika",
+  "bahasa-arab": "Bahasa Arab",
+  "bahasa-inggris": "Bahasa Inggris",
+  "sejarah": "Sejarah",
+  "sosiologi": "Sosiologi",
+  "pendidikan-jasmani-dan-kesehatan": "Pendidikan Jasmani dan Kesehatan",
+  "geografi": "Geografi",
+  "bahasa-indonesia": "Bahasa Indonesia",
+  "matematika": "Matematika",
+  "ekonomi": "Ekonomi",
+  "matematika-wajib": "Matematika Wajib",
+  "matematika-lanjut": "Matematika Lanjut"
 };
 
 function send(res, status, body) {
