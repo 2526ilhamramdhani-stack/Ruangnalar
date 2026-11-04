@@ -191,7 +191,8 @@ module.exports = async function handler(req, res) {
   let body = req.body;
   if (typeof body === 'string') { try { body = JSON.parse(body); } catch { body = {}; } }
   const title = typeof body?.title === 'string' ? body.title.trim().slice(0, 160) : '';
-  const topic = typeof body?.topic === 'string' ? body.topic.trim().slice(0, 100) : '';\n  const comment = typeof body?.comment === 'string' ? body.comment.trim().slice(0, 1000) : '';
+  const topic = typeof body?.topic === 'string' ? body.topic.trim().slice(0, 100) : '';
+  const comment = typeof body?.comment === 'string' ? body.comment.trim().slice(0, 1000) : '';
   const authorName = typeof body?.authorName === 'string' ? body.authorName.trim().slice(0, 100) : '';
   const subjectId = typeof body?.subjectId === 'string' ? body.subjectId : 'matematika-wajib';
   const requestedStatus = body?.status === 'published' ? 'published' : 'draft';
