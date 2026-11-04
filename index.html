@@ -3181,19 +3181,36 @@ main {
   }
   function renderPublicModuleFolders(modules){
     const groups=new Map();
+    const resolveSubjectId=module=>{
+      const raw=String(module.subject_id||module.subject||module.subject_name||'').trim();
+      if(!raw)return 'belum-dikategorikan';
+      if(subjectLabels[raw])return raw;
+      const normalized=raw.toLocaleLowerCase('id');
+      const match=subjectEntries.find(([id,label])=>id.toLocaleLowerCase('id')===normalized||label.toLocaleLowerCase('id')===normalized);
+      return match?match[0]:raw.toLocaleLowerCase('id').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'belum-dikategorikan';
+    };
     modules.forEach(module=>{
-      const key=module.subject_id||'lainnya';
+      const key=resolveSubjectId(module);
       if(!groups.has(key))groups.set(key,[]);
       groups.get(key).push(module);
     });
-    return [...groups.entries()].map(([subjectId,items],index)=>{
-      const subject=subjectLabels[subjectId]||(subjectId==='lainnya'?'Materi Lainnya':subjectId);
-      const folderTitle=items.every(item=>item.render_mode==='raw')?'Arsip HTML '+subject:'Modul '+subject;
+    const subjectOrder=new Map(subjectEntries.map(([id],index)=>[id,index]));
+    const sortedGroups=[...groups.entries()].sort(([a],[b])=>{
+      const aOrder=subjectOrder.has(a)?subjectOrder.get(a):Number.MAX_SAFE_INTEGER;
+      const bOrder=subjectOrder.has(b)?subjectOrder.get(b):Number.MAX_SAFE_INTEGER;
+      if(aOrder!==bOrder)return aOrder-bOrder;
+      if(a==='belum-dikategorikan')return 1;
+      if(b==='belum-dikategorikan')return -1;
+      return a.localeCompare(b,'id');
+    });
+    return sortedGroups.map(([subjectId,items])=>{
+      const subject=subjectId==='belum-dikategorikan'?'Belum Dikategorikan':(subjectLabels[subjectId]||subjectId.replace(/-/g,' ').replace(/\b\w/g,char=>char.toUpperCase()));
+      const folderTitle=subjectId==='belum-dikategorikan'?'Belum Dikategorikan':(items.every(item=>item.render_mode==='raw')?'Arsip HTML '+subject:'Modul '+subject);
       const fileItems=items.map((module,fileIndex)=>{
         const detail=[module.topic||'',module.author_name?'Penerbit '+module.author_name:''].filter(Boolean).join(' · ');
         return '<button type="button" class="runa-folder-file" data-open-html-module="'+escapeHtml(module.id)+'" style="transition-delay:'+(Math.min(fileIndex,8)*35)+'ms"><span class="runa-folder-file-icon" aria-hidden="true">'+(module.render_mode==='raw'?'&lt;/&gt;':'✦')+'</span><span class="runa-folder-file-copy"><strong>'+escapeHtml(module.title||'Tanpa judul')+'</strong><small>'+escapeHtml(detail||module.description||'Buka materi pembelajaran')+'</small></span><span class="runa-folder-file-arrow" aria-hidden="true">↗</span></button>';
       }).join('');
-      return '<article class="runa-folder-card" data-folder-card="'+escapeHtml(subjectId)+'"><button type="button" class="runa-folder-trigger" data-folder-toggle="'+escapeHtml(subjectId)+'" aria-expanded="false"><span class="runa-folder-glyph" aria-hidden="true">▰</span><span class="runa-folder-copy"><strong>'+escapeHtml(folderTitle)+'</strong><small>'+escapeHtml(subject)+' · koleksi pembelajaran</small></span><span class="runa-folder-count">'+items.length+' file <span class="runa-folder-chevron" aria-hidden="true">⌄</span></span></button><div class="runa-folder-reveal"><div class="runa-folder-reveal-inner"><div class="runa-folder-files">'+fileItems+'</div></div></div></article>';
+      return '<article class="runa-folder-card" data-folder-card="'+escapeHtml(subjectId)+'"><button type="button" class="runa-folder-trigger" data-folder-toggle="'+escapeHtml(subjectId)+'" aria-expanded="false"><span class="runa-folder-glyph" aria-hidden="true">▰</span><span class="runa-folder-copy"><strong>'+escapeHtml(folderTitle)+'</strong><small>'+escapeHtml(subject)+' · '+items.length+' materi</small></span><span class="runa-folder-count">'+items.length+' file <span class="runa-folder-chevron" aria-hidden="true">⌄</span></span></button><div class="runa-folder-reveal"><div class="runa-folder-reveal-inner"><div class="runa-folder-files">'+fileItems+'</div></div></div></article>';
     }).join('');
   }
   async function loadHtmlModules(admin=false){
