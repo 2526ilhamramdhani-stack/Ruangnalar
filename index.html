@@ -3156,6 +3156,16 @@ main {
     return '<!doctype html><html><head><meta charset="utf-8">'+meta+'</head><body>'+guarded+'</body></html>';
   }
   let activeOriginalHtmlModule=null;
+  let activeModuleFrameDocument='';
+  let moduleFrameInitialLoadSeen=false;
+  let moduleFrameRestorePending=false;
+  function handleModuleFrameLoad(){
+    if(!activeModuleFrameDocument)return;
+    if(!moduleFrameInitialLoadSeen){moduleFrameInitialLoadSeen=true;return;}
+    if(moduleFrameRestorePending){moduleFrameRestorePending=false;return;}
+    moduleFrameRestorePending=true;
+    document.getElementById('rnModuleFrame').srcdoc=activeModuleFrameDocument;
+  }
   function openHtmlModuleViewer(module){
     const viewer=document.getElementById('rnModuleViewer'),frame=document.getElementById('rnModuleFrame');
     const isRaw=module.render_mode==='raw';
@@ -3163,7 +3173,11 @@ main {
     document.getElementById('rnModuleViewerTitle').textContent=module.title||'Modul HTML · RuangNalar';
     document.getElementById('rnRawModuleLogo').hidden=!isRaw;
     document.getElementById('rnExportOriginalHtml').hidden=!isRaw;
-    frame.srcdoc=isRaw?prepareModuleDocument(module.html||''):sandboxDocument(module.html||'');
+    activeModuleFrameDocument=isRaw?prepareModuleDocument(module.html||''):sandboxDocument(module.html||'');
+    moduleFrameInitialLoadSeen=false;
+    moduleFrameRestorePending=false;
+    frame.onload=handleModuleFrameLoad;
+    frame.srcdoc=activeModuleFrameDocument;
     viewer.hidden=false;viewer.setAttribute('aria-hidden','false');viewer.scrollIntoView({behavior:'smooth',block:'start'});
   }
   function setHtmlModuleActionsOpen(open){const menu=document.getElementById('rnModuleViewerActions'),toggle=document.getElementById('rnModuleViewerSettings');if(!menu||!toggle)return;menu.hidden=!open;toggle.setAttribute('aria-expanded',String(open));}
@@ -3172,7 +3186,7 @@ main {
   document.addEventListener('keydown',event=>{if(event.key==='Escape')setHtmlModuleActionsOpen(false);});
   async function toggleHtmlModuleFullscreen(){const viewer=document.getElementById('rnModuleViewer');if(!viewer||viewer.hidden)return;try{if(document.fullscreenElement){await document.exitFullscreen();}else if(viewer.requestFullscreen){await viewer.requestFullscreen();}else{notify('Mode layar penuh tidak didukung oleh browser ini.');}}catch(error){notify('Tidak dapat mengaktifkan layar penuh. Coba izinkan fullscreen pada browser.');}}
   function updateHtmlModuleFullscreenButton(){const button=document.getElementById('rnModuleViewerFullscreen');if(!button)return;const active=document.fullscreenElement===document.getElementById('rnModuleViewer');button.textContent=active?'↙ Keluar fullscreen':'⛶ Layar penuh';button.setAttribute('aria-label',active?'Keluar dari layar penuh':'Lihat modul dalam layar penuh');}
-  function closeHtmlModuleViewer(){const viewer=document.getElementById('rnModuleViewer');if(viewer.hidden)return;if(document.fullscreenElement===viewer&&document.exitFullscreen)document.exitFullscreen().catch(()=>{});viewer.hidden=true;viewer.setAttribute('aria-hidden','true');const frame=document.getElementById('rnModuleFrame');frame.srcdoc='';activeOriginalHtmlModule=null;}
+  function closeHtmlModuleViewer(){const viewer=document.getElementById('rnModuleViewer');if(viewer.hidden)return;if(document.fullscreenElement===viewer&&document.exitFullscreen)document.exitFullscreen().catch(()=>{});viewer.hidden=true;viewer.setAttribute('aria-hidden','true');const frame=document.getElementById('rnModuleFrame');activeModuleFrameDocument='';moduleFrameInitialLoadSeen=false;moduleFrameRestorePending=false;frame.onload=null;frame.srcdoc='';activeOriginalHtmlModule=null;}
   function exportOriginalHtmlModule(){
     if(!activeOriginalHtmlModule)return;
     const encoder=new TextEncoder(),bytes=encoder.encode(activeOriginalHtmlModule.html);
