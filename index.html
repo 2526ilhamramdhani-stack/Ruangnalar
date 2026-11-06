@@ -2613,6 +2613,12 @@ main {
 .rn-module-viewer-brand{display:flex;align-items:center;gap:12px;min-width:0}.rn-module-viewer-brand>img{width:54px;height:32px;object-fit:contain;flex:0 0 auto}.rn-module-viewer-actions{display:flex;align-items:center;gap:8px}.rn-raw-module-footer{min-height:38px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:5px 14px;border-top:1px solid var(--line);background:var(--panel);color:var(--muted);font-size:11px}.rn-raw-module-footer img{width:48px;height:28px;object-fit:contain}.rn-module-viewer iframe{display:block;width:100%;min-height:70vh;border:0;background:#fff}
 .rn-module-viewer:fullscreen{width:100%;height:100%;max-height:100%;margin:0;border:0;border-radius:0;background:#F7FAFA}
 .rn-module-viewer:fullscreen iframe{flex:1 1 auto;height:auto;min-height:0}
+.rn-module-viewer.rn-module-expanded{position:fixed!important;inset:0!important;z-index:2147483000!important;width:100vw!important;height:100vh!important;height:100dvh!important;max-height:none!important;margin:0!important;border:0!important;border-radius:0!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;background:#F7FAFA!important}
+.rn-module-viewer.rn-module-expanded .rn-module-viewer-bar{flex:0 0 auto;min-height:48px}
+.rn-module-viewer.rn-module-expanded iframe{display:block!important;position:relative!important;flex:1 1 0!important;width:100%!important;height:0!important;min-height:0!important;max-height:none!important;border:0!important;pointer-events:auto!important}
+.rn-module-viewer.rn-module-expanded .rn-module-fullscreen-footer{display:flex;flex:0 0 34px}
+body.rn-module-expanded-open{overflow:hidden!important}
+
 #rnModuleFrame:fullscreen{position:fixed;inset:0;width:100vw;height:100vh;min-height:100vh;max-height:100vh;margin:0;border:0;border-radius:0;background:#fff;z-index:2147483647}
 .html-module-card-footer>.admin-content-actions{justify-content:flex-end}
 .html-module-card-footer>.admin-content-actions .btn{font-size:12px;padding:8px 10px}
@@ -3176,9 +3182,9 @@ main {
   document.getElementById('rnModuleViewerSettings')?.addEventListener('click',()=>{const menu=document.getElementById('rnModuleViewerActions');setHtmlModuleActionsOpen(!!menu?.hidden);});
   document.addEventListener('click',event=>{const toolbar=document.querySelector('.rn-module-viewer-toolbar');if(toolbar&&!toolbar.contains(event.target))setHtmlModuleActionsOpen(false);});
   document.addEventListener('keydown',event=>{if(event.key==='Escape')setHtmlModuleActionsOpen(false);});
-  async function toggleHtmlModuleFullscreen(){const viewer=document.getElementById('rnModuleViewer'),frame=document.getElementById('rnModuleFrame');if(!viewer||viewer.hidden||!frame)return;try{if(document.fullscreenElement){await document.exitFullscreen();}else if(frame.requestFullscreen){await frame.requestFullscreen();}else{notify('Mode layar penuh tidak didukung oleh browser ini.');}}catch(error){notify('Tidak dapat mengaktifkan fullscreen modul. Coba izinkan fullscreen pada browser.');}}
-  function updateHtmlModuleFullscreenButton(){const button=document.getElementById('rnModuleViewerFullscreen');if(!button)return;const active=document.fullscreenElement===document.getElementById('rnModuleFrame');button.textContent=active?'↙ Keluar fullscreen':'⛶ Layar penuh';button.setAttribute('aria-label',active?'Keluar dari layar penuh':'Lihat modul dalam layar penuh');}
-  function closeHtmlModuleViewer(){const viewer=document.getElementById('rnModuleViewer');if(viewer.hidden)return;if(document.fullscreenElement===viewer&&document.exitFullscreen)document.exitFullscreen().catch(()=>{});viewer.hidden=true;viewer.setAttribute('aria-hidden','true');const frame=document.getElementById('rnModuleFrame');frame.removeAttribute('src');frame.srcdoc='';if(activeModuleBlobUrl){URL.revokeObjectURL(activeModuleBlobUrl);activeModuleBlobUrl='';}activeOriginalHtmlModule=null;}
+  function toggleHtmlModuleFullscreen(){const viewer=document.getElementById('rnModuleViewer');if(!viewer||viewer.hidden)return;const active=viewer.classList.toggle('rn-module-expanded');document.body.classList.toggle('rn-module-expanded-open',active);updateHtmlModuleFullscreenButton();if(active){viewer.scrollTop=0;} }
+  function updateHtmlModuleFullscreenButton(){const button=document.getElementById('rnModuleViewerFullscreen');if(!button)return;const active=document.getElementById('rnModuleViewer')?.classList.contains('rn-module-expanded');button.textContent=active?'↙ Keluar tampilan luas':'⛶ Layar penuh';button.setAttribute('aria-label',active?'Keluar dari tampilan luas':'Lihat modul dalam layar penuh');}
+  function closeHtmlModuleViewer(){const viewer=document.getElementById('rnModuleViewer');if(viewer.hidden)return;viewer.classList.remove('rn-module-expanded');document.body.classList.remove('rn-module-expanded-open');viewer.hidden=true;viewer.setAttribute('aria-hidden','true');const frame=document.getElementById('rnModuleFrame');frame.removeAttribute('src');frame.srcdoc='';if(activeModuleBlobUrl){URL.revokeObjectURL(activeModuleBlobUrl);activeModuleBlobUrl='';}activeOriginalHtmlModule=null;}
   function exportOriginalHtmlModule(){
     if(!activeOriginalHtmlModule)return;
     const encoder=new TextEncoder(),bytes=encoder.encode(activeOriginalHtmlModule.html);
@@ -3316,9 +3322,8 @@ main {
   });
   document.getElementById('rnModuleViewerClose').addEventListener('click',closeHtmlModuleViewer);
   document.getElementById('rnModuleViewerFullscreen').addEventListener('click',toggleHtmlModuleFullscreen);
-  document.addEventListener('fullscreenchange',updateHtmlModuleFullscreenButton);
   document.getElementById('rnExportOriginalHtml').addEventListener('click',exportOriginalHtmlModule);
-  document.addEventListener('keydown',event=>{if(event.key==='Escape')closeHtmlModuleViewer();});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'){const viewer=document.getElementById('rnModuleViewer');if(viewer?.classList.contains('rn-module-expanded')){viewer.classList.remove('rn-module-expanded');document.body.classList.remove('rn-module-expanded-open');updateHtmlModuleFullscreenButton();}else closeHtmlModuleViewer();}});
   loadHtmlModules(false);updateHtmlModuleByteCount();
 
  const searchInput=document.getElementById('searchInput');
