@@ -3182,7 +3182,7 @@ body.rn-module-expanded-open{overflow:hidden!important}
   function setHtmlModuleActionsOpen(open){const menu=document.getElementById('rnModuleViewerActions'),toggle=document.getElementById('rnModuleViewerSettings');if(!menu||!toggle)return;menu.hidden=!open;toggle.setAttribute('aria-expanded',String(open));}
   document.getElementById('rnModuleViewerSettings')?.addEventListener('click',()=>{const menu=document.getElementById('rnModuleViewerActions');setHtmlModuleActionsOpen(!!menu?.hidden);});
   document.addEventListener('click',event=>{const toolbar=document.querySelector('.rn-module-viewer-toolbar');if(toolbar&&!toolbar.contains(event.target))setHtmlModuleActionsOpen(false);});
-  document.addEventListener('keydown',event=>{if(event.key==='Escape')setHtmlModuleActionsOpen(false);});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'){setHtmlModuleActionsOpen(false);if(document.getElementById('rnModuleViewer')?.classList.contains('rn-module-expanded'))exitHtmlModuleFullscreen();}});
   let rnModuleViewerPlaceholder=null;
   function exitHtmlModuleFullscreen(){
     const viewer=document.getElementById('rnModuleViewer');
