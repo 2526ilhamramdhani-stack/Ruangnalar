@@ -3147,16 +3147,14 @@ main {
   function updateHtmlModuleByteCount(){const n=htmlModuleBytes(htmlModuleSource.value);document.getElementById('htmlModuleByteCount').textContent=(n/1024).toFixed(1)+' / 300 KB';document.getElementById('htmlModuleByteCount').style.color=n>300*1024?'#A82020':'var(--rn-muted)';}
   function resetHtmlModuleEditor(){htmlModuleForm.reset();document.getElementById('htmlModuleId').value='';document.getElementById('htmlModuleAuthor').value='';document.getElementById('htmlModuleSubject').value='';document.getElementById('htmlModuleTopic').value='';document.getElementById('htmlModuleComment').value='';document.getElementById('htmlModuleStatus').value='draft';document.getElementById('htmlModuleRenderMode').value='module';htmlModuleStatusMessage.textContent='Editor siap untuk modul baru.';updateHtmlModuleByteCount();}
   function prepareModuleDocument(source){
-    const navigationGuard='<script>(function(){document.addEventListener("click",function(event){const link=event.target&&event.target.closest?event.target.closest("a[href]"):null;if(!link)return;const href=(link.getAttribute("href")||"").trim();if(!href||href.charAt(0)==="#"||/^javascript:/i.test(href))return;link.setAttribute("target","_blank");link.setAttribute("rel","noopener noreferrer");},true);document.addEventListener("submit",function(event){const form=event.target;if(form&&form.tagName==="FORM")form.setAttribute("target","_blank");},true);})();<\/script>';
-    if(/<head[^>]*>/i.test(source))return source.replace(/<head([^>]*)>/i,(match)=>match+navigationGuard);
-    return '<!doctype html><html><head><meta charset="utf-8">'+navigationGuard+'</head><body>'+source+'</body></html>';
+    // Keep the uploaded document's own navigation, forms, scripts, and controls intact.
+    // The iframe sandbox is the isolation boundary; do not rewrite links or inject a
+    // restrictive CSP that silently disables common interactive-module behavior.
+    if(/<html[\s>]/i.test(source))return source;
+    return '<!doctype html><html lang="id"><head><meta charset="utf-8"></head><body>'+source+'</body></html>';
   }
   function sandboxDocument(source){
-    const policy="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob: https:; font-src data:; media-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'";
-    const meta='<meta http-equiv="Content-Security-Policy" content="'+policy+'">';
-    const guarded=prepareModuleDocument(source);
-    if(/<head[^>]*>/i.test(guarded))return guarded.replace(/<head([^>]*)>/i,(match)=>match+meta);
-    return '<!doctype html><html><head><meta charset="utf-8">'+meta+'</head><body>'+guarded+'</body></html>';
+    return prepareModuleDocument(source);
   }
   let activeOriginalHtmlModule=null;
   let activeModuleBlobUrl='';
@@ -3178,8 +3176,9 @@ main {
   document.getElementById('rnModuleViewerSettings')?.addEventListener('click',()=>{const menu=document.getElementById('rnModuleViewerActions');setHtmlModuleActionsOpen(!!menu?.hidden);});
   document.addEventListener('click',event=>{const toolbar=document.querySelector('.rn-module-viewer-toolbar');if(toolbar&&!toolbar.contains(event.target))setHtmlModuleActionsOpen(false);});
   document.addEventListener('keydown',event=>{if(event.key==='Escape')setHtmlModuleActionsOpen(false);});
-  async function toggleHtmlModuleFullscreen(){const viewer=document.getElementById('rnModuleViewer');if(!viewer||viewer.hidden)return;try{if(document.fullscreenElement){await document.exitFullscreen();}else if(viewer.requestFullscreen){await viewer.requestFullscreen();}else{notify('Mode layar penuh tidak didukung oleh browser ini.');}}catch(error){notify('Tidak dapat mengaktifkan layar penuh. Coba izinkan fullscreen pada browser.');}}
+  async function toggleHtmlModuleFullscreen(){const viewer=document.getElementById('rnModuleViewer');if(!viewer||viewer.hidden)return;try{if(document.fullscreenElement===viewer){await document.exitFullscreen();}else if(!document.fullscreenElement&&viewer.requestFullscreen){await viewer.requestFullscreen();}else if(document.fullscreenElement){notify('Keluar dari mode layar penuh lain terlebih dahulu.');}else{notify('Mode layar penuh tidak didukung oleh browser ini.');}}catch(error){notify('Tidak dapat mengaktifkan layar penuh. Coba izinkan fullscreen pada browser.');}}
   function updateHtmlModuleFullscreenButton(){const button=document.getElementById('rnModuleViewerFullscreen');if(!button)return;const active=document.fullscreenElement===document.getElementById('rnModuleViewer');button.textContent=active?'↙ Keluar fullscreen':'⛶ Layar penuh';button.setAttribute('aria-label',active?'Keluar dari layar penuh':'Lihat modul dalam layar penuh');}
+  document.addEventListener('fullscreenchange',updateHtmlModuleFullscreenButton);
   function closeHtmlModuleViewer(){const viewer=document.getElementById('rnModuleViewer');if(viewer.hidden)return;if(document.fullscreenElement===viewer&&document.exitFullscreen)document.exitFullscreen().catch(()=>{});viewer.hidden=true;viewer.setAttribute('aria-hidden','true');const frame=document.getElementById('rnModuleFrame');frame.srcdoc='';activeOriginalHtmlModule=null;}
   function exportOriginalHtmlModule(){
     if(!activeOriginalHtmlModule)return;
@@ -3319,7 +3318,7 @@ main {
   document.getElementById('rnModuleViewerClose').addEventListener('click',closeHtmlModuleViewer);
   document.getElementById('rnModuleViewerFullscreen').addEventListener('click',toggleHtmlModuleFullscreen);
   document.getElementById('rnExportOriginalHtml').addEventListener('click',exportOriginalHtmlModule);
-  document.addEventListener('keydown',event=>{if(event.key==='Escape'){const viewer=document.getElementById('rnModuleViewer');if(viewer?.classList.contains('rn-module-expanded')){viewer.classList.remove('rn-module-expanded');document.body.classList.remove('rn-module-expanded-open');updateHtmlModuleFullscreenButton();}else closeHtmlModuleViewer();}});
+  document.addEventListener('keydown',event=>{if(event.key!=='Escape')return;const viewer=document.getElementById('rnModuleViewer');if(!viewer||viewer.hidden)return;if(document.fullscreenElement===viewer)return;closeHtmlModuleViewer();});
   loadHtmlModules(false);updateHtmlModuleByteCount();
 
  const searchInput=document.getElementById('searchInput');
