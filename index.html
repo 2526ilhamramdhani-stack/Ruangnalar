@@ -3267,14 +3267,6 @@ main {
       return '<div class="rn-archive-empty"><span aria-hidden="true">⌕</span><strong>Tidak ada modul yang cocok</strong><p>Coba kata kunci lain atau ubah filter mata pelajaran.</p><button type="button" data-archive-reset>Hapus pencarian dan filter</button></div>';
     }
     const groups=new Map();
-    const resolveSubjectId=module=>{
-      const raw=String(module.subject_id||module.subject||module.subject_name||'').trim();
-      if(!raw)return 'belum-dikategorikan';
-      if(subjectLabels[raw])return raw;
-      const normalized=raw.toLocaleLowerCase('id');
-      const match=subjectEntries.find(([id,label])=>id.toLocaleLowerCase('id')===normalized||label.toLocaleLowerCase('id')===normalized);
-      return match?match[0]:raw.toLocaleLowerCase('id').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'belum-dikategorikan';
-    };
     filteredModules.forEach(module=>{
       const key=resolveSubjectId(module);
       if(!groups.has(key))groups.set(key,[]);
