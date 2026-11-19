@@ -3263,7 +3263,7 @@ main {
     if(!authorName){htmlModuleStatusMessage.textContent='Nama penerbit wajib diisi.';return;}
     const html=htmlModuleSource.value;
     if(htmlModuleBytes(html)>15*1024*1024){htmlModuleStatusMessage.textContent='Ukuran HTML melebihi 15 MiB.';return;}
-    if(!html.trim()||!/<html[\\s>]|<!doctype\\s+html|<body[\\s>]/i.test(html)){htmlModuleStatusMessage.textContent='Masukkan dokumen HTML lengkap.';return;}
+    if(!html.trim()||!/<html[\s>]|<!doctype\s+html|<body[\s>]/i.test(html)){htmlModuleStatusMessage.textContent='Masukkan dokumen HTML lengkap.';return;}
     const payload={id,title:document.getElementById('htmlModuleTitle').value,description:document.getElementById('htmlModuleDescription').value,authorName,subjectId,topic:document.getElementById('htmlModuleTopic').value.trim(),comment:document.getElementById('htmlModuleComment').value.trim(),status:document.getElementById('htmlModuleStatus').value,renderMode:document.getElementById('htmlModuleRenderMode').value};
     const button=document.getElementById('saveHtmlModule');button.disabled=true;button.textContent='Mengunggah…';
     try{
@@ -3299,7 +3299,7 @@ main {
       htmlModuleForm.scrollIntoView({behavior:'smooth',block:'start'});
     }catch(error){notify(error.message||'Gagal memproses modul.');}
   });
-  document.getElementById('publicHtmlModuleList').addEventListener('click',event=>{
+  document.getElementById('publicHtmlModuleList').addEventListener('click',async event=>{
     const folderToggle=event.target.closest('[data-folder-toggle]');
     if(folderToggle){
       const card=folderToggle.closest('[data-folder-card]');
@@ -3308,7 +3308,7 @@ main {
       return;
     }
     const button=event.target.closest('[data-open-html-module]');if(!button)return;
-    const module=publicHtmlModules.find(item=>item.id===button.dataset.openHtmlModule);if(module)openHtmlModuleViewer(module);
+    const module=publicHtmlModules.find(item=>item.id===button.dataset.openHtmlModule);if(module){try{await openHtmlModuleViewer(module);}catch(error){notify(error.message||'Modul HTML gagal dibuka.');}}
   });
   const publicFolderGrid=document.getElementById('publicHtmlModuleList');
   publicFolderGrid.addEventListener('pointermove',event=>{
