@@ -3144,7 +3144,7 @@ main {
   const htmlModuleStatusMessage=document.getElementById('htmlModuleStatusMessage');
   let publicHtmlModules=[];
   function htmlModuleBytes(value){return new Blob([value||'']).size;}
-  function updateHtmlModuleByteCount(){const n=htmlModuleBytes(htmlModuleSource.value);document.getElementById('htmlModuleByteCount').textContent=(n/1024).toFixed(1)+' / 300 KB';document.getElementById('htmlModuleByteCount').style.color=n>300*1024?'#A82020':'var(--rn-muted)';}
+  function updateHtmlModuleByteCount(){const n=htmlModuleBytes(htmlModuleSource.value),limit=15*1024*1024;document.getElementById('htmlModuleByteCount').textContent=(n/1024/1024).toFixed(2)+' / 15 MiB';document.getElementById('htmlModuleByteCount').style.color=n>limit?'#A82020':'var(--rn-muted)';}
   function resetHtmlModuleEditor(){htmlModuleForm.reset();document.getElementById('htmlModuleId').value='';document.getElementById('htmlModuleAuthor').value='';document.getElementById('htmlModuleSubject').value='';document.getElementById('htmlModuleTopic').value='';document.getElementById('htmlModuleComment').value='';document.getElementById('htmlModuleStatus').value='draft';document.getElementById('htmlModuleRenderMode').value='module';htmlModuleStatusMessage.textContent='Editor siap untuk modul baru.';updateHtmlModuleByteCount();}
   function prepareModuleDocument(source){
     const navigationGuard='<script>(function(){document.addEventListener("click",function(event){const link=event.target&&event.target.closest?event.target.closest("a[href]"):null;if(!link)return;const href=(link.getAttribute("href")||"").trim();if(!href||href.charAt(0)==="#"||/^javascript:/i.test(href))return;link.setAttribute("target","_blank");link.setAttribute("rel","noopener noreferrer");},true);document.addEventListener("submit",function(event){const form=event.target;if(form&&form.tagName==="FORM")form.setAttribute("target","_blank");},true);})();<\/script>';
@@ -3160,7 +3160,8 @@ main {
   }
   let activeOriginalHtmlModule=null;
   let activeModuleBlobUrl='';
-  function openHtmlModuleViewer(module){
+  async function openHtmlModuleViewer(module){
+    if(!module.html&&module.html_url){const response=await fetch(module.html_url,{cache:'no-store'});if(!response.ok)throw new Error('File HTML gagal diunduh dari Storage.');module={...module,html:await response.text()};}
     const viewer=document.getElementById('rnModuleViewer'),frame=document.getElementById('rnModuleFrame');
     const isRaw=module.render_mode==='raw';
     activeOriginalHtmlModule=isRaw?{title:module.title||'HTML Original',html:module.html||''}:null;
@@ -3249,7 +3250,7 @@ main {
   htmlModuleSource.addEventListener('input',updateHtmlModuleByteCount);
   document.getElementById('htmlModuleFile').addEventListener('change',async event=>{
     const file=event.target.files&&event.target.files[0];if(!file)return;
-    if(file.size>300*1024){notify('File HTML melebihi batas 300 KB.');event.target.value='';return;}
+    if(file.size>15*1024*1024){notify('File HTML melebihi batas 15 MiB.');event.target.value='';return;}
     htmlModuleSource.value=await file.text();updateHtmlModuleByteCount();
     if(!document.getElementById('htmlModuleTitle').value)document.getElementById('htmlModuleTitle').value=file.name.replace(/\.html?$/i,'');
   });
@@ -3260,10 +3261,18 @@ main {
     if(!subjectId){htmlModuleStatusMessage.textContent='Pilih mata pelajaran dari daftar standar RuNa.';return;}
     const authorName=document.getElementById('htmlModuleAuthor').value.trim();
     if(!authorName){htmlModuleStatusMessage.textContent='Nama penerbit wajib diisi.';return;}
-    const payload={id,title:document.getElementById('htmlModuleTitle').value,description:document.getElementById('htmlModuleDescription').value,authorName,subjectId,topic:document.getElementById('htmlModuleTopic').value.trim(),comment:document.getElementById('htmlModuleComment').value.trim(),html:htmlModuleSource.value,status:document.getElementById('htmlModuleStatus').value,renderMode:document.getElementById('htmlModuleRenderMode').value};
-    if(htmlModuleBytes(payload.html)>300*1024){htmlModuleStatusMessage.textContent='Ukuran HTML melebihi 300 KB.';return;}
-    const button=document.getElementById('saveHtmlModule');button.disabled=true;button.textContent='Menyimpan…';
+    const html=htmlModuleSource.value;
+    if(htmlModuleBytes(html)>15*1024*1024){htmlModuleStatusMessage.textContent='Ukuran HTML melebihi 15 MiB.';return;}
+    if(!html.trim()||!/<html[\s>]|<!doctype\s+html|<body[\s>]/i.test(html)){htmlModuleStatusMessage.textContent='Masukkan dokumen HTML lengkap.';return;}
+    const payload={id,title:document.getElementById('htmlModuleTitle').value,description:document.getElementById('htmlModuleDescription').value,authorName,subjectId,topic:document.getElementById('htmlModuleTopic').value.trim(),comment:document.getElementById('htmlModuleComment').value.trim(),status:document.getElementById('htmlModuleStatus').value,renderMode:document.getElementById('htmlModuleRenderMode').value};
+    const button=document.getElementById('saveHtmlModule');button.disabled=true;button.textContent='Mengunggah…';
     try{
+      const signResponse=await fetch('/api/custom-modules',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({action:'sign-upload',id:id||undefined,size:htmlModuleBytes(html)})});
+      const signed=await signResponse.json();if(!signResponse.ok)throw new Error(signed.error||'Gagal menyiapkan upload.');
+      const uploadResponse=await fetch(signed.uploadUrl,{method:'PUT',headers:{'Content-Type':'text/html','x-upsert':'false'},body:new Blob([html],{type:'text/html'})});
+      if(!uploadResponse.ok)throw new Error('Upload ke Supabase Storage gagal. Periksa konfigurasi Storage dan CORS project.');
+      payload.id=signed.id;payload.storagePath=signed.storagePath;
+      button.textContent='Menyimpan metadata…';
       const response=await fetch('/api/custom-modules',{method:id?'PATCH':'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify(payload)});
       const result=await response.json();if(!response.ok)throw new Error(result.error||'Modul gagal disimpan.');
       htmlModuleStatusMessage.textContent='Modul berhasil disimpan: '+result.module.title+'.';
@@ -3284,12 +3293,13 @@ main {
       const response=await fetch('/api/custom-modules?admin=1',{credentials:'same-origin',cache:'no-store'});const result=await response.json();if(!response.ok)throw new Error(result.error||'Gagal memuat modul.');
       const module=(result.modules||[]).find(item=>item.id===id);if(!module)throw new Error('Modul tidak ditemukan.');
       if(remove){if(!confirm('Hapus modul “'+module.title+'” secara permanen?'))return;const deleted=await fetch('/api/custom-modules?id='+encodeURIComponent(id),{method:'DELETE',credentials:'same-origin'});const data=await deleted.json();if(!deleted.ok)throw new Error(data.error||'Gagal menghapus modul.');notify('Modul dihapus.');await loadHtmlModules(true);await loadHtmlModules(false);return;}
+      if(module.storage_path&&module.html_url){const fileResponse=await fetch(module.html_url,{cache:'no-store'});if(!fileResponse.ok)throw new Error('File HTML gagal dimuat dari Storage.');module.html=await fileResponse.text();}
       document.getElementById('htmlModuleId').value=module.id;document.getElementById('htmlModuleTitle').value=module.title||'';document.getElementById('htmlModuleDescription').value=module.description||'';document.getElementById('htmlModuleAuthor').value=module.author_name||'';document.getElementById('htmlModuleSubject').value=subjectLabels[module.subject_id]||'';document.getElementById('htmlModuleTopic').value=module.topic||'';document.getElementById('htmlModuleComment').value=module.comment||'';htmlModuleSource.value=module.html||'';document.getElementById('htmlModuleStatus').value=publish?'published':(module.status||'draft');document.getElementById('htmlModuleRenderMode').value=module.render_mode||'module';updateHtmlModuleByteCount();
       htmlModuleStatusMessage.textContent=publish?'Siap diterbitkan. Tekan Simpan modul untuk mengonfirmasi.':'Modul dimuat ke editor.';
       htmlModuleForm.scrollIntoView({behavior:'smooth',block:'start'});
     }catch(error){notify(error.message||'Gagal memproses modul.');}
   });
-  document.getElementById('publicHtmlModuleList').addEventListener('click',event=>{
+  document.getElementById('publicHtmlModuleList').addEventListener('click',async event=>{
     const folderToggle=event.target.closest('[data-folder-toggle]');
     if(folderToggle){
       const card=folderToggle.closest('[data-folder-card]');
@@ -3298,7 +3308,7 @@ main {
       return;
     }
     const button=event.target.closest('[data-open-html-module]');if(!button)return;
-    const module=publicHtmlModules.find(item=>item.id===button.dataset.openHtmlModule);if(module)openHtmlModuleViewer(module);
+    const module=publicHtmlModules.find(item=>item.id===button.dataset.openHtmlModule);if(module){try{await openHtmlModuleViewer(module);}catch(error){notify(error.message||'Modul HTML gagal dibuka.');}}
   });
   const publicFolderGrid=document.getElementById('publicHtmlModuleList');
   publicFolderGrid.addEventListener('pointermove',event=>{
